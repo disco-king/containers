@@ -1,0 +1,51 @@
+#include <iostream>
+#include "stack.hpp"
+#include <stack>
+#include <vector>
+
+class Myclass
+{
+private:
+	int num;
+	std::string str;
+public:
+	Myclass():num(5), str("string"){};
+
+	void setStr(std::string const &str){this->str = str;};
+	void setNum(int num){this->num = num;};
+	std::string const &getStr() const {return str;}
+	int getNum() const {return num;}
+
+};
+
+std::ostream &operator<<(std::ostream &o, Myclass const &mine)
+{
+	o << mine.getNum() << ' ' << mine.getStr();
+	return o;
+}
+
+int main()
+{
+	ft::stack<Myclass> stack0;
+
+	Myclass obj1;
+	Myclass obj2 = Myclass();
+	Myclass obj3;
+
+	obj3.setNum(8);
+	obj3.setStr("strong");
+
+	stack0.push(obj1);
+	stack0.push(obj3);
+	stack0.push(obj2);
+
+	std::cout << stack0.top()  << '\n';
+
+	std::cout << "size is " << stack0.size() << '\n';
+	stack0.pop();
+	std::cout << "size is " << stack0.size() << '\n';
+
+	std::cout << stack0.top()  << '\n';
+
+	return 0;
+}
