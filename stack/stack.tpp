@@ -13,7 +13,8 @@ bool ft::stack<T, Container>::empty() const
 }
 
 template <typename T, typename Container>
-size_t ft::stack<T, Container>::size() const
+typename ft::stack<T, Container>::size_type
+ft::stack<T, Container>::size() const
 {
 	return c.size();
 }
