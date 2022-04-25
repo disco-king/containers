@@ -11,19 +11,11 @@ public:
 
 int main(int argc, char const *argv[])
 {
-	std::vector<int> v(6, 15);
+	ft::vector<int> v(6, 15);
 
-	std::vector<int>::iterator i = v.begin();
-	std::vector<int>::iterator e = v.end();
-	for (size_t i = 0; i < 6; i++)
-	{
-		v.at(i) = i + 1;
-	}
-	
-	std::cout << *(i += 5) << ' ' << *(i -= 5);
+	ft::vector<int>::iterator i = v.begin();
+	ft::vector<int>::iterator e = v.end();
 
-	for (; i < e; i++)
-		std::cout << *i << '\n';
 	return 0;
 }
 

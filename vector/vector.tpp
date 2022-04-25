@@ -37,8 +37,8 @@ alloc(alloc)
 }
 
 // template <typename T, typename Allocator>
-// template <class InputIterator>
-// ft::vector<T, Allocator>::vector (InputIterator first, InputIterator last, const allocator_type& alloc) :
+// template <class InputvectorIterator>
+// ft::vector<T, Allocator>::vector (InputvectorIterator first, InputvectorIterator last, const allocator_type& alloc) :
 // alloc(alloc)
 // {
 // 	array = alloc.allocate(last - first);
@@ -152,47 +152,9 @@ void ft::vector<T, Allocator>::pop_back ()
 	sz--;
 }
 
-template <typename T, typename Allocator>
-class ft::vector<T, Allocator>::iterator : public ft::iterator<
-ft::random_access_iterator_tag, T, std::ptrdiff_t, T*, T&>
-{
-
-private:
-	T *ptr;
-
-public:
-	explicit iterator(T *ptr = 0) : ptr(ptr) {}
-	iterator& operator=(iterator const &src) {ptr = src.ptr; return *this;}
-	iterator operator+(size_t val) {
-		iterator ret;
-		ret.ptr = ptr + val;
-		return ret;
-	}
-	iterator operator-(size_t val) {
-		iterator ret;
-		ret.ptr = ptr - val;
-		return ret;
-	}
-	iterator operator+=(size_t val) { ptr+=val; return *this;}
-	iterator operator-=(size_t val) { ptr-=val; return *this;}
-	iterator& operator++() {ptr++; return *this;}
-	iterator operator++(int) {iterator retval = *this; ++(*this); return retval;}
-	iterator& operator--() {ptr++; return *this;}
-	iterator operator--(int) {iterator retval = *this; --(*this); return retval;}
-	bool operator<(iterator const &other) const {return ptr < other.ptr;}
-	bool operator>(iterator const &other) const {return ptr > other.ptr;}
-	bool operator<=(iterator const &other) const {return ptr <= other.ptr;}
-	bool operator>=(iterator const &other) const {return ptr >= other.ptr;}
-	bool operator==(iterator other) const {return ptr == other.ptr;}
-	bool operator!=(iterator other) const {return ptr != other.ptr;}
-	reference operator*() const {return *ptr;}
-};
-
 // template <typename T, typename Allocator>
-// class ft::vector<T, Allocator>::const_iterator : public ft::vector<T, Allocator>::iterator
+// template <class InputIterator>
+// void ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
 // {
 
-// public:
-// 	operator iterator() {return *this; }
-// 	const_reference operator*() const {return *ptr;}
-// };
+// }
