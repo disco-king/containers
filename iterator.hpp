@@ -34,4 +34,18 @@ ptrdiff_t distance(IterType left, IterType right)
 	return &(*left) - &(*right);
 }
 
+template <class T, T v>
+struct integral_constant {
+	static constexpr T value = v;
+	typedef T value_type;
+	typedef integral_constant<T,v> type;
+	constexpr operator T() { return v; }
+};
+
+template <class T> struct is_integral
+{
+	typedef bool value_type;
+
+};
+
 }

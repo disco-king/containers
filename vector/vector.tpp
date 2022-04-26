@@ -76,6 +76,7 @@ void ft::vector<T, Allocator>::resize (size_type n, value_type val)
 		{
 			for(size_t j = sz; j < i; j++)
 				alloc.destroy(array + j);
+			throw;
 		}
 		sz = n;
 		return;
@@ -152,9 +153,47 @@ void ft::vector<T, Allocator>::pop_back ()
 	sz--;
 }
 
-// template <typename T, typename Allocator>
-// template <class InputIterator>
-// void ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
-// {
+template <typename T, typename Allocator>
+template <class InputIterator>
+void ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
+{
+	ptrdiff_t number = last - first;
+	size_t i;
 
-// }
+	clear();
+	sz = 0;
+
+	if(number > cap)
+	{
+		alloc.deallocate(array, cap);
+		cap = 0;
+		array = alloc.allocate(number);
+		cap = number;
+	}
+
+	try
+	{
+		for (i = 0; i < number; i++)
+		{
+			alloc.construct(array + i, *first);
+			first++;
+		}
+		sz = i;
+	}
+	catch(...)
+	{
+		clear();
+		sz = 0;
+		throw;
+	}
+}
+
+template <typename T, typename Allocator>
+void ft::vector<T, Allocator>::assign (size_type n, const value_type& val)
+{
+	size_t i;
+	clear();
+	sz = 0;
+
+	resize(n, val);
+}

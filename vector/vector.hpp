@@ -38,8 +38,8 @@ public:
 	// vector (InputIterator first, InputIterator last,
 	// 	const allocator_type& alloc = allocator_type());
 
-	// template <class InputIterator>
-	// void assign (InputIterator first, InputIterator last);
+	template <class InputIterator>
+	void assign (InputIterator first, InputIterator last);
 	void assign (size_type n, const value_type& val);
 	void reserve (size_type n);
 	void resize (size_type n, value_type val = value_type());
