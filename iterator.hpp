@@ -1,5 +1,6 @@
 #pragma once
 
+#include "template_meta.hpp"
 #include <cstddef>
 
 namespace ft
@@ -29,23 +30,31 @@ class bidirectional_iterator_tag : public forward_iterator_tag { };
 class random_access_iterator_tag : public bidirectional_iterator_tag { };
 
 template <typename IterType>
-ptrdiff_t distance(IterType left, IterType right)
+typename ft::enable_if<
+ft::is_same<
+typename IterType::iterator_category,
+random_access_iterator_tag>::value,
+ptrdiff_t>::type
+distance(IterType first, IterType last)
 {
-	return &(*left) - &(*right);
+	return &(*last) - &(*first);
 }
 
-template <class T, T v>
-struct integral_constant {
-	static constexpr T value = v;
-	typedef T value_type;
-	typedef integral_constant<T,v> type;
-	constexpr operator T() { return v; }
-};
-
-template <class T> struct is_integral
+template <typename IterType>
+typename ft::enable_if<
+!ft::is_same<
+typename IterType::iterator_category,
+random_access_iterator_tag>::value,
+ptrdiff_t>::type
+distance(IterType first, IterType last)
 {
-	typedef bool value_type;
-
-};
+	ptrdiff_t ret = 0;
+	while(first != last)
+	{
+		ret++;
+		first++;
+	}
+	return ret;
+}
 
 }

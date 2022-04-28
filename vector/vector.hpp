@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../random_access_iterator.hpp"
-#include <cstddef>
+#include "../utils.hpp"
 #include <iostream>
 #include <memory>
 
@@ -33,13 +32,14 @@ public:
 	explicit vector (size_type n, const value_type& val = value_type(),
 						const allocator_type& alloc = allocator_type());
 	~vector();
-	// vector (const vector& src);
-	// template <class InputIterator>
-	// vector (InputIterator first, InputIterator last,
-	// 	const allocator_type& alloc = allocator_type());
+	vector (const vector& src);
+	template <class InputIterator>
+	vector (InputIterator first, InputIterator last,
+		const allocator_type& alloc = allocator_type());
 
 	template <class InputIterator>
-	void assign (InputIterator first, InputIterator last);
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
+	assign (InputIterator first, InputIterator last);
 	void assign (size_type n, const value_type& val);
 	void reserve (size_type n);
 	void resize (size_type n, value_type val = value_type());
@@ -64,6 +64,7 @@ public:
 		return array[n];
 	};
 
+	vector& operator=( const vector& src );
 	reference front() { return array[0]; };
 	const_reference front() const { return array[0]; };
 	reference back() { return array[sz - 1]; };
@@ -71,10 +72,10 @@ public:
 	reference operator[] (size_type n) { return array[n]; };
 	const_reference operator[] (size_type n) const { return array[n]; };
 
-	// class const_iterator;
-
 	iterator begin() {return iterator(array);};
 	iterator end() {return iterator(array + sz);};
+	const iterator begin() const {return iterator(array);};
+	const iterator end() const {return iterator(array + sz);};
 };
 }
 

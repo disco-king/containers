@@ -36,27 +36,38 @@ alloc(alloc)
 	cap = n;
 }
 
-// template <typename T, typename Allocator>
-// template <class InputvectorIterator>
-// ft::vector<T, Allocator>::vector (InputvectorIterator first, InputvectorIterator last, const allocator_type& alloc) :
-// alloc(alloc)
-// {
-// 	array = alloc.allocate(last - first);
-// 	for (; first < last; first++)
+template <typename T, typename Allocator>
+template <class InputvectorIterator>
+ft::vector<T, Allocator>::vector (InputvectorIterator first,
+									InputvectorIterator last,
+									const allocator_type& alloc) :
+array(0), sz(0), cap(0), alloc(alloc)
+{
+	assign(first, last);
+}
 
-// }
+template <typename T, typename Allocator>
+ft::vector<T, Allocator>::vector (const vector& src) :
+array(0), sz(0), cap(0)
+{
+	*this = src;
+}
 
-// template <typename T, typename Allocator>
-// ft::vector<T, Allocator>::vector (const vector& src)
-// {
-// 	/*there will be code*/
-// }
+template <typename T, typename Allocator>
+ft::vector<T, Allocator>& ft::vector<T, Allocator>::operator=
+( const ft::vector<T, Allocator>& src )
+{
+	assign(src.begin(), src.end());
+	return *this;
+}
+
 
 template <typename T, typename Allocator>
 void ft::vector<T, Allocator>::clear()
 {
 	for (size_t i = 0; i < sz; i++)
 		alloc.destroy(array + i);
+	sz = 0;
 }
 
 template <typename T, typename Allocator>
@@ -155,17 +166,18 @@ void ft::vector<T, Allocator>::pop_back ()
 
 template <typename T, typename Allocator>
 template <class InputIterator>
-void ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
+typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
+ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
 {
 	ptrdiff_t number = last - first;
 	size_t i;
 
 	clear();
-	sz = 0;
 
 	if(number > cap)
 	{
-		alloc.deallocate(array, cap);
+		if(array != 0)
+			alloc.deallocate(array, cap);
 		cap = 0;
 		array = alloc.allocate(number);
 		cap = number;
@@ -191,9 +203,6 @@ void ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
 template <typename T, typename Allocator>
 void ft::vector<T, Allocator>::assign (size_type n, const value_type& val)
 {
-	size_t i;
 	clear();
-	sz = 0;
-
 	resize(n, val);
 }
