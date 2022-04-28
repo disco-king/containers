@@ -138,6 +138,7 @@ void ft::vector<T, Allocator>::reserve (size_type n)
 	clear();
 	alloc.deallocate(array, cap);
 	array = new_array;
+	sz = i;
 	cap = n;
 }
 
@@ -152,7 +153,9 @@ void ft::vector<T, Allocator>::push_back (const value_type& val)
 		return;
 	}
 	if(sz == cap)
+	{
 		reserve(sz * 2);
+	}
 	alloc.construct(array + sz, val);
 	sz++;
 }
@@ -205,4 +208,20 @@ void ft::vector<T, Allocator>::assign (size_type n, const value_type& val)
 {
 	clear();
 	resize(n, val);
+}
+
+template <typename T, typename Allocator>
+void ft::vector<T, Allocator>::swap( ft::vector<T, Allocator>& other )
+{
+	T *swap_array = array;
+	array = other.array;
+	other.array = swap_array;
+
+	size_t swap_num = sz;
+	sz = other.sz;
+	other.sz = swap_num;
+
+	swap_num = cap;
+	cap = other.cap;
+	other.cap = swap_num;
 }

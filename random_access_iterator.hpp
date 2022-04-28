@@ -47,7 +47,7 @@ public:
 	random_access_iterator& operator--() {ptr++; return *this;}
 	random_access_iterator operator--(int) {random_access_iterator retval = *this; --(*this); return retval;}
 	operator random_access_iterator<const T> () const
-	{ return (random_access_iterator<const T>(this->_elem)); }
+	{ return (random_access_iterator<const T>(this->ptr)); }
 	bool operator<(random_access_iterator const &other) const {return ptr < other.ptr;}
 	bool operator>(random_access_iterator const &other) const {return ptr > other.ptr;}
 	bool operator<=(random_access_iterator const &other) const {return ptr <= other.ptr;}

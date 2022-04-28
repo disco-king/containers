@@ -13,93 +13,99 @@ public:
 
 int main()
 {
-	VEC_TYPE<int> vec2(5, 1);
-	VEC_TYPE<int> vec1 = vec2;
+	VEC_TYPE<int> v1;
 
-	for(VEC_TYPE<int>::iterator i = vec1.begin(); i < vec1.end(); i++)
-		std::cout << *i << ' ';
+	for (size_t i = 0; i < 5; i++)
+	{
+		v1.push_back(i);
+		std::cout << i << " size " << v1.size()
+		<< " capacity " << v1.capacity()
+		<< " first " << v1.front() << '\n';
+	}
+
+
+	for (size_t i = 0; i < v1.size(); i++)
+		std::cout << v1[i] << ' ';
 	std::cout << '\n';
-	std::cout << "size " << vec1.size()
-	<< " capacity " << vec1.capacity() << '\n';
-
-	vec1.pop_back();
-	vec2 = vec1;
-
-	for(VEC_TYPE<int>::iterator i = vec2.begin(); i < vec2.end(); i++)
-		std::cout << *i << ' ';
+	VEC_TYPE<int>::iterator i = v1.begin() + 2;
+	(*i)++;
+	std::cout << *i << '\n';
+	for (size_t i = 0; i < v1.size(); i++)
+		std::cout << v1[i] << ' ';
 	std::cout << '\n';
-	std::cout << "size " << vec2.size()
-	<< " capacity " << vec2.capacity() << '\n';
-
 }
 
 
+
 // int main()
 // {
-// 	VEC_TYPE<int> vec1(5, 1);
-// 	VEC_TYPE<int> vec2(3, 2);
+// 	VEC_TYPE<int> v1;
 
-// 	for(VEC_TYPE<int>::iterator i = vec1.begin(); i < vec1.end(); i++)
+// 	for (size_t i = 0; i < 3; i++)
+// 	{
+// 		v1.push_back(i);
+// 	}
+
+// 	std::cout << "size " << v1.size() << ' '
+// 	<< " capacity " << v1.capacity() << '\n';
+// 	for (VEC_TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
 // 		std::cout << *i << ' ';
 // 	std::cout << '\n';
-// 	std::cout << "size " << vec1.size()
-// 	<< " capacity " << vec1.capacity() << '\n';
-
-// 	// vec1.assign(vec2.begin(), vec2.end());
-// 	// vec1.assign(3, 2);
-// 	vec1.assign(10, 2);
-
-// 	for(VEC_TYPE<int>::iterator i = vec1.begin(); i < vec1.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
-// 	std::cout << "size " << vec1.size()
-// 	<< " capacity " << vec1.capacity() << '\n';
 // }
 
 // int main()
 // {
-// 	VEC_TYPE<int> vec;
+// 	VEC_TYPE<std::string> v1;
+// 	v1.push_back("s1");
+// 	v1.push_back("s2");
+// 	v1.push_back("s3");
+// 	VEC_TYPE<std::string> v2;
+// 	v2.push_back("s4");
+// 	v2.push_back("s5");
 
-// 	std::cout << "size " << vec.size()
-// 	<< " capacity " << vec.capacity() << '\n';
+// 	VEC_TYPE<std::string>::iterator i1 = v1.begin();
+// 	VEC_TYPE<std::string>::iterator i2 = v2.begin();
+
+// 	for (VEC_TYPE<std::string>::iterator i = i1; i < v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
+// 	for (VEC_TYPE<std::string>::iterator i = i2; i < v2.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
 	
-// 	for (int i = 0; i < 5; i++)
-// 		vec.push_back(i);
+// 	v1.swap(v2);
 
-// 	for(VEC_TYPE<int>::iterator i = vec.begin(); i < vec.end(); i++)
+// 	for (VEC_TYPE<std::string>::iterator i = i1; i < v2.end(); i++)
 // 		std::cout << *i << ' ';
 // 	std::cout << '\n';
-// 	std::cout << "size " << vec.size()
-// 	<< " capacity " << vec.capacity() << '\n';
+// 	for (VEC_TYPE<std::string>::iterator i = i2; i < v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
 	
-// 	vec.resize(15, 3);
-
-// 	for(VEC_TYPE<int>::iterator i = vec.begin(); i < vec.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
-// 	std::cout << "size " << vec.size()
-// 	<< " capacity " << vec.capacity() << '\n';
-
-// 	vec.resize(5, 3);
-
-// 	for(VEC_TYPE<int>::iterator i = vec.begin(); i < vec.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
-// 	std::cout << "size " << vec.size()
-// 	<< " capacity " << vec.capacity() << '\n';
 // }
-
 
 // int main()
 // {
-// 	VEC_TYPE<std::string> v;
+// 	VEC_TYPE<int> v1;
+// 	VEC_TYPE<int> v2;
 
-// 	v.push_back("str1");
-// 	v.push_back("str2");
-// 	v.push_back("str3");
+// 	for (size_t i = 0; i < 10; i++)
+// 		v1.push_back(i+1);
+// 	for (size_t i = -1; i > -6; i--)
+// 		v2.push_back(i);
 
-// 	VEC_TYPE<std::string>::iterator begin = v.begin();
-// 	VEC_TYPE<std::string>::iterator end = v.end();
+// 	std::cout << "size " << v1.size() << ' '
+// 	<< " capacity " << v1.capacity() << '\n';
+// 	for (VEC_TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
 
-// 	std::cout << ft::distance(begin, end) << std::endl;
+// 	VEC_TYPE<int>::iterator i = v1.begin() + 5;
+// 	v1.insert(i, 10, 0);
+
+// 	std::cout << "size " << v1.size() << ' '
+// 	<< " capacity " << v1.capacity() << '\n';
+// 	for (VEC_TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
 // }

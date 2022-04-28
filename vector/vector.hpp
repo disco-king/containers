@@ -27,6 +27,7 @@ public:
 	typedef ptrdiff_t difference_type;
 	typedef size_t size_type;
 	typedef ft::random_access_iterator<T> iterator;
+	typedef ft::random_access_iterator<const T> const_iterator;
 
 	explicit vector (const allocator_type& alloc = allocator_type());
 	explicit vector (size_type n, const value_type& val = value_type(),
@@ -41,6 +42,7 @@ public:
 	typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
 	assign (InputIterator first, InputIterator last);
 	void assign (size_type n, const value_type& val);
+	void swap( vector& other );
 	void reserve (size_type n);
 	void resize (size_type n, value_type val = value_type());
 	void clear();
