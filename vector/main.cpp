@@ -27,7 +27,7 @@ int main() //checking insert
 	// v1.push_back("s2");
 	// v1.push_back("s3");
 
-	for (size_t i = 0; i < 10; i++)
+	for (size_t i = 0; i < 5; i++)
 		v1.push_back(i+1);
 	for (size_t i = -1; i > -6; i--)
 		v2.push_back(i);
@@ -38,8 +38,9 @@ int main() //checking insert
 		std::cout << *i << ' ';
 	std::cout << '\n';
 
-	VEC_TYPE<int>::iterator i = v1.begin();
-	v1.insert(i, 3, 8);
+	VEC_TYPE<int>::iterator i = v1.end();
+	v1.insert(i, v2.begin(), v2.end());
+	// v1.insert(i, 10, -1);
 	// v1.insert(v1.begin() + 1, 0);
 
 	std::cout << "size " << v1.size() << ' '
@@ -47,9 +48,6 @@ int main() //checking insert
 	for (VEC_TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
 		std::cout << *i << ' ';
 	std::cout << '\n';
-	// for (size_t i = 0; i < v1.capacity(); i++)
-	// 	std::cout << v1[i] << ' ';
-	// std::cout << '\n';
 }
 
 // int main () //checking erase and iterators

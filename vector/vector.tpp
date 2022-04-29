@@ -325,6 +325,8 @@ ft::vector<T, Allocator>::insert( iterator pos, const T& value )
 template <typename T, typename Allocator>
 void ft::vector<T, Allocator>::insert( iterator pos, size_type count, const T& value )
 {
+	if(!count)
+		return;
 	if (sz + count <= cap)
 	{
 		iterator iter = end() + count - 1;
@@ -333,58 +335,99 @@ void ft::vector<T, Allocator>::insert( iterator pos, size_type count, const T& v
 		{
 			if(iter < arr_end)
 				alloc.destroy(&(*iter));
-			else if(pos != arr_end)
+			if(iter > pos + (count - 1))
+				alloc.construct(&(*iter), *(iter - count));
+			else
+				alloc.construct(&(*iter), value);
+			if(iter >= arr_end)
 				sz++;
+		}
+	}
+	else
+	{
+		T *new_arr = alloc.allocate(sz + count);
+		size_t pos_index = ft::distance(begin(), pos);
+		size_t i;
+		try
+		{
+			for (i = 0; i < pos_index; i++)
+				alloc.construct(new_arr + i, array[i]);
+			for(; i < pos_index + count; i++)
+				alloc.construct(new_arr + i, value);
+			for (; i < sz + count; i++)
+				alloc.construct(new_arr + i, array[i - count]);
+		}
+		catch(...)
+		{
+			for (size_t j = 0; j < i; j++)
+				alloc.destroy(new_arr + j);
+			alloc.deallocate(new_arr, cap * 2);
+			throw;
+		}
+		clear();
+		alloc.deallocate(array, cap);
+		array = new_arr;
+		sz = i;
+		cap = i;
+	}
+}
+
+template <typename T, typename Allocator>
+template< class InputIt >
+typename ft::enable_if<!ft::is_integral<InputIt>::value>::type
+ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
+{
+	size_t count = ft::distance(first, last);
+	if(!count)
+		return;
+	last--;
+	if (sz + count <= cap)
+	{
+		iterator iter = end() + count - 1;
+		iterator arr_end = end();
+		for (; iter >= pos; iter--)
+		{
+			if(iter < arr_end)
+				alloc.destroy(&(*iter));
 			if(iter > pos + (count - 1))
 				alloc.construct(&(*iter), *(iter - count));
 			else
 			{
-				for (; iter >= pos; iter--)
-				{
-					if(iter < arr_end)
-						alloc.destroy(&(*iter));
-					alloc.construct(&(*iter), value);
-					if(pos == arr_end)
-						sz++;
-				}
+				alloc.construct(&(*iter), *last);
+				last--;
 			}
+			if(iter >= arr_end)
+				sz++;
 		}
 	}
-	// else
-	// {
-	// 	T *new_arr = alloc.allocate(cap * 2);
-	// 	size_t pos_index = ft::distance(begin(), pos);
-	// 	size_t i;
-	// 	try
-	// 	{
-	// 		for (i = 0; i < pos_index; i++)
-	// 			alloc.construct(new_arr + i, array[i]);
-	// 		alloc.construct(new_arr + i, value);
-	// 		for (i += 1; i <= sz; i++)
-	// 			alloc.construct(new_arr + i, array[i - 1]);
-	// 	}
-	// 	catch(...)
-	// 	{
-	// 		for (size_t j = 0; j < i; j++)
-	// 			alloc.destroy(new_arr + j);
-	// 		alloc.deallocate(new_arr, cap * 2);
-	// 		throw;
-	// 	}
-	// 	for (size_t j = 0; j < sz; j++)
-	// 		alloc.destroy(new_arr + j);
-	// 	alloc.deallocate(array, cap);
-	// 	array = new_arr;
-	// 	cap = sz * 2;
-	// 	sz += 1;
-	// 	ret = begin() + pos_index;
-	// }
-	// return ret;
+	else
+	{
+		T *new_arr = alloc.allocate(sz + count);
+		size_t pos_index = ft::distance(begin(), pos);
+		size_t i;
+		try
+		{
+			for (i = 0; i < pos_index; i++)
+				alloc.construct(new_arr + i, array[i]);
+			for(; i < pos_index + count; i++)
+			{
+				alloc.construct(new_arr + i, *first);
+				first++;
+			}
+			for (; i < sz + count; i++)
+				alloc.construct(new_arr + i, array[i - count]);
+		}
+		catch(...)
+		{
+			for (size_t j = 0; j < i; j++)
+				alloc.destroy(new_arr + j);
+			alloc.deallocate(new_arr, cap * 2);
+			throw;
+		}
+		clear();
+		alloc.deallocate(array, cap);
+		array = new_arr;
+		sz = i;
+		cap = i;
+	}
 }
-
-// template <typename T, typename Allocator>
-// template< class InputIt >
-// typename ft::enable_if<!ft::is_integral<InputIt>::value>::type
-// ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
-// {
-
-// }
