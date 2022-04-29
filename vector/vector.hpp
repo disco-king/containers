@@ -3,6 +3,7 @@
 #include "../utils.hpp"
 #include <iostream>
 #include <memory>
+#include <cstdlib>
 
 namespace ft
 {
@@ -46,8 +47,17 @@ public:
 	void reserve (size_type n);
 	void resize (size_type n, value_type val = value_type());
 	void clear();
+	iterator erase (iterator position);
+	iterator erase (iterator first, iterator last);
+	iterator insert( iterator pos, const T& value );
+	void insert( iterator pos, size_type count, const T& value );
+	template< class InputIt >
+	typename ft::enable_if<!ft::is_integral<InputIt>::value>::type
+	insert( iterator pos, InputIt first, InputIt last );
 	void push_back (const value_type& val);
 	void pop_back();
+	allocator_type get_allocator() const;
+
 	size_type size() const { return sz; };
 	size_type capacity() const { return cap; };
 	size_type max_size() const { return alloc.max_size(); };
@@ -67,6 +77,8 @@ public:
 	};
 
 	vector& operator=( const vector& src );
+	T* data() { return array; };
+	const T* data() const { return array; };
 	reference front() { return array[0]; };
 	const_reference front() const { return array[0]; };
 	reference back() { return array[sz - 1]; };

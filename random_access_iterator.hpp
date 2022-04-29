@@ -22,7 +22,7 @@ public:
 		return *this;
 	}
 
-	random_access_iterator operator+(size_t val) {
+	random_access_iterator operator+(ptrdiff_t val) {
 		random_access_iterator ret;
 		ret.ptr = ptr + val;
 		return ret;
@@ -44,16 +44,20 @@ public:
 	random_access_iterator operator-=(ptrdiff_t val) { ptr-=val; return *this;}
 	random_access_iterator& operator++() {ptr++; return *this;}
 	random_access_iterator operator++(int) {random_access_iterator retval = *this; ++(*this); return retval;}
-	random_access_iterator& operator--() {ptr++; return *this;}
+	random_access_iterator& operator--() {ptr--; return *this;}
 	random_access_iterator operator--(int) {random_access_iterator retval = *this; --(*this); return retval;}
+
 	operator random_access_iterator<const T> () const
 	{ return (random_access_iterator<const T>(this->ptr)); }
+
+	bool operator==(random_access_iterator other) const {return ptr == other.ptr;}
+	bool operator!=(random_access_iterator other) const {return ptr != other.ptr;}
 	bool operator<(random_access_iterator const &other) const {return ptr < other.ptr;}
 	bool operator>(random_access_iterator const &other) const {return ptr > other.ptr;}
 	bool operator<=(random_access_iterator const &other) const {return ptr <= other.ptr;}
 	bool operator>=(random_access_iterator const &other) const {return ptr >= other.ptr;}
-	bool operator==(random_access_iterator other) const {return ptr == other.ptr;}
-	bool operator!=(random_access_iterator other) const {return ptr != other.ptr;}
-	reference operator*() const {return *ptr;}
+
+	reference operator*() const { return *ptr; }
+	pointer operator->() const { return &(this->operator*()); }
 };
 }
