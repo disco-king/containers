@@ -91,6 +91,50 @@ public:
 	const iterator begin() const {return iterator(array);};
 	const iterator end() const {return iterator(array + sz);};
 };
+
+template <typename T>
+bool operator==(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
+{
+	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()) 
+			&& lhs.size() == rhs.size());
+}
+
+template <typename T>
+bool operator>=(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
+{
+	return
+		(ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end())
+		|| lhs == rhs);
+}
+
+template <typename T>
+bool operator<=(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
+{
+	return 
+		(ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())
+		|| lhs == rhs);
+}
+
+template <typename T>
+bool operator>(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
+{
+	return
+	(ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+}
+
+template <typename T>
+bool operator<(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
+{
+	return 
+	(ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+}
+
+template <typename T>
+bool operator!=(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
+{
+	return !(lhs == rhs);
+}
+
 }
 
 #include "vector.tpp"
