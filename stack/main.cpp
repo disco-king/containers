@@ -5,23 +5,25 @@
 
 int main()
 {
-	ft::stack<int> s1;
-	ft::stack<int> s2;
+	ft::stack<int> s1, s2;
 
-	s1.push(1);
-	// s2.push(1);
-	s1.push(2);
-	s2.push(5);
-	s1.push(4);
-	s2.push(4);
+	// s1.push(1);
+	// // s2.push(1);
+	// s1.push(2);
+	// s2.push(2);
+	// s1.push(4);
+	// s2.push(4);
 
-	std::cout << "eq " << (s1 == s2) << '\n';
-	std::cout << "ne " << (s1 != s2) << '\n';
-	std::cout << "gt " << (s1 > s2) << '\n';
-	std::cout << "ge " << (s1 >= s2) << '\n';
-	std::cout << "lt " << (s1 < s2) << '\n';
-	std::cout << "le " << (s1 <= s2) << '\n';
+	// std::cout << "eq " << std::boolalpha << (s1 == s2) << '\n';
+	// std::cout << "ne " << std::boolalpha << (s1 != s2) << '\n';
+	// std::cout << "gt " << std::boolalpha << (s1 > s2) << '\n';
+	// std::cout << "ge " << std::boolalpha << (s1 >= s2) << '\n';
+	// std::cout << "lt " << std::boolalpha << (s1 < s2) << '\n';
+	// std::cout << "le " << std::boolalpha << (s1 <= s2) << '\n';
 	
+	std::cout << "s1 empty " << std::boolalpha << s1.empty() << '\n';
+	s1.push(1);
+	std::cout << "s1 not empty " << std::boolalpha << s1.empty() << '\n';
 
 	return 0;
 }

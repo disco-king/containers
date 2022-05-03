@@ -93,7 +93,8 @@ void ft::vector<T, Allocator>::resize (size_type n, value_type val)
 		return;
 	}
 
-	T *new_array = alloc.allocate(n);
+	size_t new_cap = n > cap * 2 ? n : cap * 2;
+	T *new_array = alloc.allocate(new_cap);
 	try
 	{
 		for(i = 0; i < sz; i++)
@@ -112,7 +113,7 @@ void ft::vector<T, Allocator>::resize (size_type n, value_type val)
 	alloc.deallocate(array, cap);
 	array = new_array;
 	sz = n;
-	cap = n;
+	cap = new_cap;
 }
 
 template <typename T, typename Allocator>

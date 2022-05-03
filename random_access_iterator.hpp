@@ -1,3 +1,5 @@
+#pragma once
+
 #include "iterator.hpp"
 
 namespace ft{
@@ -22,19 +24,19 @@ public:
 		return *this;
 	}
 
-	random_access_iterator operator+(ptrdiff_t val) {
+	random_access_iterator operator+(ptrdiff_t val) const {
 		random_access_iterator ret;
 		ret.ptr = ptr + val;
 		return ret;
 	}
 
-	ptrdiff_t operator-(random_access_iterator other) {
+	ptrdiff_t operator-(random_access_iterator other) const {
 		ptrdiff_t ret;
 		ret = ptr - other.ptr;
 		return ret;
 	}
 
-	random_access_iterator operator-(ptrdiff_t val) {
+	random_access_iterator operator-(ptrdiff_t val) const {
 		random_access_iterator ret;
 		ret.ptr = ptr - val;
 		return ret;
@@ -49,12 +51,6 @@ public:
 
 	operator random_access_iterator<const T> () const
 	{ return (random_access_iterator<const T>(this->ptr)); }
-
-	// bool operator!=(random_access_iterator other) const {return ptr != other.ptr;}
-	// bool operator<(random_access_iterator const &other) const {return ptr < other.ptr;}
-	// bool operator>(random_access_iterator const &other) const {return ptr > other.ptr;}
-	// bool operator<=(random_access_iterator const &other) const {return ptr <= other.ptr;}
-	// bool operator>=(random_access_iterator const &other) const {return ptr >= other.ptr;}
 
 	reference operator*() const { return *ptr; }
 	pointer operator->() const { return &(this->operator*()); }

@@ -1,10 +1,10 @@
 #pragma once
 
 #include <iostream>
-#include <vector>
+#include "../vector/vector.hpp"
 
 namespace ft{
-template <typename T, typename Container = std::vector<T> >
+template <typename T, typename Container = ft::vector<T> >
 class stack
 {
 

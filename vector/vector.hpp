@@ -29,6 +29,8 @@ public:
 	typedef size_t size_type;
 	typedef ft::random_access_iterator<T> iterator;
 	typedef ft::random_access_iterator<const T> const_iterator;
+	typedef ft::reverse_iterator<iterator> reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	explicit vector (const allocator_type& alloc = allocator_type());
 	explicit vector (size_type n, const value_type& val = value_type(),
@@ -61,7 +63,7 @@ public:
 	size_type size() const { return sz; };
 	size_type capacity() const { return cap; };
 	size_type max_size() const { return alloc.max_size(); };
-	bool empty() const { return sz ? 1 : 0; };
+	bool empty() const { return (sz == 0); };
 	
 
 	reference at (size_type n){
@@ -88,8 +90,12 @@ public:
 
 	iterator begin() {return iterator(array);};
 	iterator end() {return iterator(array + sz);};
-	const iterator begin() const {return iterator(array);};
-	const iterator end() const {return iterator(array + sz);};
+	const_iterator begin() const {return const_iterator(array);};
+	const_iterator end() const {return const_iterator(array + sz);};
+	reverse_iterator rbegin() {return reverse_iterator(end());};
+	reverse_iterator rend() {return reverse_iterator(begin());};
+	const_reverse_iterator rbegin() const {return const_reverse_iterator(end());};
+	const_reverse_iterator rend() const {return const_reverse_iterator(begin());};
 };
 
 template <typename T>
