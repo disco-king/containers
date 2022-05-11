@@ -101,8 +101,9 @@ public:
 template <typename T>
 bool operator==(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
 {
-	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()) 
-			&& lhs.size() == rhs.size());
+	if(lhs.size() != rhs.size())
+		return false;
+	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
 template <typename T>
@@ -125,14 +126,14 @@ template <typename T>
 bool operator>(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
 {
 	return
-	(ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+		(ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
 }
 
 template <typename T>
 bool operator<(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
 {
 	return 
-	(ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+		(ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 }
 
 template <typename T>

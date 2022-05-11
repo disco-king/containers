@@ -3,31 +3,70 @@
 #include <iterator>
 #include <algorithm>
 #include <iostream>
+#include <sys/time.h>
+#include <chrono>
 
 #define TYPE ft::vector
 
-int main()//checking resize
+template <typename T>
+void print_vec(T const &vec)
 {
-	TYPE<int> v;
-	v.assign(9900, 1);
-	v.resize(5000);
-	std::cout << "size: " << v.size()
-	<< " capacity: " << v.capacity() << '\n';
-
-	v.reserve(5000);
-	v.resize(7000);
-	std::cout << "size: " << v.size()
-	<< " capacity: " << v.capacity() << '\n';
-
-	v.resize(15300);
-	std::cout << "size: " << v.size()
-	<< " capacity: " << v.capacity() << '\n';
-
-	v.push_back(v[65]);
-	std::cout << "size: " << v.size()
-		<< " capacity: " << v.capacity() << '\n';
-	return 0;
+	std::cout << "size " << vec.size() << ' '
+	<< " capacity " << vec.capacity() << '\n';
+	for (size_t i = 0; i < vec.size(); i++)
+		std::cout << vec[i] << ' ';
+	std::cout << '\n';
 }
+
+// int main()//checking compares
+// {
+// 	TYPE<int> v1, v2;
+
+// 	for (size_t i = 0; i < 5; i++)
+// 	{
+// 		v1.push_back(i+1);
+// 		v2.push_back(i+1);
+// 	}
+
+// 	v1.push_back(15);
+
+// 	std::cout << "eq " << std::boolalpha << (v1 == v2) << '\n';
+// 	std::cout << "ne " << std::boolalpha << (v1 != v2) << '\n';
+// 	std::cout << "gt " << std::boolalpha << (v1 > v2) << '\n';
+// 	std::cout << "lt " << std::boolalpha << (v1 < v2) << '\n';
+// 	std::cout << "ge " << std::boolalpha << (v1 >= v2) << '\n';
+// 	std::cout << "le " << std::boolalpha << (v1 <= v2) << '\n';
+	
+// 	std::cout << "\nv1 ";
+// 	print_vec(v1);
+// 	std::cout << "v2 ";
+// 	print_vec(v2);
+
+// 	return 0;
+// }
+
+// int main()//checking resize
+// {
+// 	TYPE<int> v;
+// 	v.assign(9900, 1);
+// 	v.resize(5000);
+// 	std::cout << "size: " << v.size()
+// 	<< " capacity: " << v.capacity() << '\n';
+
+// 	v.reserve(5000);
+// 	v.resize(7000);
+// 	std::cout << "size: " << v.size()
+// 	<< " capacity: " << v.capacity() << '\n';
+
+// 	v.resize(15300);
+// 	std::cout << "size: " << v.size()
+// 	<< " capacity: " << v.capacity() << '\n';
+
+// 	v.push_back(v[65]);
+// 	std::cout << "size: " << v.size()
+// 		<< " capacity: " << v.capacity() << '\n';
+// 	return 0;
+// }
 
 
 // int main() //checking reverse iterators
@@ -140,15 +179,20 @@ int main()//checking resize
 // {
 // 	TYPE<int> v1;
 
-// 	for (size_t i = 0; i < 3; i++)
+// 	for (size_t i = 0; i < 5; i++)
 // 	{
 // 		v1.push_back(i);
+// 		std::cout << "size " << v1.size()
+// 		<< " capacity " << v1.capacity() << '\n';
 // 	}
 
-// 	std::cout << "size " << v1.size() << ' '
+// 	print_vec(v1);
+
+// 	std::cout << "cap check: " << v1.capacity() << '\n';
+// 	std::cout << "size " << v1.size()
 // 	<< " capacity " << v1.capacity() << '\n';
-// 	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
-// 		std::cout << *i << ' ';
+// 	for (size_t i = 0; i < v1.size(); i++)
+// 		std::cout << v1[i] << ' ';
 // 	std::cout << '\n';
 // }
 
@@ -169,6 +213,7 @@ int main()//checking resize
 // 	std::string const & ref2 = v2.back();
 
 // 	std::cout << "references: " << ref1 << " " << ref2 << '\n';
+// 	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
 // 	for (TYPE<std::string>::iterator i = i1; i < v1.end(); i++)
 // 		std::cout << *i << ' ';
 // 	std::cout << '\n';
@@ -179,6 +224,7 @@ int main()//checking resize
 // 	v1.swap(v2);
 
 // 	std::cout << "references: " << ref1 << " " << ref2 << '\n';
+// 	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
 // 	for (TYPE<std::string>::iterator i = i1; i < v2.end(); i++)
 // 		std::cout << *i << ' ';
 // 	std::cout << '\n';
@@ -187,3 +233,52 @@ int main()//checking resize
 // 	std::cout << '\n';
 	
 // }
+
+#define _ratio 10000
+#define _vector TYPE
+
+time_t timer() {
+	struct timeval start = {};
+	gettimeofday(&start, 0);
+	time_t msecs_time = (start.tv_sec * 1000) + (start.tv_usec / 1000);
+	return msecs_time;
+}
+
+int main(int argc, char const *argv[])
+{
+    std::vector<int> v;
+    TYPE<int> vector;
+    vector.assign(1100 * _ratio, 11);
+    _vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
+	typedef std::chrono::system_clock clock;
+	typedef std::chrono::microseconds msecs;
+	std::chrono::time_point<clock> start = clock::now();//why so slow?
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    vector.swap(tmp);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    vector.swap(tmp3);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    std::swap(vector, tmp2);//for some reason doesn't swap capacities
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    std::swap(vector, tmp4);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+	std::chrono::time_point<clock> end = clock::now();
+
+	std::chrono::duration<double, std::micro> diff = end - start;
+	std::cout << "time elapsed: " 
+	<< std::fixed
+	<< diff.count() << '\n';
+	print_vec(v);
+    return 0;
+}
+

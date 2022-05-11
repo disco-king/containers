@@ -5,3 +5,4 @@
 #include "reverse_iterator.hpp"
 #include "template_meta.hpp"
 #include "compare.hpp"
+#include "other.hpp"

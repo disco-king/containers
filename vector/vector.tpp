@@ -212,17 +212,10 @@ void ft::vector<T, Allocator>::assign (size_type n, const value_type& val)
 template <typename T, typename Allocator>
 void ft::vector<T, Allocator>::swap( ft::vector<T, Allocator>& other )
 {
-	T *swap_array = array;
-	array = other.array;
-	other.array = swap_array;
-
-	size_t swap_num = sz;
-	sz = other.sz;
-	other.sz = swap_num;
-
-	swap_num = cap;
-	cap = other.cap;
-	other.cap = swap_num;
+	std::swap(array, other.array);
+	std::swap(sz, other.sz);
+	std::swap(cap, other.cap);
+	std::swap(alloc, other.alloc);
 }
 
 template <typename T, typename Allocator>
