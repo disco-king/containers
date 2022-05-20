@@ -268,52 +268,9 @@ template <typename T, typename Allocator>
 typename ft::vector<T, Allocator>::iterator
 ft::vector<T, Allocator>::insert( iterator pos, const T& value )
 {
-	iterator ret;
-	if (sz < cap)
-	{
-		ret = end();
-		iterator arr_end = ret;
-		for (; ret >= pos; ret--)
-		{
-			if(ret != arr_end)
-				alloc.destroy(&(*ret));
-			if(ret > pos)
-				alloc.construct(&(*ret), *(ret - 1));
-			else
-				alloc.construct(&(*ret), value);
-			if (ret == arr_end)
-				sz++;
-		}
-	}
-	else
-	{
-		T *new_arr = alloc.allocate(cap * 2);
-		size_t pos_index = ft::distance(begin(), pos);
-		size_t i;
-		try
-		{
-			for (i = 0; i < pos_index; i++)
-				alloc.construct(new_arr + i, array[i]);
-			alloc.construct(new_arr + i, value);
-			for (i += 1; i <= sz; i++)
-				alloc.construct(new_arr + i, array[i - 1]);
-		}
-		catch(...)
-		{
-			for (size_t j = 0; j < i; j++)
-				alloc.destroy(new_arr + j);
-			alloc.deallocate(new_arr, cap * 2);
-			throw;
-		}
-		for (size_t j = 0; j < sz; j++)
-			alloc.destroy(new_arr + j);
-		alloc.deallocate(array, cap);
-		array = new_arr;
-		cap = sz * 2;
-		sz += 1;
-		ret = begin() + pos_index;
-	}
-	return ret;
+	ptrdiff_t diff = pos - begin();
+	insert(pos, 1, value);
+	return begin() + diff;
 }
 
 template <typename T, typename Allocator>
@@ -339,7 +296,8 @@ void ft::vector<T, Allocator>::insert( iterator pos, size_type count, const T& v
 	}
 	else
 	{
-		T *new_arr = alloc.allocate(sz + count);
+		size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
+		T *new_arr = alloc.allocate(new_cap);
 		size_t pos_index = ft::distance(begin(), pos);
 		size_t i;
 		try
@@ -362,7 +320,7 @@ void ft::vector<T, Allocator>::insert( iterator pos, size_type count, const T& v
 		alloc.deallocate(array, cap);
 		array = new_arr;
 		sz = i;
-		cap = i;
+		cap = new_cap;
 	}
 }
 
@@ -396,7 +354,8 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 	}
 	else
 	{
-		T *new_arr = alloc.allocate(sz + count);
+		size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
+		T *new_arr = alloc.allocate(new_cap);
 		size_t pos_index = ft::distance(begin(), pos);
 		size_t i;
 		try
@@ -422,6 +381,6 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 		alloc.deallocate(array, cap);
 		array = new_arr;
 		sz = i;
-		cap = i;
+		cap = new_cap;
 	}
 }
