@@ -6,7 +6,7 @@
 #include <sys/time.h>
 #include <chrono>
 
-#define TYPE ft::vector
+#define TYPE std::vector
 
 template <typename T>
 void print_vec(T const &vec)
@@ -264,14 +264,14 @@ int main(int argc, char const *argv[])
     v.push_back(vector[2]);
     v.push_back(vector.size());
     v.push_back(vector.capacity());
-    std::swap(vector, tmp2);//for some reason doesn't swap capacities
-    v.push_back(vector[2]);
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
-    std::swap(vector, tmp4);
-    v.push_back(vector[2]);
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
+    // std::swap(vector, tmp2);//for some reason doesn't swap capacities
+    // v.push_back(vector[2]);
+    // v.push_back(vector.size());
+    // v.push_back(vector.capacity());
+    // std::swap(vector, tmp4);
+    // v.push_back(vector[2]);
+    // v.push_back(vector.size());
+    // v.push_back(vector.capacity());
 	std::chrono::time_point<clock> end = clock::now();
 
 	std::chrono::duration<double, std::micro> diff = end - start;

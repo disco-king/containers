@@ -15,7 +15,7 @@ ft::vector<T, Allocator>::~vector()
 template <typename T, typename Allocator>
 ft::vector<T, Allocator>::vector(size_type n, const value_type& val,
 							const allocator_type& alloc) :
-alloc(alloc)
+sz(0), cap(0), array(0), alloc(alloc)
 {
 	array = this->alloc.allocate(n);
 	size_t i;
@@ -212,10 +212,10 @@ void ft::vector<T, Allocator>::assign (size_type n, const value_type& val)
 template <typename T, typename Allocator>
 void ft::vector<T, Allocator>::swap( ft::vector<T, Allocator>& other )
 {
-	std::swap(array, other.array);
-	std::swap(sz, other.sz);
-	std::swap(cap, other.cap);
-	std::swap(alloc, other.alloc);
+	ft::swap(array, other.array);
+	ft::swap(sz, other.sz);
+	ft::swap(cap, other.cap);
+	ft::swap(alloc, other.alloc);
 }
 
 template <typename T, typename Allocator>
