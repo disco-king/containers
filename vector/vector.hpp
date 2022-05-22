@@ -10,6 +10,7 @@ template <typename T, typename Allocator> class vector;
 
 namespace ft
 {
+
 template <typename T, typename Allocator = std::allocator<T> >
 class vector
 {

@@ -6,3 +6,4 @@
 #include "template_meta.hpp"
 #include "compare.hpp"
 #include "swaps.hpp"
+#include "pair.hpp"
