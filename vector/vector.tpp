@@ -83,7 +83,7 @@ void ft::vector<T, Allocator>::resize (size_type n, value_type val)
 			for (i = sz; i < n; i++)
 				alloc.construct(array + i, val);
 		}
-		catch(...)
+		catch(const std::exception& e)
 		{
 			for(size_t j = sz; j < i; j++)
 				alloc.destroy(array + j);
@@ -129,7 +129,7 @@ void ft::vector<T, Allocator>::reserve (size_type n)
 		for(i = 0; i < sz; i++)
 			alloc.construct(new_array + i, array[i]);
 	}
-	catch(...)
+	catch(const std::exception& e)
 	{
 		for(size_t j = 0; j < i; j++)
 			alloc.destroy(new_array + j);
@@ -370,7 +370,7 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 			for (; i < sz + count; i++)
 				alloc.construct(new_arr + i, array[i - count]);
 		}
-		catch(...)
+		catch(const std::exception& e)
 		{
 			for (size_t j = 0; j < i; j++)
 				alloc.destroy(new_arr + j);

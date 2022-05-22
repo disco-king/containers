@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <sys/time.h>
-#include <chrono>
+// #include <chrono>
 
 #define TYPE ft::vector
 
@@ -128,8 +128,8 @@ int main() //checking insert
 
 	TYPE<int>::iterator i = v1.end();
 	// v1.insert(i, v2.begin(), v2.end());
-	v1.insert(i, 10, -1);
-	// v1.insert(v1.begin() + 1, 0);
+	// v1.insert(i, 10, -1);
+	v1.insert(v1.begin() + 2, 0);
 
 	std::cout << "size " << v1.size() << ' '
 	<< " capacity " << v1.capacity() << '\n';
@@ -264,14 +264,14 @@ int main() //checking insert
 //     v.push_back(vector[2]);
 //     v.push_back(vector.size());
 //     v.push_back(vector.capacity());
-//     std::swap(vector, tmp2);//for some reason doesn't swap capacities
-//     v.push_back(vector[2]);
-//     v.push_back(vector.size());
-//     v.push_back(vector.capacity());
-//     std::swap(vector, tmp4);
-//     v.push_back(vector[2]);
-//     v.push_back(vector.size());
-//     v.push_back(vector.capacity());
+//     // std::swap(vector, tmp2);//for some reason doesn't swap capacities
+//     // v.push_back(vector[2]);
+//     // v.push_back(vector.size());
+//     // v.push_back(vector.capacity());
+//     // std::swap(vector, tmp4);
+//     // v.push_back(vector[2]);
+//     // v.push_back(vector.size());
+//     // v.push_back(vector.capacity());
 // 	std::chrono::time_point<clock> end = clock::now();
 
 // 	std::chrono::duration<double, std::micro> diff = end - start;
