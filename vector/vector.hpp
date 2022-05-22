@@ -1,7 +1,10 @@
 #pragma once
 
+namespace ft{
+template <typename T, typename Allocator> class vector;
+}
+
 #include "../utils.hpp"
-#include <iostream>
 #include <memory>
 #include <cstdlib>
 

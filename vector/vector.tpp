@@ -50,14 +50,15 @@ template <typename T, typename Allocator>
 ft::vector<T, Allocator>::vector (const vector& src) :
 array(0), sz(0), cap(0)
 {
-	*this = src;
+	assign(src.begin(), src.end());
 }
 
 template <typename T, typename Allocator>
 ft::vector<T, Allocator>& ft::vector<T, Allocator>::operator=
 ( const ft::vector<T, Allocator>& src )
 {
-	assign(src.begin(), src.end());
+	ft::vector<T, Allocator> copy = src;
+	swap(copy);
 	return *this;
 }
 

@@ -3,8 +3,7 @@
 #include <iterator>
 #include <algorithm>
 #include <iostream>
-#include <sys/time.h>
-// #include <chrono>
+#include "../timer/Timer.hpp"
 
 #define TYPE ft::vector
 
@@ -16,6 +15,16 @@ void print_vec(T const &vec)
 	for (size_t i = 0; i < vec.size(); i++)
 		std::cout << vec[i] << ' ';
 	std::cout << '\n';
+}
+
+int main()//checking compares
+{
+	TYPE<int> v1(10, 3);
+	TYPE<int> v2(3, 5);
+
+	print_vec(v1);
+	v1 = v2;
+	print_vec(v2);
 }
 
 // int main()//checking compares
@@ -106,37 +115,37 @@ void print_vec(T const &vec)
 // }
 
 
-int main() //checking insert
-{
-	TYPE<int> v1;
-	TYPE<int> v2;
+// int main() //checking insert
+// {
+// 	TYPE<int> v1;
+// 	TYPE<int> v2;
 
-	// v1.push_back("s1");
-	// v1.push_back("s2");
-	// v1.push_back("s3");
+// 	// v1.push_back("s1");
+// 	// v1.push_back("s2");
+// 	// v1.push_back("s3");
 
-	for (size_t i = 0; i < 5; i++)
-		v1.push_back(i+1);
-	for (size_t i = -1; i > -6; i--)
-		v2.push_back(i);
+// 	for (size_t i = 0; i < 5; i++)
+// 		v1.push_back(i+1);
+// 	for (size_t i = -1; i > -6; i--)
+// 		v2.push_back(i);
 
-	std::cout << "size " << v1.size() << ' '
-	<< " capacity " << v1.capacity() << '\n';
-	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
-		std::cout << *i << ' ';
-	std::cout << '\n';
+// 	std::cout << "size " << v1.size() << ' '
+// 	<< " capacity " << v1.capacity() << '\n';
+// 	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
 
-	TYPE<int>::iterator i = v1.end();
-	// v1.insert(i, v2.begin(), v2.end());
-	// v1.insert(i, 10, -1);
-	v1.insert(v1.begin() + 2, 0);
+// 	TYPE<int>::iterator i = v1.end();
+// 	// v1.insert(i, v2.begin(), v2.end());
+// 	// v1.insert(i, 10, -1);
+// 	v1.insert(v1.begin() + 2, 0);
 
-	std::cout << "size " << v1.size() << ' '
-	<< " capacity " << v1.capacity() << '\n';
-	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
-		std::cout << *i << ' ';
-	std::cout << '\n';
-}
+// 	std::cout << "size " << v1.size() << ' '
+// 	<< " capacity " << v1.capacity() << '\n';
+// 	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
+// }
 
 // int main () //checking erase and iterators
 // {
@@ -237,22 +246,17 @@ int main() //checking insert
 // #define _ratio 10000
 // #define _vector TYPE
 
-// time_t timer() {
-// 	struct timeval start = {};
-// 	gettimeofday(&start, 0);
-// 	time_t msecs_time = (start.tv_sec * 1000) + (start.tv_usec / 1000);
-// 	return msecs_time;
-// }
-
 // int main(int argc, char const *argv[])//checking swap
 // {
+// 	Timer t;
+
 //     std::vector<int> v;
 //     TYPE<int> vector;
 //     vector.assign(1100 * _ratio, 11);
 //     _vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
-// 	typedef std::chrono::system_clock clock;
-// 	typedef std::chrono::microseconds msecs;
-// 	std::chrono::time_point<clock> start = clock::now();//why so slow?
+
+// 	t.start();
+
 //     v.push_back(vector[2]);
 //     v.push_back(vector.size());
 //     v.push_back(vector.capacity());
@@ -264,20 +268,18 @@ int main() //checking insert
 //     v.push_back(vector[2]);
 //     v.push_back(vector.size());
 //     v.push_back(vector.capacity());
-//     // std::swap(vector, tmp2);//for some reason doesn't swap capacities
-//     // v.push_back(vector[2]);
-//     // v.push_back(vector.size());
-//     // v.push_back(vector.capacity());
-//     // std::swap(vector, tmp4);
-//     // v.push_back(vector[2]);
-//     // v.push_back(vector.size());
-//     // v.push_back(vector.capacity());
-// 	std::chrono::time_point<clock> end = clock::now();
+//     std::swap(vector, tmp2);
+//     v.push_back(vector[2]);
+//     v.push_back(vector.size());
+//     v.push_back(vector.capacity());
+//     std::swap(vector, tmp4);
+//     v.push_back(vector[2]);
+//     v.push_back(vector.size());
+//     v.push_back(vector.capacity());
 
-// 	std::chrono::duration<double, std::micro> diff = end - start;
-// 	std::cout << "time elapsed: " 
-// 	<< std::fixed
-// 	<< diff.count() << '\n';
+// 	t.finish();
+
+// 	t.printTime(0);
 // 	print_vec(v);
 //     return 0;
 // }
