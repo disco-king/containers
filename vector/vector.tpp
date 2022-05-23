@@ -17,21 +17,23 @@ ft::vector<T, Allocator>::vector(size_type n, const value_type& val,
 							const allocator_type& alloc) :
 sz(0), cap(0), array(0), alloc(alloc)
 {
-	array = this->alloc.allocate(n);
-	size_t i;
-	try
-	{
-		for(i = 0; i < n; i++)
-			this->alloc.construct(array + i, val);
-	}
-	catch(const std::exception& e)
-	{
-		for(size_t j = 0; j < i; j++)
-			this->alloc.destroy(array + j);
-		this->alloc.deallocate(array, n);
-		sz = 0;
-		throw;
-	}
+	T *new_arr = create_array(limits(0, n, 0), n, val);
+	array = new_arr;
+	// array = this->alloc.allocate(n);
+	// size_t i;
+	// try
+	// {
+	// 	for(i = 0; i < n; i++)
+	// 		this->alloc.construct(array + i, val);
+	// }
+	// catch(const std::exception& e)
+	// {
+	// 	for(size_t j = 0; j < i; j++)
+	// 		this->alloc.destroy(array + j);
+	// 	this->alloc.deallocate(array, n);
+	// 	sz = 0;
+	// 	throw;
+	// }
 	sz = n;
 	cap = n;
 }
@@ -77,41 +79,46 @@ void ft::vector<T, Allocator>::resize (size_type n, value_type val)
 	size_t i;
 	if(n <= cap)
 	{
+		std::cout << "sufficient capacity\n";
 		for (i = n; i < sz; i++)
 			alloc.destroy(array + i);
-		try
-		{
-			for (i = sz; i < n; i++)
-				alloc.construct(array + i, val);
-		}
-		catch(const std::exception& e)
-		{
-			for(size_t j = sz; j < i; j++)
-				alloc.destroy(array + j);
-			throw;
-		}
+		// try
+		// {
+		// 	for (i = sz; i < n; i++)
+		// 		alloc.construct(array + i, val);
+		// }
+		// catch(const std::exception& e)
+		// {
+		// 	for(size_t j = sz; j < i; j++)
+		// 		alloc.destroy(array + j);
+		// 	throw;
+		// }
+		create_array(limits(sz, n, 0), 0, val);
 		sz = n;
 		return;
 	}
 
 	size_t new_cap = n > cap * 2 ? n : cap * 2;
-	T *new_array = alloc.allocate(new_cap);
-	try
-	{
-		for(i = 0; i < sz; i++)
-			alloc.construct(new_array + i, array[i]);
-		for(; i < n; i++)
-			alloc.construct(new_array + i, val);
-	}
-	catch(const std::exception& e)
-	{
-		for(size_t j = 0; j < i; j++)
-			alloc.destroy(new_array + j);
-		alloc.deallocate(new_array, n);
-		throw;
-	}
-	clear();
-	alloc.deallocate(array, cap);
+	// T *new_array = alloc.allocate(new_cap);
+	// try
+	// {
+	// 	for(i = 0; i < sz; i++)
+	// 		alloc.construct(new_array + i, array[i]);
+	// 	for(; i < n; i++)
+	// 		alloc.construct(new_array + i, val);
+	// }
+	// catch(const std::exception& e)
+	// {
+	// 	for(size_t j = 0; j < i; j++)
+	// 		alloc.destroy(new_array + j);
+	// 	alloc.deallocate(new_array, n);
+	// 	throw;
+	// }
+	// clear();
+	// alloc.deallocate(array, cap);
+
+	T *new_array = create_array(limits(sz, n, 0), new_cap, val);
+
 	array = new_array;
 	sz = n;
 	cap = new_cap;
@@ -123,6 +130,7 @@ void ft::vector<T, Allocator>::reserve (size_type n)
 	if(n <= cap)
 		return;
 
+	// T *new_array = create_array(limits(sz, 0, 0), n, 0);
 	T *new_array = alloc.allocate(n);
 	size_t i;
 	try
@@ -139,8 +147,8 @@ void ft::vector<T, Allocator>::reserve (size_type n)
 	}
 	clear();
 	alloc.deallocate(array, cap);
+	// std::cout << "success, cap = " << n << '\n';
 	array = new_array;
-	sz = i;
 	cap = n;
 }
 
@@ -158,6 +166,7 @@ void ft::vector<T, Allocator>::push_back (const value_type& val)
 		reserve(sz * 2);
 	alloc.construct(array + sz, val);
 	sz++;
+	// std::cout << "constructed val " << val << ", size " << sz << '\n';
 }
 
 template <typename T, typename Allocator>
@@ -195,10 +204,9 @@ ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
 		}
 		sz = i;
 	}
-	catch(...)
+	catch(const std::exception& e)
 	{
 		clear();
-		sz = 0;
 		throw;
 	}
 }
@@ -384,4 +392,53 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 		sz = i;
 		cap = new_cap;
 	}
+}
+
+template <typename T, typename Allocator>
+T const &ft::vector<T, Allocator>::get_value(T const& val)
+{
+	return val;
+}
+
+template <typename T, typename Allocator>
+T const &ft::vector<T, Allocator>::get_value(iterator &iter)
+{
+	iterator buff = iter++;
+	return *buff;
+}
+
+template <typename T, typename Allocator>
+template <typename Arg>
+T *ft::vector<T, Allocator>::create_array(limits lims, size_t size, Arg const &val)
+{
+	T * new_arr;
+	if (size)
+		new_arr = alloc.allocate(size);
+	else
+		new_arr = array;
+	
+	size_t i;
+	try
+	{
+		for (i = 0; i < lims.l1; i++)
+			alloc.construct(new_arr + i, array[i]);
+		for(; i < lims.l2; i++)
+			alloc.construct(new_arr + i, get_value(val));
+		for (; i < sz + lims.count; i++)
+			alloc.construct(new_arr + i, array[i - lims.count]);
+	}
+	catch(const std::exception& e)
+	{
+		for (size_t j = 0; j < i; j++)
+			alloc.destroy(new_arr + j);
+		alloc.deallocate(new_arr, size);
+		throw;
+	}
+
+	if(size)
+	{
+		clear();
+		alloc.deallocate(array, cap);
+	}
+	return new_arr;
 }

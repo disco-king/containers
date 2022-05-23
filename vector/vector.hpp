@@ -7,6 +7,7 @@ template <typename T, typename Allocator> class vector;
 #include "../utils.hpp"
 #include <memory>
 #include <cstdlib>
+#include <iostream>
 
 namespace ft
 {
@@ -14,14 +15,7 @@ template <typename T, typename Allocator = std::allocator<T> >
 class vector
 {
 
-private:
-	T * array;
-	size_t sz;
-	size_t cap;
-	Allocator alloc;
-
 public:
-
 	typedef T value_type;
 	typedef Allocator allocator_type;
 	typedef typename allocator_type::reference reference;
@@ -34,6 +28,26 @@ public:
 	typedef ft::random_access_iterator<const T> const_iterator;
 	typedef ft::reverse_iterator<iterator> reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+
+private:
+	T * array;
+	size_t sz;
+	size_t cap;
+	Allocator alloc;
+
+	struct limits { 
+		int l1;
+		int l2;
+		int count;
+		limits(int l1, int l2, int count) : l1(l1), l2(l2), count(count) {}
+	};
+
+	T const &get_value(T const& val);
+	T const &get_value(iterator &iter);
+	template <typename Arg>
+	T *create_array(limits lims, size_t size, Arg const &val);
+
+public:
 
 	explicit vector (const allocator_type& alloc = allocator_type());
 	explicit vector (size_type n, const value_type& val = value_type(),
