@@ -3,7 +3,7 @@
 #include <iterator>
 #include <algorithm>
 #include <iostream>
-#include "../timer/Timer.hpp"
+#include "/Users/fmalphit/timer/Timer.hpp"
 
 #define TYPE ft::vector
 
@@ -17,15 +17,23 @@ void print_vec(T const &vec)
 	std::cout << '\n';
 }
 
-int main()//checking compares
-{
-	TYPE<int> v1(10, 3);
-	TYPE<int> v2(3, 5);
+// int main()//checking value constructor
+// {
+// 	TYPE<std::string> v(5, "string");
+// 	// TYPE<int> v(5, 1);
 
-	print_vec(v1);
-	v1 = v2;
-	print_vec(v2);
-}
+// 	print_vec(v);
+// }
+
+// int main()//checking compares
+// {
+// 	TYPE<int> v1(10, 3);
+// 	TYPE<int> v2(3, 5);
+
+// 	print_vec(v1);
+// 	v1 = v2;
+// 	print_vec(v2);
+// }
 
 // int main()//checking compares
 // {
@@ -184,26 +192,19 @@ int main()//checking compares
 // }
 
 
-// int main() //checking push_back
-// {
-// 	TYPE<int> v1;
+int main() //checking push_back
+{
+	TYPE<int> v1;
 
-// 	for (size_t i = 0; i < 5; i++)
-// 	{
-// 		v1.push_back(i);
-// 		std::cout << "size " << v1.size()
-// 		<< " capacity " << v1.capacity() << '\n';
-// 	}
+	for (size_t i = 0; i < 5; i++)
+	{
+		v1.push_back(i);
+		std::cout << "size " << v1.size()
+		<< " capacity " << v1.capacity() << '\n';
+	}
 
-// 	print_vec(v1);
-
-// 	std::cout << "cap check: " << v1.capacity() << '\n';
-// 	std::cout << "size " << v1.size()
-// 	<< " capacity " << v1.capacity() << '\n';
-// 	for (size_t i = 0; i < v1.size(); i++)
-// 		std::cout << v1[i] << ' ';
-// 	std::cout << '\n';
-// }
+	print_vec(v1);
+}
 
 // int main() //checking swap
 // {
@@ -248,7 +249,7 @@ int main()//checking compares
 
 // int main(int argc, char const *argv[])//checking swap
 // {
-// 	Timer t;
+// 	Timer<> t;
 
 //     std::vector<int> v;
 //     TYPE<int> vector;
