@@ -3,7 +3,7 @@
 #include <iterator>
 #include <algorithm>
 #include <iostream>
-#include "/Users/fmalphit/timer/Timer.hpp"
+#include <Timer.hpp>
 
 #define TYPE ft::vector
 
