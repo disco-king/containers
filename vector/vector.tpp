@@ -17,23 +17,8 @@ ft::vector<T, Allocator>::vector(size_type n, const value_type& val,
 							const allocator_type& alloc) :
 sz(0), cap(0), array(0), alloc(alloc)
 {
-	T *new_arr = create_array(limits(0, n, 0), n, val);
+	T *new_arr = create_array(limits(0, n, 0), n, &val);
 	array = new_arr;
-	// array = this->alloc.allocate(n);
-	// size_t i;
-	// try
-	// {
-	// 	for(i = 0; i < n; i++)
-	// 		this->alloc.construct(array + i, val);
-	// }
-	// catch(const std::exception& e)
-	// {
-	// 	for(size_t j = 0; j < i; j++)
-	// 		this->alloc.destroy(array + j);
-	// 	this->alloc.deallocate(array, n);
-	// 	sz = 0;
-	// 	throw;
-	// }
 	sz = n;
 	cap = n;
 }
@@ -79,45 +64,15 @@ void ft::vector<T, Allocator>::resize (size_type n, value_type val)
 	size_t i;
 	if(n <= cap)
 	{
-		std::cout << "sufficient capacity\n";
 		for (i = n; i < sz; i++)
-			alloc.destroy(array + i);
-		// try
-		// {
-		// 	for (i = sz; i < n; i++)
-		// 		alloc.construct(array + i, val);
-		// }
-		// catch(const std::exception& e)
-		// {
-		// 	for(size_t j = sz; j < i; j++)
-		// 		alloc.destroy(array + j);
-		// 	throw;
-		// }
-		create_array(limits(sz, n, 0), 0, val);
+		create_array(limits(sz, n, 0), 0, &val);
 		sz = n;
 		return;
 	}
 
 	size_t new_cap = n > cap * 2 ? n : cap * 2;
-	// T *new_array = alloc.allocate(new_cap);
-	// try
-	// {
-	// 	for(i = 0; i < sz; i++)
-	// 		alloc.construct(new_array + i, array[i]);
-	// 	for(; i < n; i++)
-	// 		alloc.construct(new_array + i, val);
-	// }
-	// catch(const std::exception& e)
-	// {
-	// 	for(size_t j = 0; j < i; j++)
-	// 		alloc.destroy(new_array + j);
-	// 	alloc.deallocate(new_array, n);
-	// 	throw;
-	// }
-	// clear();
-	// alloc.deallocate(array, cap);
 
-	T *new_array = create_array(limits(sz, n, 0), new_cap, val);
+	T *new_array = create_array(limits(sz, n, 0), new_cap, &val);
 
 	array = new_array;
 	sz = n;
@@ -130,25 +85,9 @@ void ft::vector<T, Allocator>::reserve (size_type n)
 	if(n <= cap)
 		return;
 
-	// T *new_array = create_array(limits(sz, 0, 0), n, 0);
-	T *new_array = alloc.allocate(n);
-	size_t i;
-	try
-	{
-		for(i = 0; i < sz; i++)
-			alloc.construct(new_array + i, array[i]);
-	}
-	catch(const std::exception& e)
-	{
-		for(size_t j = 0; j < i; j++)
-			alloc.destroy(new_array + j);
-		alloc.deallocate(new_array, n);
-		throw;
-	}
-	clear();
-	alloc.deallocate(array, cap);
-	// std::cout << "success, cap = " << n << '\n';
+	T *new_array = create_array(limits(sz, 0, 0), n, reinterpret_cast<T *>(0));
 	array = new_array;
+	sz = cap;
 	cap = n;
 }
 
@@ -166,7 +105,6 @@ void ft::vector<T, Allocator>::push_back (const value_type& val)
 		reserve(sz * 2);
 	alloc.construct(array + sz, val);
 	sz++;
-	// std::cout << "constructed val " << val << ", size " << sz << '\n';
 }
 
 template <typename T, typename Allocator>
@@ -181,34 +119,22 @@ template <class InputIterator>
 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
 ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
 {
-	ptrdiff_t number = last - first;
-	size_t i;
+	ptrdiff_t number = distance(first, last);
 
 	clear();
-
-	if(number > cap)
-	{
-		if(array != 0)
-			alloc.deallocate(array, cap);
-		cap = 0;
-		array = alloc.allocate(number);
-		cap = number;
-	}
-
+	T *buff_arr;
 	try
 	{
-		for (i = 0; i < number; i++)
-		{
-			alloc.construct(array + i, *first);
-			first++;
-		}
-		sz = i;
+		buff_arr = create_array(limits(0, number, 0),
+				(number > cap ? number : 0), first);
 	}
-	catch(const std::exception& e)
+	catch(std::exception const &e)
 	{
-		clear();
+		sz = 0;
 		throw;
 	}
+	sz = number;
+	array = buff_arr;
 }
 
 template <typename T, typename Allocator>
@@ -302,35 +228,15 @@ void ft::vector<T, Allocator>::insert( iterator pos, size_type count, const T& v
 			if(iter >= arr_end)
 				sz++;
 		}
+		return;
 	}
-	else
-	{
-		size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
-		T *new_arr = alloc.allocate(new_cap);
-		size_t pos_index = ft::distance(begin(), pos);
-		size_t i;
-		try
-		{
-			for (i = 0; i < pos_index; i++)
-				alloc.construct(new_arr + i, array[i]);
-			for(; i < pos_index + count; i++)
-				alloc.construct(new_arr + i, value);
-			for (; i < sz + count; i++)
-				alloc.construct(new_arr + i, array[i - count]);
-		}
-		catch(...)
-		{
-			for (size_t j = 0; j < i; j++)
-				alloc.destroy(new_arr + j);
-			alloc.deallocate(new_arr, cap * 2);
-			throw;
-		}
-		clear();
-		alloc.deallocate(array, cap);
-		array = new_arr;
-		sz = i;
-		cap = new_cap;
-	}
+	size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
+	size_t pos_index = ft::distance(begin(), pos);
+	T *new_arr = create_array(limits(pos_index, pos_index + count, count),
+								new_cap, &value);
+	array = new_arr;
+	sz += count;
+	cap = new_cap;
 }
 
 template <typename T, typename Allocator>
@@ -338,12 +244,12 @@ template< class InputIt >
 typename ft::enable_if<!ft::is_integral<InputIt>::value>::type
 ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 {
-	size_t count = ft::distance(first, last);
+	size_t count = distance(first, last);
 	if(!count)
 		return;
-	last--;
 	if (sz + count <= cap)
 	{
+		last--;
 		iterator iter = end() + count - 1;
 		iterator arr_end = end();
 		for (; iter >= pos; iter--)
@@ -360,56 +266,33 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 			if(iter >= arr_end)
 				sz++;
 		}
+		return;
 	}
-	else
-	{
-		size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
-		T *new_arr = alloc.allocate(new_cap);
-		size_t pos_index = ft::distance(begin(), pos);
-		size_t i;
-		try
-		{
-			for (i = 0; i < pos_index; i++)
-				alloc.construct(new_arr + i, array[i]);
-			for(; i < pos_index + count; i++)
-			{
-				alloc.construct(new_arr + i, *first);
-				first++;
-			}
-			for (; i < sz + count; i++)
-				alloc.construct(new_arr + i, array[i - count]);
-		}
-		catch(const std::exception& e)
-		{
-			for (size_t j = 0; j < i; j++)
-				alloc.destroy(new_arr + j);
-			alloc.deallocate(new_arr, cap * 2);
-			throw;
-		}
-		clear();
-		alloc.deallocate(array, cap);
-		array = new_arr;
-		sz = i;
-		cap = new_cap;
-	}
+
+	size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
+	size_t pos_index = ft::distance(begin(), pos);
+	T *new_arr = create_array(limits(pos_index, pos_index + count, count),
+								new_cap, first);
+	array = new_arr;
+	sz += count;
+	cap = new_cap;
 }
 
 template <typename T, typename Allocator>
-T const &ft::vector<T, Allocator>::get_value(T const& val)
+T const &ft::vector<T, Allocator>::get_value(T const *val)
 {
-	return val;
+	return *val;
 }
 
 template <typename T, typename Allocator>
 T const &ft::vector<T, Allocator>::get_value(iterator &iter)
 {
-	iterator buff = iter++;
-	return *buff;
+	return *iter++;
 }
 
 template <typename T, typename Allocator>
 template <typename Arg>
-T *ft::vector<T, Allocator>::create_array(limits lims, size_t size, Arg const &val)
+T *ft::vector<T, Allocator>::create_array(limits lims, size_t size, Arg val)
 {
 	T * new_arr;
 	if (size)
@@ -431,7 +314,8 @@ T *ft::vector<T, Allocator>::create_array(limits lims, size_t size, Arg const &v
 	{
 		for (size_t j = 0; j < i; j++)
 			alloc.destroy(new_arr + j);
-		alloc.deallocate(new_arr, size);
+		if(size)
+			alloc.deallocate(new_arr, size);
 		throw;
 	}
 

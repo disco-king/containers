@@ -43,10 +43,10 @@ private:
 		limits(int l1, int l2, int count) : l1(l1), l2(l2), count(count) {}
 	};
 
-	T const &get_value(T const& val);
+	T const &get_value(T const *val);
 	T const &get_value(iterator &iter);
 	template <typename Arg>
-	T *create_array(limits lims, size_t size, Arg const &val);
+	T *create_array(limits lims, size_t size, Arg val);
 
 public:
 

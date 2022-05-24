@@ -33,7 +33,7 @@ template <typename IterType>
 typename ft::enable_if<
 ft::is_same<typename IterType::iterator_category,
 			random_access_iterator_tag>::value,
-ptrdiff_t>::type
+			ptrdiff_t>::type
 distance(IterType first, IterType last)
 {
 	return &(*last) - &(*first);
@@ -43,7 +43,7 @@ template <typename IterType>
 typename ft::enable_if<
 !ft::is_same<typename IterType::iterator_category,
 			random_access_iterator_tag>::value,
-ptrdiff_t>::type
+			ptrdiff_t>::type
 distance(IterType first, IterType last)
 {
 	ptrdiff_t ret = 0;

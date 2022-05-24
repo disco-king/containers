@@ -5,7 +5,7 @@
 #include <iostream>
 #include <Timer.hpp>
 
-#define TYPE ft::vector
+#define TYPE std::vector
 
 template <typename T>
 void print_vec(T const &vec)
@@ -17,10 +17,41 @@ void print_vec(T const &vec)
 	std::cout << '\n';
 }
 
+// int main() //checking assign
+// {
+// 	{
+// 		TYPE<int> v1(5, 1);
+// 		TYPE<int> v2(3, 7);
+
+// 		print_vec(v1);
+// 		std::cout << std::endl;
+
+// 		v1.assign(v2.begin(), v2.end());
+// 		print_vec(v1);
+// 		std::cout << std::endl;
+
+// 		v1.assign(10, 9);
+// 		print_vec(v1);
+// 	}
+
+// 	std::cout << std::endl;
+
+// 	{
+// 		TYPE<char> characters;
+
+// 		characters.assign(5, 'a');
+// 		print_vec(characters);
+
+// 		/*const*/ TYPE<char> extra(6, 'b');//problem with const
+// 		characters.assign(extra.begin(), extra.end());
+// 		print_vec(characters);
+// 	}
+// }
+
 // int main()//checking value constructor
 // {
-// 	TYPE<std::string> v(5, "string");
-// 	// TYPE<int> v(5, 1);
+// 	// TYPE<std::string> v(5, "string");
+// 	TYPE<int> v(5, 1);
 
 // 	print_vec(v);
 // }
@@ -123,37 +154,37 @@ void print_vec(T const &vec)
 // }
 
 
-// int main() //checking insert
-// {
-// 	TYPE<int> v1;
-// 	TYPE<int> v2;
+int main() //checking insert
+{
+	TYPE<int> v1;
+	TYPE<int> v2;
 
-// 	// v1.push_back("s1");
-// 	// v1.push_back("s2");
-// 	// v1.push_back("s3");
+	// v1.push_back("s1");
+	// v1.push_back("s2");
+	// v1.push_back("s3");
 
-// 	for (size_t i = 0; i < 5; i++)
-// 		v1.push_back(i+1);
-// 	for (size_t i = -1; i > -6; i--)
-// 		v2.push_back(i);
+	for (size_t i = 0; i < 5; i++)
+		v1.push_back(i+1);
+	for (size_t i = -1; i > -6; i--)
+		v2.push_back(i);
 
-// 	std::cout << "size " << v1.size() << ' '
-// 	<< " capacity " << v1.capacity() << '\n';
-// 	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
+	std::cout << "size " << v1.size() << ' '
+	<< " capacity " << v1.capacity() << '\n';
+	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
+		std::cout << *i << ' ';
+	std::cout << '\n';
 
-// 	TYPE<int>::iterator i = v1.end();
-// 	// v1.insert(i, v2.begin(), v2.end());
-// 	// v1.insert(i, 10, -1);
-// 	v1.insert(v1.begin() + 2, 0);
+	TYPE<int>::iterator i = v1.end();
+	v1.insert(i, v2.begin(), v2.end());//doesn't copy by iters
+	// v1.insert(i, 10, -1);
+	// v1.insert(v1.begin() + 2, 0);
 
-// 	std::cout << "size " << v1.size() << ' '
-// 	<< " capacity " << v1.capacity() << '\n';
-// 	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
-// }
+	std::cout << "size " << v1.size() << ' '
+	<< " capacity " << v1.capacity() << '\n';
+	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
+		std::cout << *i << ' ';
+	std::cout << '\n';
+}
 
 // int main () //checking erase and iterators
 // {
@@ -192,19 +223,19 @@ void print_vec(T const &vec)
 // }
 
 
-int main() //checking push_back
-{
-	TYPE<int> v1;
+// int main() //checking push_back
+// {
+// 	TYPE<std::string> v1;
+// 	std::string s = "foo bar";
+// 	for (size_t i = 0; i < 5; i++)
+// 	{
+// 		v1.push_back(s);
+// 		std::cout << "size " << v1.size()
+// 		<< " capacity " << v1.capacity() << '\n';
+// 	}
 
-	for (size_t i = 0; i < 5; i++)
-	{
-		v1.push_back(i);
-		std::cout << "size " << v1.size()
-		<< " capacity " << v1.capacity() << '\n';
-	}
-
-	print_vec(v1);
-}
+// 	print_vec(v1);
+// }
 
 // int main() //checking swap
 // {
