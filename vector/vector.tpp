@@ -281,15 +281,25 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 }
 
 template <typename T, typename Allocator>
-T const &ft::vector<T, Allocator>::get_value(T const *val)
+void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim, const_iterator iter)
 {
-	return *val;
+	for(; i < lim; i++)
+		alloc.construct(arr + i, *iter++);
 }
 
 template <typename T, typename Allocator>
-T const &ft::vector<T, Allocator>::get_value(const_iterator &iter)
+void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim,
+										std::iterator<std::random_access_iterator_tag, T> iter)
 {
-	return *iter++;
+	for(; i < lim; i++)
+		alloc.construct(arr + i, *iter++);
+}
+
+template <typename T, typename Allocator>
+void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim, T const *val)
+{
+	for(; i < lim; i++)
+		alloc.construct(arr + i, *val);
 }
 
 template <typename T, typename Allocator>
@@ -307,8 +317,7 @@ T *ft::vector<T, Allocator>::create_array(limits lims, size_t size, Arg val)
 	{
 		for (i = 0; i < lims.l1; i++)
 			alloc.construct(new_arr + i, array[i]);
-		for(; i < lims.l2; i++)
-			alloc.construct(new_arr + i, get_value(val));
+		construct_value(new_arr, i, lims.l2, val);
 		for (; i < sz + lims.count; i++)
 			alloc.construct(new_arr + i, array[i - lims.count]);
 	}
@@ -321,7 +330,7 @@ T *ft::vector<T, Allocator>::create_array(limits lims, size_t size, Arg val)
 		throw;
 	}
 
-	if(size)
+	if(size && array)
 	{
 		clear();
 		alloc.deallocate(array, cap);

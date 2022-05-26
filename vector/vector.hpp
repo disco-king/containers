@@ -6,6 +6,7 @@ template <typename T, typename Allocator> class vector;
 
 #include "../utils.hpp"
 #include <memory>
+#include <iterator>
 #include <cstdlib>
 #include <iostream>
 
@@ -43,8 +44,12 @@ private:
 		limits(int l1, int l2, int count) : l1(l1), l2(l2), count(count) {}
 	};
 
-	T const &get_value(T const *val);
-	T const &get_value(const_iterator &iter);
+	// template <typename Iter>
+	// void construct_value(T* arr, size_t &i, size_t lim, Iter iter);
+	void construct_value(T* arr, size_t &i, size_t lim, T const *val);
+	void construct_value(T* arr, size_t &i, size_t lim, const_iterator iter);
+	void construct_value(T* arr, size_t &i, size_t lim,
+						std::iterator<std::random_access_iterator_tag, T> iter);
 	template <typename Arg>
 	T *create_array(limits lims, size_t size, Arg val);
 
