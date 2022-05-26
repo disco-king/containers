@@ -3,7 +3,7 @@
 template <typename T, typename Allocator>
 ft::vector<T, Allocator>::vector(const typename vector<T,
 							Allocator>::allocator_type& alloc) :
-alloc(alloc), sz(0), cap(0), array(0){}
+sz(0), cap(0), array(0), alloc(alloc){}
 
 template <typename T, typename Allocator>
 ft::vector<T, Allocator>::~vector()
@@ -28,7 +28,7 @@ template <class InputvectorIterator>
 ft::vector<T, Allocator>::vector (InputvectorIterator first,
 									InputvectorIterator last,
 									const allocator_type& alloc) :
-array(0), sz(0), cap(0), alloc(alloc)
+sz(0), cap(0), array(0), alloc(alloc)
 {
 	assign(first, last);
 }
@@ -119,7 +119,7 @@ template <class InputIterator>
 typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type
 ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
 {
-	ptrdiff_t number = distance(first, last);
+	size_t number = ft::distance(first, last);
 
 	clear();
 	T *buff_arr;
@@ -163,7 +163,7 @@ template <typename T, typename Allocator>
 typename ft::vector<T, Allocator>::iterator
 ft::vector<T, Allocator>::erase (iterator position)
 {
-	ptrdiff_t dist = distance(begin(), position);
+	ptrdiff_t dist = ft::distance(begin(), position);
 
 	if(position + 1 == end())
 		alloc.destroy(&(*position));
@@ -185,8 +185,8 @@ template <typename T, typename Allocator>
 typename ft::vector<T, Allocator>::iterator
 ft::vector<T, Allocator>::erase (iterator first, iterator last)
 {
-	ptrdiff_t dist = distance(begin(), first);
-	ptrdiff_t jump = distance(first, last);
+	ptrdiff_t dist = ft::distance(begin(), first);
+	ptrdiff_t jump = ft::distance(first, last);
 
 	iterator fin = end();
 	for (; first < fin; first++)
@@ -231,11 +231,12 @@ void ft::vector<T, Allocator>::insert( iterator pos, size_type count, const T& v
 		return;
 	}
 	size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
+	size_t old_sz = sz;
 	size_t pos_index = ft::distance(begin(), pos);
 	T *new_arr = create_array(limits(pos_index, pos_index + count, count),
 								new_cap, &value);
 	array = new_arr;
-	sz += count;
+	sz = old_sz + count;
 	cap = new_cap;
 }
 
@@ -244,7 +245,7 @@ template< class InputIt >
 typename ft::enable_if<!ft::is_integral<InputIt>::value>::type
 ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 {
-	size_t count = distance(first, last);
+	size_t count = ft::distance(first, last);
 	if(!count)
 		return;
 	if (sz + count <= cap)
@@ -270,11 +271,12 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 	}
 
 	size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
+	size_t old_sz = sz;
 	size_t pos_index = ft::distance(begin(), pos);
 	T *new_arr = create_array(limits(pos_index, pos_index + count, count),
 								new_cap, first);
 	array = new_arr;
-	sz += count;
+	sz = old_sz + count;
 	cap = new_cap;
 }
 
@@ -285,7 +287,7 @@ T const &ft::vector<T, Allocator>::get_value(T const *val)
 }
 
 template <typename T, typename Allocator>
-T const &ft::vector<T, Allocator>::get_value(iterator &iter)
+T const &ft::vector<T, Allocator>::get_value(const_iterator &iter)
 {
 	return *iter++;
 }

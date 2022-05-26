@@ -31,20 +31,20 @@ public:
 	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 private:
-	T * array;
 	size_t sz;
 	size_t cap;
+	T * array;
 	Allocator alloc;
 
 	struct limits { 
-		int l1;
-		int l2;
-		int count;
+		size_t l1;
+		size_t l2;
+		size_t count;
 		limits(int l1, int l2, int count) : l1(l1), l2(l2), count(count) {}
 	};
 
 	T const &get_value(T const *val);
-	T const &get_value(iterator &iter);
+	T const &get_value(const_iterator &iter);
 	template <typename Arg>
 	T *create_array(limits lims, size_t size, Arg val);
 

@@ -3,9 +3,9 @@
 #include <iterator>
 #include <algorithm>
 #include <iostream>
-#include <Timer.hpp>
+#include </Users/fmalphit/timer/Timer.hpp>
 
-#define TYPE std::vector
+#define TYPE ft::vector
 
 template <typename T>
 void print_vec(T const &vec)
@@ -16,6 +16,23 @@ void print_vec(T const &vec)
 		std::cout << vec[i] << ' ';
 	std::cout << '\n';
 }
+
+int main()//checking iterator to const conversion
+{
+	TYPE<int> v(5, 1);
+
+	TYPE<int>::iterator i = v.begin();
+	TYPE<int>::const_iterator ci = i;
+	TYPE<int>::iterator e = v.end();
+
+	// i = ci;
+	ci = i;
+	for(; ci < e; ci++)
+		std::cout << *ci << ' ';
+	std::cout << '\n';
+	return 0;
+}
+
 
 // int main() //checking assign
 // {
@@ -42,7 +59,7 @@ void print_vec(T const &vec)
 // 		characters.assign(5, 'a');
 // 		print_vec(characters);
 
-// 		/*const*/ TYPE<char> extra(6, 'b');//problem with const
+// 		const TYPE<char> extra(6, 'b');//problem with const
 // 		characters.assign(extra.begin(), extra.end());
 // 		print_vec(characters);
 // 	}
@@ -154,37 +171,41 @@ void print_vec(T const &vec)
 // }
 
 
-int main() //checking insert
-{
-	TYPE<int> v1;
-	TYPE<int> v2;
+// int main() //checking insert
+// {
+// 	TYPE<std::string> v1;
+// 	TYPE<std::string> v2;
 
-	// v1.push_back("s1");
-	// v1.push_back("s2");
-	// v1.push_back("s3");
+// 	v1.push_back("s1");
+// 	v1.push_back("s2");
+// 	v1.push_back("s3");
 
-	for (size_t i = 0; i < 5; i++)
-		v1.push_back(i+1);
-	for (size_t i = -1; i > -6; i--)
-		v2.push_back(i);
+// 	v2.push_back("s4");
+// 	v2.push_back("s5");
+// 	v2.push_back("s6");
 
-	std::cout << "size " << v1.size() << ' '
-	<< " capacity " << v1.capacity() << '\n';
-	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
-		std::cout << *i << ' ';
-	std::cout << '\n';
+// 	// for (int i = 0; i < 5; i++)
+// 	// 	v1.push_back(i+1);
+// 	// for (int i = -1; i > -6; i--)
+// 	// 	v2.push_back(i);
 
-	TYPE<int>::iterator i = v1.end();
-	v1.insert(i, v2.begin(), v2.end());//doesn't copy by iters
-	// v1.insert(i, 10, -1);
-	// v1.insert(v1.begin() + 2, 0);
+// 	std::cout << "size " << v1.size() << ' '
+// 	<< " capacity " << v1.capacity() << '\n';
+// 	for (TYPE<std::string>::const_iterator i = v1.begin(); i != v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
 
-	std::cout << "size " << v1.size() << ' '
-	<< " capacity " << v1.capacity() << '\n';
-	for (TYPE<int>::const_iterator i = v1.begin(); i != v1.end(); i++)
-		std::cout << *i << ' ';
-	std::cout << '\n';
-}
+// 	TYPE<std::string>::iterator i = v1.end();
+// 	v1.insert(i, v2.end(), v2.begin());
+// 	// v1.insert(i, 10, -1);
+// 	// v1.insert(v1.begin() + 2, 0);
+
+// 	std::cout << "size " << v1.size() << ' '
+// 	<< " capacity " << v1.capacity() << '\n';
+// 	for (TYPE<std::string>::const_iterator i = v1.begin(); i != v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
+// }
 
 // int main () //checking erase and iterators
 // {
