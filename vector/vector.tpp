@@ -44,7 +44,7 @@ template <typename T, typename Allocator>
 ft::vector<T, Allocator>& ft::vector<T, Allocator>::operator=
 ( const ft::vector<T, Allocator>& src )
 {
-	ft::vector<T, Allocator> copy = src;
+	ft::vector<T, Allocator> copy(src);
 	swap(copy);
 	return *this;
 }
@@ -65,7 +65,18 @@ void ft::vector<T, Allocator>::resize (size_type n, value_type val)
 	if(n <= cap)
 	{
 		for (i = n; i < sz; i++)
-		create_array(limits(sz, n, 0), 0, &val);
+			alloc.destroy(array + i);
+		try
+		{
+			for (i = sz; i < n; i++)
+				alloc.construct(array + i, val);
+		}
+		catch(const std::exception& e)
+		{
+			for(size_t j = sz; j < i; j++)
+				alloc.destroy(array + j);
+			throw;
+		}
 		sz = n;
 		return;
 	}
@@ -123,18 +134,26 @@ ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
 
 	clear();
 	T *buff_arr;
+	size_t new_cap;
+	if(number > cap)
+		new_cap = (number > cap * 2) ? number : cap * 2;
+	else
+		new_cap = 0;
+
 	try
 	{
-		buff_arr = create_array(limits(0, number, 0),
-				(number > cap ? number : 0), first);
+		buff_arr = create_array(limits(0, number, 0), new_cap, first);
 	}
 	catch(std::exception const &e)
 	{
 		sz = 0;
 		throw;
 	}
+
 	sz = number;
 	array = buff_arr;
+	if(new_cap)
+		cap = new_cap;
 }
 
 template <typename T, typename Allocator>
@@ -280,16 +299,16 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 	cap = new_cap;
 }
 
-template <typename T, typename Allocator>
-void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim, const_iterator iter)
-{
-	for(; i < lim; i++)
-		alloc.construct(arr + i, *iter++);
-}
+// template <typename T, typename Allocator>
+// void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim,
+// 										std::iterator<std::random_access_iterator_tag, T> iter)
+// {
+// 	for(; i < lim; i++)
+// 		alloc.construct(arr + i, *iter++);
+// }
 
 template <typename T, typename Allocator>
-void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim,
-										std::iterator<std::random_access_iterator_tag, T> iter)
+void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim, const_iterator iter)
 {
 	for(; i < lim; i++)
 		alloc.construct(arr + i, *iter++);

@@ -3,9 +3,10 @@
 #include <iterator>
 #include <algorithm>
 #include <iostream>
-#include </Users/fmalphit/timer/Timer.hpp>
+#include <Timer.hpp>
 
-#define _vector ft::vector
+#define _vector std::vector
+#define _ratio 1000
 
 template <typename T>
 void print_vec(T const &vec)
@@ -23,23 +24,24 @@ int main()
 	std::vector<int> v;
 	// std::vector<int> vector(100, 5);
 	// _vector<int> tmp0(vector);
-    _vector<int> tmp(1000000, 4), tmp2(1000000, 5);
-    tmp = tmp2;
-    _vector<int> tmp3(tmp);
-    t.start();
-    _vector<int> tmp4(tmp.begin(), tmp.end());
-    t.finish();
-    v.push_back(tmp4.size());
-    v.push_back(tmp4.capacity());
-    v.push_back(tmp[2]);
-    v.push_back(tmp3[2]);
-    v.push_back(tmp4[2]);
-    try { _vector<int> tmp5(-1, -1); }
-    catch (std::exception &e) { v.push_back(1); }
+	_vector<int> tmp(1000000, 4), tmp2(1000000, 5);
+	tmp = tmp2;
+	_vector<int> tmp3(tmp);
+	t.start();
+	_vector<int> tmp4(tmp.begin(), tmp.end());
+	t.finish();
+	v.push_back(tmp4.size());
+	v.push_back(tmp4.capacity());
+	v.push_back(tmp[2]);
+	v.push_back(tmp3[2]);
+	v.push_back(tmp4[2]);
+	try { _vector<int> tmp5(-1, -1); }
+	catch (std::exception &e) { v.push_back(1); }
 	print_vec(v);
 	t.printTime();
-    return 0;
+	return 0;
 }
+
 // int main()//checking iterator to const conversion
 // {
 // 	_vector<int> v(5, 1);
@@ -136,25 +138,48 @@ int main()
 
 // int main()//checking resize
 // {
-// 	_vector<int> v;
-// 	v.assign(9900, 1);
-// 	v.resize(5000);
-// 	std::cout << "size: " << v.size()
-// 	<< " capacity: " << v.capacity() << '\n';
+// 	{
+// 		// _vector<int> v;
+// 		// v.assign(9900, 1);
+// 		// v.resize(5000);
+// 		// std::cout << "size: " << v.size()
+// 		// << " capacity: " << v.capacity() << '\n';
 
-// 	v.reserve(5000);
-// 	v.resize(7000);
-// 	std::cout << "size: " << v.size()
-// 	<< " capacity: " << v.capacity() << '\n';
+// 		// v.reserve(5000);
+// 		// v.resize(7000);
+// 		// std::cout << "size: " << v.size()
+// 		// << " capacity: " << v.capacity() << '\n';
 
-// 	v.resize(15300);
-// 	std::cout << "size: " << v.size()
-// 	<< " capacity: " << v.capacity() << '\n';
+// 		// v.resize(15300);
+// 		// std::cout << "size: " << v.size()
+// 		// << " capacity: " << v.capacity() << '\n';
 
-// 	v.push_back(v[65]);
-// 	std::cout << "size: " << v.size()
-// 		<< " capacity: " << v.capacity() << '\n';
-// 	return 0;
+// 		// v.push_back(v[65]);
+// 		// std::cout << "size: " << v.size()
+// 		// 	<< " capacity: " << v.capacity() << '\n';
+// 		// return 0;
+// 	}
+// 	{
+// 		std::vector<int> v;
+// 		Timer<float, MILLI> t;
+// 		_vector<int> vector;
+// 		vector.assign(9900 * _ratio, 1);
+// 		t.start();
+// 		vector.resize(5000 * _ratio);
+// 		vector.reserve(5000 * _ratio);
+// 		v.push_back(vector.size());
+// 		v.push_back(vector.capacity());
+// 		vector.resize(7000 * _ratio);
+// 		v.push_back(vector.size());
+// 		v.push_back(vector.capacity());
+// 		vector.resize(15300 * _ratio, int());
+// 		v.push_back(vector.size());
+// 		v.push_back(vector.capacity());
+// 		v.push_back(vector[65]);
+// 		t.finish();
+// 		t.printTime();
+// 		print_vec(v);
+// 	}
 // }
 
 

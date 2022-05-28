@@ -48,8 +48,8 @@ private:
 	// void construct_value(T* arr, size_t &i, size_t lim, Iter iter);
 	void construct_value(T* arr, size_t &i, size_t lim, T const *val);
 	void construct_value(T* arr, size_t &i, size_t lim, const_iterator iter);
-	void construct_value(T* arr, size_t &i, size_t lim,
-						std::iterator<std::random_access_iterator_tag, T> iter);
+	// void construct_value(T* arr, size_t &i, size_t lim,
+	// 					std::iterator<std::random_access_iterator_tag, T> iter);
 	template <typename Arg>
 	T *create_array(limits lims, size_t size, Arg val);
 
