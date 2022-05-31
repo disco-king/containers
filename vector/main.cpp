@@ -5,7 +5,7 @@
 #include <iostream>
 #include <Timer.hpp>
 
-#define _vector std::vector
+#define _vector ft::vector
 #define _ratio 1000
 
 template <typename T>

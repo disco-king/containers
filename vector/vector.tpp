@@ -24,9 +24,9 @@ sz(0), cap(0), array(0), alloc(alloc)
 }
 
 template <typename T, typename Allocator>
-template <class InputvectorIterator>
-ft::vector<T, Allocator>::vector (InputvectorIterator first,
-									InputvectorIterator last,
+template <class InputIt>
+ft::vector<T, Allocator>::vector (typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
+									InputIt last,
 									const allocator_type& alloc) :
 sz(0), cap(0), array(0), alloc(alloc)
 {
@@ -299,16 +299,9 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 	cap = new_cap;
 }
 
-// template <typename T, typename Allocator>
-// void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim,
-// 										std::iterator<std::random_access_iterator_tag, T> iter)
-// {
-// 	for(; i < lim; i++)
-// 		alloc.construct(arr + i, *iter++);
-// }
-
 template <typename T, typename Allocator>
-void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim, const_iterator iter)
+template <typename Iter>
+void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim, Iter iter)
 {
 	for(; i < lim; i++)
 		alloc.construct(arr + i, *iter++);

@@ -44,12 +44,9 @@ private:
 		limits(int l1, int l2, int count) : l1(l1), l2(l2), count(count) {}
 	};
 
-	// template <typename Iter>
-	// void construct_value(T* arr, size_t &i, size_t lim, Iter iter);
+	template <typename Iter>
+	void construct_value(T* arr, size_t &i, size_t lim, Iter iter);
 	void construct_value(T* arr, size_t &i, size_t lim, T const *val);
-	void construct_value(T* arr, size_t &i, size_t lim, const_iterator iter);
-	// void construct_value(T* arr, size_t &i, size_t lim,
-	// 					std::iterator<std::random_access_iterator_tag, T> iter);
 	template <typename Arg>
 	T *create_array(limits lims, size_t size, Arg val);
 
@@ -60,8 +57,9 @@ public:
 						const allocator_type& alloc = allocator_type());
 	~vector();
 	vector (const vector& src);
-	template <class InputIterator>
-	vector (InputIterator first, InputIterator last,
+	template <class InputIt>
+	vector (typename enable_if<!is_integral<InputIt>::value, InputIt>::type first,
+			InputIt last,
 		const allocator_type& alloc = allocator_type());
 
 	template <class InputIterator>
