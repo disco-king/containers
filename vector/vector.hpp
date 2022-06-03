@@ -8,7 +8,6 @@ template <typename T, typename Allocator> class vector;
 #include <memory>
 #include <iterator>
 #include <cstdlib>
-#include <iostream>
 
 namespace ft
 {
@@ -45,7 +44,8 @@ private:
 	};
 
 	template <typename Iter>
-	void construct_value(T* arr, size_t &i, size_t lim, Iter iter);
+	typename ft::enable_if<!ft::is_pointer<Iter>::value>::type
+	construct_value(T* arr, size_t &i, size_t lim, Iter iter);
 	void construct_value(T* arr, size_t &i, size_t lim, T const *val);
 	template <typename Arg>
 	T *create_array(limits lims, size_t size, Arg val);

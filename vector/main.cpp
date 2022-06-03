@@ -18,29 +18,79 @@ void print_vec(T const &vec)
 	std::cout << '\n';
 }
 
-int main()
-{
-	Timer<> t;
-	std::vector<int> v;
-	// std::vector<int> vector(100, 5);
-	// _vector<int> tmp0(vector);
-	_vector<int> tmp(1000000, 4), tmp2(1000000, 5);
-	tmp = tmp2;
-	_vector<int> tmp3(tmp);
-	t.start();
-	_vector<int> tmp4(tmp.begin(), tmp.end());
-	t.finish();
-	v.push_back(tmp4.size());
-	v.push_back(tmp4.capacity());
-	v.push_back(tmp[2]);
-	v.push_back(tmp3[2]);
-	v.push_back(tmp4[2]);
-	try { _vector<int> tmp5(-1, -1); }
-	catch (std::exception &e) { v.push_back(1); }
-	print_vec(v);
-	t.printTime();
-	return 0;
-}
+// int main()// checking access funcs
+// {
+// 	_vector<int> v;
+
+// 	for (size_t i = 0; i < 10; i++)
+// 		v.push_back(i);
+
+// 	std::cout << "front " << v.front() << '\n';
+// 	std::cout << "back " << v.back() << '\n';
+
+// 	std::cout << "at 5 " << v.at(5) << '\n';
+
+// 	try
+// 	{
+// 		std::cout << "at 10 " << v.at(10) << '\n';
+// 	}
+// 	catch(const std::exception& e)
+// 	{
+// 		std::cerr << e.what() << '\n';
+// 	}
+	
+// 	return 0;
+// }
+
+
+// int main() //checking pop_back
+// {
+// 	_vector<int> v(5, 1);
+
+// 	std::cout << v.size() << '\n';
+// 	while (v.size())
+// 	{
+// 		v.pop_back();
+// 		std::cout << v.size() << '\n';
+// 	}
+	
+// }
+
+// int main()//checking iterators
+// {
+// 	_vector<int> v(1, 1000);
+// 	ft::vector<int>::iterator b = v.begin();
+// 	ft::vector<int>::iterator e = v.begin() + 1;
+
+// 	std::cout << *b << '\n';
+// 	std::cout << *(e - 1) << '\n';
+// 	return 0;
+// }
+
+
+// int main()//checking constructors
+// {
+// 	Timer<> t;
+// 	std::vector<int> v;
+// 	// std::vector<int> vector(100, 5);
+// 	// _vector<int> tmp0(vector);
+// 	_vector<int> tmp(1000000, 4), tmp2(1000000, 5);
+// 	tmp = tmp2;
+// 	_vector<int> tmp3(tmp);
+// 	t.start();
+// 	_vector<int> tmp4(tmp.begin(), tmp.end());
+// 	t.finish();
+// 	v.push_back(tmp4.size());
+// 	v.push_back(tmp4.capacity());
+// 	v.push_back(tmp[2]);
+// 	v.push_back(tmp3[2]);
+// 	v.push_back(tmp4[2]);
+// 	try { _vector<int> tmp5(-1, -1); }
+// 	catch (std::exception &e) { v.push_back(1); }
+// 	print_vec(v);
+// 	t.printTime();
+// 	return 0;
+// }
 
 // int main()//checking iterator to const conversion
 // {
@@ -139,25 +189,25 @@ int main()
 // int main()//checking resize
 // {
 // 	{
-// 		// _vector<int> v;
-// 		// v.assign(9900, 1);
-// 		// v.resize(5000);
-// 		// std::cout << "size: " << v.size()
-// 		// << " capacity: " << v.capacity() << '\n';
+// 		_vector<int> v;
+// 		v.assign(9900, 1);
+// 		v.resize(5000);
+// 		std::cout << "size: " << v.size()
+// 		<< " capacity: " << v.capacity() << '\n';
 
-// 		// v.reserve(5000);
-// 		// v.resize(7000);
-// 		// std::cout << "size: " << v.size()
-// 		// << " capacity: " << v.capacity() << '\n';
+// 		v.reserve(5000);
+// 		v.resize(7000);
+// 		std::cout << "size: " << v.size()
+// 		<< " capacity: " << v.capacity() << '\n';
 
-// 		// v.resize(15300);
-// 		// std::cout << "size: " << v.size()
-// 		// << " capacity: " << v.capacity() << '\n';
+// 		v.resize(15300);
+// 		std::cout << "size: " << v.size()
+// 		<< " capacity: " << v.capacity() << '\n';
 
-// 		// v.push_back(v[65]);
-// 		// std::cout << "size: " << v.size()
-// 		// 	<< " capacity: " << v.capacity() << '\n';
-// 		// return 0;
+// 		v.push_back(v[65]);
+// 		std::cout << "size: " << v.size()
+// 			<< " capacity: " << v.capacity() << '\n';
+// 		return 0;
 // 	}
 // 	{
 // 		std::vector<int> v;
@@ -238,22 +288,16 @@ int main()
 // 	// for (int i = -1; i > -6; i--)
 // 	// 	v2.push_back(i);
 
-// 	std::cout << "size " << v1.size() << ' '
-// 	<< " capacity " << v1.capacity() << '\n';
-// 	for (_vector<std::string>::const_iterator i = v1.begin(); i != v1.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
+// 	print_vec(v1);
 
 // 	_vector<std::string>::iterator i = v1.end();
-// 	v1.insert(i, v2.end(), v2.begin());
+// 	// v1.insert(i, v2.begin(), v2.end());
 // 	// v1.insert(i, 10, -1);
+// 	// v1.insert(i, 10, "ins");
 // 	// v1.insert(v1.begin() + 2, 0);
+// 	v1.insert(v1.begin() + 2, "ins");
 
-// 	std::cout << "size " << v1.size() << ' '
-// 	<< " capacity " << v1.capacity() << '\n';
-// 	for (_vector<std::string>::const_iterator i = v1.begin(); i != v1.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
+// 	print_vec(v1);
 // }
 
 // int main () //checking erase and iterators
@@ -304,8 +348,8 @@ int main()
 // 		<< " capacity " << v1.capacity() << '\n';
 // 	}
 
-// 	print_vec(v1);
-// }
+// // 	print_vec(v1);
+// // }
 
 // int main() //checking swap
 // {
@@ -345,9 +389,6 @@ int main()
 	
 // }
 
-// #define _ratio 10000
-// #define _vector _vector
-
 // int main(int argc, char const *argv[])//checking swap
 // {
 // 	Timer<> t;
@@ -385,4 +426,30 @@ int main()
 // 	print_vec(v);
 //     return 0;
 // }
+
+int main()//checking erase
+{
+	_vector<int> v(1000 * _ratio, 5);
+	Timer<float, MILLI> t;
+
+	std::cout << "size " << v.size()
+	<< " capacity " << v.capacity() << '\n';
+
+	t.start();
+	v.erase(v.begin() + 50 * _ratio);
+	t.finish();
+	t.printTime(0, "single ");
+
+	std::cout << "size " << v.size()
+	<< " capacity " << v.capacity() << '\n';
+
+	t.start();
+	v.erase(v.begin(), v.end());
+	t.finish();
+	t.printTime(0, "range ");
+
+	std::cout << "size " << v.size()
+	<< " capacity " << v.capacity() << '\n';
+}
+
 

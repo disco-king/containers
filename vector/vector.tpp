@@ -301,7 +301,8 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 
 template <typename T, typename Allocator>
 template <typename Iter>
-void ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim, Iter iter)
+typename ft::enable_if<!ft::is_pointer<Iter>::value>::type
+ft::vector<T, Allocator>::construct_value(T* arr, size_t &i, size_t lim, Iter iter)
 {
 	for(; i < lim; i++)
 		alloc.construct(arr + i, *iter++);

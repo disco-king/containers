@@ -2,6 +2,7 @@
 
 #include "template_meta.hpp"
 #include <cstddef>
+#include <iostream>
 
 namespace ft
 {
