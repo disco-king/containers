@@ -188,13 +188,14 @@ ft::vector<T, Allocator>::erase (iterator position)
 		alloc.destroy(&(*position));
 	else
 	{
-		iterator fin = end();
-		for (; position + 1 != fin; position++)
+		T *end_p = &(*end());
+		T *pos = &(*position);
+		for (; pos + 1 != end_p; pos++)
 		{
-			alloc.destroy(&(*position));
-			alloc.construct(&(*position), *(position + 1));
+			alloc.destroy(pos);
+			alloc.construct(pos, *(pos + 1));
 		}
-		alloc.destroy(&(*position));
+		alloc.destroy(pos);
 	}
 	sz--;
 	return begin() + dist;
@@ -207,12 +208,13 @@ ft::vector<T, Allocator>::erase (iterator first, iterator last)
 	ptrdiff_t dist = ft::distance(begin(), first);
 	ptrdiff_t jump = ft::distance(first, last);
 
-	iterator fin = end();
-	for (; first < fin; first++)
+	T *end_p = &(*end());
+	T *pos = &(*first);
+	for (; pos < end_p; pos++)
 	{
-		alloc.destroy(&(*first));
-		if(first + jump < fin)
-			alloc.construct(&(*first), *(first + jump));
+		alloc.destroy(pos);
+		if(pos + jump < end_p)
+			alloc.construct(pos, *(pos + jump));
 	}
 	sz -= jump;
 	return begin() + dist;

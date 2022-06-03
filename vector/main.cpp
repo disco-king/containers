@@ -444,7 +444,7 @@ int main()//checking erase
 	<< " capacity " << v.capacity() << '\n';
 
 	t.start();
-	v.erase(v.begin(), v.end());
+	v.erase(v.begin() + 300 * _ratio, v.begin() + 700 * _ratio);
 	t.finish();
 	t.printTime(0, "range ");
 
