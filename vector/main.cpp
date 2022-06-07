@@ -3,7 +3,7 @@
 #include <iterator>
 #include <algorithm>
 #include <iostream>
-#include <Timer.hpp>
+// #include <Timer.hpp>
 
 #define _vector ft::vector
 #define _ratio 1000
@@ -97,7 +97,7 @@ void print_vec(T const &vec)
 // 	_vector<int> v(5, 1);
 
 // 	_vector<int>::iterator i = v.begin();
-// 	_vector<int>::const_iterator ci = i;
+// 	_vector<int>::const_iterator ci = v.begin();
 // 	_vector<int>::iterator e = v.end();
 
 // 	// i = ci;
@@ -233,41 +233,41 @@ void print_vec(T const &vec)
 // }
 
 
-// int main() //checking reverse iterators
-// {
-// 	_vector<int> v;
-// 	v.push_back(1);
-// 	v.push_back(2);
-// 	v.push_back(3);
+int main() //checking reverse iterators
+{
+	_vector<int> v;
+	v.push_back(1);
+	v.push_back(2);
+	v.push_back(3);
 
-// 	_vector<int>::iterator i = v.end();
-// 	_vector<int>::reverse_iterator rbegin = _vector<int>::reverse_iterator(i);
-// 	_vector<int>::reverse_iterator rend = v.rend() - 1;
-// 	std::cout << "rbegin " << *rbegin << '\n';
-// 	std::cout << "rend " << *rend << '\n';
-// 	std::cout << "addr1 " << &(*i) << '\n';
-// 	std::cout << "addr2 " << &(*rbegin) << '\n';
+	_vector<int>::iterator i = v.end();
+	_vector<int>::const_reverse_iterator rbegin = _vector<int>::reverse_iterator(i);
+	_vector<int>::reverse_iterator rend = v.rend() - 1;
+	std::cout << "rbegin " << *rbegin << '\n';
+	std::cout << "rend " << *rend << '\n';
+	std::cout << "addr1 " << &(*i) << '\n';
+	std::cout << "addr2 " << &(*rbegin) << '\n';
 
-// 	std::cout << "eq " << (rbegin == rend) << '\n'; 
-// 	std::cout << "ne " << (rbegin != rend) << '\n'; 
-// 	std::cout << "gt " << (rbegin > rend) << '\n'; 
-// 	std::cout << "lt " << (rbegin < rend) << '\n'; 
-// 	std::cout << "ge " << (rbegin >= rend) << '\n'; 
-// 	std::cout << "le " << (rbegin <= rend) << '\n'; 
+	std::cout << "eq " << (rbegin == rend) << '\n'; 
+	std::cout << "ne " << (rbegin != rend) << '\n'; 
+	std::cout << "gt " << (rbegin > rend) << '\n'; 
+	std::cout << "lt " << (rbegin < rend) << '\n'; 
+	std::cout << "ge " << (rbegin >= rend) << '\n'; 
+	std::cout << "le " << (rbegin <= rend) << '\n'; 
 
-// 	rbegin += 2;
-// 	rend -= 2;
-// 	std::cout << "rbegin " << *rbegin << '\n';
-// 	std::cout << "rend " << *rend << '\n';
+	rbegin += 2;
+	rend -= 2;
+	std::cout << "rbegin " << *rbegin << '\n';
+	std::cout << "rend " << *rend << '\n';
 
-// 	std::cout << "eq " << (rbegin == rend) << '\n'; 
-// 	std::cout << "ne " << (rbegin != rend) << '\n'; 
-// 	std::cout << "gt " << (rbegin > rend) << '\n'; 
-// 	std::cout << "lt " << (rbegin < rend) << '\n'; 
-// 	std::cout << "ge " << (rbegin >= rend) << '\n'; 
-// 	std::cout << "le " << (rbegin <= rend) << '\n'; 
+	std::cout << "eq " << (rbegin == rend) << '\n'; 
+	std::cout << "ne " << (rbegin != rend) << '\n'; 
+	std::cout << "gt " << (rbegin > rend) << '\n'; 
+	std::cout << "lt " << (rbegin < rend) << '\n'; 
+	std::cout << "ge " << (rbegin >= rend) << '\n'; 
+	std::cout << "le " << (rbegin <= rend) << '\n'; 
 
-// }
+}
 
 
 // int main() //checking insert
@@ -291,11 +291,11 @@ void print_vec(T const &vec)
 // 	print_vec(v1);
 
 // 	_vector<std::string>::iterator i = v1.end();
-// 	// v1.insert(i, v2.begin(), v2.end());
+// 	v1.insert(i, v2.begin(), v2.end());
 // 	// v1.insert(i, 10, -1);
 // 	// v1.insert(i, 10, "ins");
 // 	// v1.insert(v1.begin() + 2, 0);
-// 	v1.insert(v1.begin() + 2, "ins");
+// 	// v1.insert(v1.begin() + 2, "ins");
 
 // 	print_vec(v1);
 // }
@@ -427,29 +427,29 @@ void print_vec(T const &vec)
 //     return 0;
 // }
 
-int main()//checking erase
-{
-	_vector<int> v(1000 * _ratio, 5);
-	Timer<float, MILLI> t;
+// int main()//checking erase
+// {
+// 	_vector<int> v(1000 * _ratio, 5);
+// 	Timer<float, MILLI> t;
 
-	std::cout << "size " << v.size()
-	<< " capacity " << v.capacity() << '\n';
+// 	std::cout << "size " << v.size()
+// 	<< " capacity " << v.capacity() << '\n';
 
-	t.start();
-	v.erase(v.begin() + 50 * _ratio);
-	t.finish();
-	t.printTime(0, "single ");
+// 	t.start();
+// 	v.erase(v.begin() + 50 * _ratio);
+// 	t.finish();
+// 	t.printTime(0, "single ");
 
-	std::cout << "size " << v.size()
-	<< " capacity " << v.capacity() << '\n';
+// 	std::cout << "size " << v.size()
+// 	<< " capacity " << v.capacity() << '\n';
 
-	t.start();
-	v.erase(v.begin() + 300 * _ratio, v.begin() + 700 * _ratio);
-	t.finish();
-	t.printTime(0, "range ");
+// 	t.start();
+// 	v.erase(v.begin() + 300 * _ratio, v.begin() + 700 * _ratio);
+// 	t.finish();
+// 	t.printTime(0, "range ");
 
-	std::cout << "size " << v.size()
-	<< " capacity " << v.capacity() << '\n';
-}
+// 	std::cout << "size " << v.size()
+// 	<< " capacity " << v.capacity() << '\n';
+// }
 
 
