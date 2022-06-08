@@ -21,7 +21,7 @@ class Tree
 
 public:
 	typedef T value_type;
-	typedef Comp comparator;
+	typedef Comp key_compare;
 	typedef ptrdiff_t difference_type;
 	typedef size_t size_type;
 	typedef treeIterator<T> iterator;
@@ -29,7 +29,6 @@ public:
 	typedef ft::reverse_iterator<iterator> reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
-private:
 	struct Node{
 		Tree *t_ptr;
 		Node *p;
@@ -42,10 +41,12 @@ private:
 		p(ptr), left(ptr), right(ptr), val(val), color(RED) {}
 	};
 
+private:
 	friend class ft::treeIterator<T>;
 	Node *root;
 	Node * const nil;
 	int height;
+	key_compare comp;
 
 	Node *addNode(Node *head, T val, int depth);
 	void insertFixup(Node *n);
@@ -57,8 +58,8 @@ private:
 	void transplant(Node *prev_n, Node * new_n);
 	void updateHeight();
 	void clearNodes(Node *head);
-	// virtual bool isLess(T const & lhs, T const &rhs)
-	// { return comparator(lhs, rhs); }
+	virtual bool isLess(T const & lhs, T const &rhs)
+	{ return comp(lhs, rhs); }
 
 public:
 	Tree() : root(0), height(0), nil(new Node(this)){
@@ -206,7 +207,7 @@ int Tree<T, Comp, Alloc>::maxHeight(Node *head, int depth)
 template <typename T, typename Comp, typename Alloc>
 typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::addNode(Node *n, T val, int depth)
 {
-	if(val < n->val)
+	if(isLess(val, n->val))
 	{
 		if(n->left == nil)
 		{
@@ -253,10 +254,10 @@ typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::findValue(T val)
 	Node *n = root;
 	while (n != nil)
 	{
-		if(val == n->val)
-			break;
-		if(comparator(val, n->val))
+		if(isLess(val, n->val))
 			n = n->left;
+		else if(!isLess(n->val, val))
+			break;
 		else
 			n = n->right;
 	}
