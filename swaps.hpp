@@ -12,14 +12,3 @@ void swap(T &lhs, T &rhs)
 }
 
 }
-
-namespace std
-{
-
-template <class T, class Allocator>
-void swap(ft::vector<T, Allocator> &x, ft::vector<T, Allocator> &y)
-{
-	x.swap(y);
-}
-
-}

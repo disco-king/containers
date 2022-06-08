@@ -5,6 +5,7 @@ template <typename T, typename Allocator> class vector;
 }
 
 #include "../utils.hpp"
+#include "vectorIterator.hpp"
 #include <memory>
 #include <iterator>
 #include <cstdlib>
@@ -27,8 +28,8 @@ public:
 	typedef size_t size_type;
 	typedef vectorIterator<T> iterator;
 	typedef vectorIterator<const T> const_iterator;
-	typedef reverse_iterator<iterator> reverse_iterator;
-	typedef reverse_iterator<const_iterator> const_reverse_iterator;
+	typedef ft::reverse_iterator<iterator> reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 private:
 	size_t sz;
@@ -163,6 +164,15 @@ bool operator!=(ft::vector<T> const &lhs, ft::vector<T> const &rhs)
 	return !(lhs == rhs);
 }
 
+}
+
+namespace std
+{
+template <class T, class Allocator>
+void swap(ft::vector<T, Allocator> &x, ft::vector<T, Allocator> &y)
+{
+	x.swap(y);
+}
 }
 
 #include "vector.tpp"

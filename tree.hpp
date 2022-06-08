@@ -3,7 +3,6 @@
 #include <iostream>
 #include <cmath>
 #include "utils.hpp"
-// #include "treeIterator.hpp"
 
 namespace ft
 {
@@ -14,7 +13,9 @@ namespace ft
 template <typename T>
 class treeIterator;
 
-template <typename T, typename Comp = std::less<T>>
+template <typename T,
+			typename Comp = std::less<T>,
+			typename Allocator = std::allocator<T> >
 class Tree
 {
 
@@ -25,7 +26,10 @@ public:
 	typedef size_t size_type;
 	typedef treeIterator<T> iterator;
 	typedef treeIterator<const T> const_iterator;
+	typedef ft::reverse_iterator<iterator> reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
+private:
 	struct Node{
 		Tree *t_ptr;
 		Node *p;
@@ -38,7 +42,6 @@ public:
 		p(ptr), left(ptr), right(ptr), val(val), color(RED) {}
 	};
 
-private:
 	friend class ft::treeIterator<T>;
 	Node *root;
 	Node * const nil;
@@ -54,6 +57,8 @@ private:
 	void transplant(Node *prev_n, Node * new_n);
 	void updateHeight();
 	void clearNodes(Node *head);
+	// virtual bool isLess(T const & lhs, T const &rhs)
+	// { return comparator(lhs, rhs); }
 
 public:
 	Tree() : root(0), height(0), nil(new Node(this)){
@@ -83,10 +88,12 @@ public:
 
 	iterator begin() { return iterator(treeMinimum(root)); }
 	iterator end() { return iterator(nil); }
+	reverse_iterator rbegin() { return reverse_iterator(end()); }
+	reverse_iterator rend() { return reverse_iterator(begin()); }
 };
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::insertFixup(Node *x)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::insertFixup(Node *x)
 {
 	Node *y;
 	while(x->p->color == RED)
@@ -133,8 +140,8 @@ void Tree<T, Comp>::insertFixup(Node *x)
 	root->color = BLACK;
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::rotateLeft(Node *x)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::rotateLeft(Node *x)
 {
 	Node *y = x->right;
 	x->right = y->left;
@@ -153,8 +160,8 @@ void Tree<T, Comp>::rotateLeft(Node *x)
 	updateHeight();
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::rotateRight(Node *x)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::rotateRight(Node *x)
 {
 	Node *y = x->left;
 	x->left = y->right;
@@ -173,16 +180,16 @@ void Tree<T, Comp>::rotateRight(Node *x)
 	updateHeight();
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::updateHeight()
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::updateHeight()
 {
 	int h = maxHeight(root, 0);
 	if(h != height)
 		height = h;
 }
 
-template <typename T, typename Comp>
-int Tree<T, Comp>::maxHeight(Node *head, int depth)
+template <typename T, typename Comp, typename Alloc>
+int Tree<T, Comp, Alloc>::maxHeight(Node *head, int depth)
 {
 	if(head == nil)
 		return depth - 1;
@@ -196,8 +203,8 @@ int Tree<T, Comp>::maxHeight(Node *head, int depth)
 	return (left > right) ? left : right;
 }
 
-template <typename T, typename Comp>
-typename Tree<T, Comp>::Node *Tree<T, Comp>::addNode(Node *n, T val, int depth)
+template <typename T, typename Comp, typename Alloc>
+typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::addNode(Node *n, T val, int depth)
 {
 	if(val < n->val)
 	{
@@ -223,8 +230,8 @@ typename Tree<T, Comp>::Node *Tree<T, Comp>::addNode(Node *n, T val, int depth)
 	}
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::addValue(T val)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::addValue(T val)
 {
 	if(!root)
 	{
@@ -233,10 +240,12 @@ void Tree<T, Comp>::addValue(T val)
 	}
 	else
 		insertFixup(addNode(root, val, 0));
+	nil->p = treeMaximum(root);
+	root->p = nil;
 }
 
-template <typename T, typename Comp>
-typename Tree<T, Comp>::Node *Tree<T, Comp>::findValue(T val)
+template <typename T, typename Comp, typename Alloc>
+typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::findValue(T val)
 {
 	if(root == nil)
 		return root;
@@ -254,8 +263,8 @@ typename Tree<T, Comp>::Node *Tree<T, Comp>::findValue(T val)
 	return n;
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::transplant(Node *prev_n, Node * new_n)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::transplant(Node *prev_n, Node * new_n)
 {
 	if(prev_n->p == nil)
 		root = new_n;
@@ -266,8 +275,8 @@ void Tree<T, Comp>::transplant(Node *prev_n, Node * new_n)
 	new_n->p = prev_n->p;
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::removeValue(T val)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::removeValue(T val)
 {
 	Node *n = findValue(val);
 	if(n == nil)
@@ -308,10 +317,12 @@ void Tree<T, Comp>::removeValue(T val)
 	if(orig_color == BLACK)
 		deleteFixup(repl);
 	updateHeight();
+	nil->p = treeMaximum(root);
+	root->p = nil;
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::deleteFixup(Node *n)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::deleteFixup(Node *n)
 {
 	Node *s;
 	while(n != root && n->color == BLACK)
@@ -382,8 +393,8 @@ void Tree<T, Comp>::deleteFixup(Node *n)
 	n->color = BLACK;
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::printNodes(Node *head)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::printNodes(Node *head)
 {
 	if(head->left != nil)
 		printNodes(head->left);
@@ -392,15 +403,15 @@ void Tree<T, Comp>::printNodes(Node *head)
 		printNodes(head->right);
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::printTree()
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::printTree()
 {
 	printNodes(root);
 	std::cout << "\n";
 }
 
-template <typename T, typename Comp>
-typename Tree<T, Comp>::Node *Tree<T, Comp>::treeMinimum(Node *head)
+template <typename T, typename Comp, typename Alloc>
+typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::treeMinimum(Node *head)
 {
 	if(head->left == nil)
 		return head;
@@ -408,8 +419,8 @@ typename Tree<T, Comp>::Node *Tree<T, Comp>::treeMinimum(Node *head)
 	return treeMinimum(head->left);
 }
 
-template <typename T, typename Comp>
-typename Tree<T, Comp>::Node *Tree<T, Comp>::treeMaximum(Node *head)
+template <typename T, typename Comp, typename Alloc>
+typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::treeMaximum(Node *head)
 {
 	if(head->right == nil)
 		return head;
@@ -435,8 +446,8 @@ int width(int num)
 	return count;
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::printLevel(typename Tree<T, Comp>::Node *head, int level, int depth)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::printLevel(typename Tree<T, Comp, Alloc>::Node *head, int level, int depth)
 {
 	if(depth != level)
 	{
@@ -462,8 +473,8 @@ void Tree<T, Comp>::printLevel(typename Tree<T, Comp>::Node *head, int level, in
 		std::cout << ' ';
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::graphicPrint()
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::graphicPrint()
 {
 	for (int i = 0; i <= height; i++)
 	{
@@ -472,8 +483,8 @@ void Tree<T, Comp>::graphicPrint()
 	}
 }
 
-template <typename T, typename Comp>
-typename Tree<T, Comp>::Node *Tree<T, Comp>::successor(Node *x)
+template <typename T, typename Comp, typename Alloc>
+typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::successor(Node *x)
 {
 	if(x->right != nil)
 		return treeMinimum(x->right);
@@ -486,9 +497,11 @@ typename Tree<T, Comp>::Node *Tree<T, Comp>::successor(Node *x)
 	return y;
 }
 
-template <typename T, typename Comp>
-typename Tree<T, Comp>::Node *Tree<T, Comp>::predecessor(Node *x)
+template <typename T, typename Comp, typename Alloc>
+typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::predecessor(Node *x)
 {
+	if(x == nil)
+		return x->p;
 	if(x->left != nil)
 		return treeMaximum(x->left);
 	Node *y = x;
@@ -500,8 +513,8 @@ typename Tree<T, Comp>::Node *Tree<T, Comp>::predecessor(Node *x)
 	return y;
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::checkPars(Node *head)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::checkPars(Node *head)
 {
 	if(head == nil)
 		return;
@@ -515,8 +528,8 @@ void Tree<T, Comp>::checkPars(Node *head)
 	std::cout << "\nroot reached\n";
 }
 
-template <typename T, typename Comp>
-void Tree<T, Comp>::clearNodes(Node *head)
+template <typename T, typename Comp, typename Alloc>
+void Tree<T, Comp, Alloc>::clearNodes(Node *head)
 {
 	if(head == nil)
 		return;
@@ -527,76 +540,6 @@ void Tree<T, Comp>::clearNodes(Node *head)
 	delete head;
 }
 
-template <typename T>
-class treeIterator : public iterator<bidirectional_iterator_tag, T>
-{
-
-private:
-	typedef typename Tree<T>::Node Node;
-	Node *n_ptr;
-
-public:
-	typedef typename iterator<bidirectional_iterator_tag, T>::iterator_category iterator_category;
-	typedef typename iterator<bidirectional_iterator_tag, T>::difference_type difference_type;
-	typedef typename iterator<bidirectional_iterator_tag, T>::value_type value_type;
-	typedef typename iterator<bidirectional_iterator_tag, T>::pointer pointer;
-	typedef typename iterator<bidirectional_iterator_tag, T>::reference reference;
-
-	explicit treeIterator(Node *ptr = 0) : n_ptr(ptr) {};
-
-	treeIterator& operator=(treeIterator const &src) {
-		n_ptr = src.n_ptr;
-		return *this;
-	}
-
-	treeIterator& operator++() {
-		n_ptr = n_ptr->t_ptr->successor(n_ptr);
-		return *this;
-	}
-	
-	treeIterator operator++(int) {
-		treeIterator retval = *this;
-		++(*this);
-		return retval;
-	}
-
-	treeIterator& operator--() {
-		n_ptr = n_ptr->t_ptr->predecessor(n_ptr);
-		return *this;
-	}
-
-	treeIterator operator--(int) {
-		treeIterator retval = *this;
-		--(*this);
-		return retval;
-	}
-
-	operator vectorIterator<const T> () const
-	{ return (vectorIterator<const T>(this->n_ptr)); }
-
-	reference operator*() const { return n_ptr->val; }
-	pointer operator->() const { return &(this->operator*()); }
-};
-
-template <typename T, typename U>
-bool operator==(const treeIterator<T> &lhs,
-				const treeIterator<U> &rhs)
-{return &(*lhs) == &(*rhs);}
-
-template <typename T>
-bool operator==(const treeIterator<T> &lhs,
-				const treeIterator<T> &rhs)
-{return &(*lhs) == &(*rhs);}
-
-template <typename T, typename U>
-bool operator!=(const treeIterator<T> &lhs,
-				const treeIterator<U> &rhs)
-{return &(*lhs) != &(*rhs);}
-
-template <typename T>
-bool operator!=(const treeIterator<T> &lhs,
-				const treeIterator<T> &rhs)
-{return &(*lhs) != &(*rhs);}
-
-
 }
+
+#include "treeIterator.hpp"

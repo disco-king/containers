@@ -3,9 +3,9 @@
 #include <iterator>
 #include <algorithm>
 #include <iostream>
-// #include <Timer.hpp>
+#include <Timer.hpp>
 
-#define _vector ft::vector
+#define _vector std::vector
 #define _ratio 1000
 
 template <typename T>
@@ -233,41 +233,41 @@ void print_vec(T const &vec)
 // }
 
 
-int main() //checking reverse iterators
-{
-	_vector<int> v;
-	v.push_back(1);
-	v.push_back(2);
-	v.push_back(3);
+// int main() //checking reverse iterators
+// {
+// 	_vector<int> v;
+// 	v.push_back(1);
+// 	v.push_back(2);
+// 	v.push_back(3);
 
-	_vector<int>::iterator i = v.end();
-	_vector<int>::const_reverse_iterator rbegin = _vector<int>::reverse_iterator(i);
-	_vector<int>::reverse_iterator rend = v.rend() - 1;
-	std::cout << "rbegin " << *rbegin << '\n';
-	std::cout << "rend " << *rend << '\n';
-	std::cout << "addr1 " << &(*i) << '\n';
-	std::cout << "addr2 " << &(*rbegin) << '\n';
+// 	_vector<int>::iterator i = v.end();
+// 	_vector<int>::const_reverse_iterator rbegin = _vector<int>::reverse_iterator(i);
+// 	_vector<int>::reverse_iterator rend = v.rend() - 1;
+// 	std::cout << "rbegin " << *rbegin << '\n';
+// 	std::cout << "rend " << *rend << '\n';
+// 	std::cout << "addr1 " << &(*i) << '\n';
+// 	std::cout << "addr2 " << &(*rbegin) << '\n';
 
-	std::cout << "eq " << (rbegin == rend) << '\n'; 
-	std::cout << "ne " << (rbegin != rend) << '\n'; 
-	std::cout << "gt " << (rbegin > rend) << '\n'; 
-	std::cout << "lt " << (rbegin < rend) << '\n'; 
-	std::cout << "ge " << (rbegin >= rend) << '\n'; 
-	std::cout << "le " << (rbegin <= rend) << '\n'; 
+// 	std::cout << "eq " << (rbegin == rend) << '\n'; 
+// 	std::cout << "ne " << (rbegin != rend) << '\n'; 
+// 	std::cout << "gt " << (rbegin > rend) << '\n'; 
+// 	std::cout << "lt " << (rbegin < rend) << '\n'; 
+// 	std::cout << "ge " << (rbegin >= rend) << '\n'; 
+// 	std::cout << "le " << (rbegin <= rend) << '\n'; 
 
-	rbegin += 2;
-	rend -= 2;
-	std::cout << "rbegin " << *rbegin << '\n';
-	std::cout << "rend " << *rend << '\n';
+// 	rbegin += 2;
+// 	rend -= 2;
+// 	std::cout << "rbegin " << *rbegin << '\n';
+// 	std::cout << "rend " << *rend << '\n';
 
-	std::cout << "eq " << (rbegin == rend) << '\n'; 
-	std::cout << "ne " << (rbegin != rend) << '\n'; 
-	std::cout << "gt " << (rbegin > rend) << '\n'; 
-	std::cout << "lt " << (rbegin < rend) << '\n'; 
-	std::cout << "ge " << (rbegin >= rend) << '\n'; 
-	std::cout << "le " << (rbegin <= rend) << '\n'; 
+// 	std::cout << "eq " << (rbegin == rend) << '\n'; 
+// 	std::cout << "ne " << (rbegin != rend) << '\n'; 
+// 	std::cout << "gt " << (rbegin > rend) << '\n'; 
+// 	std::cout << "lt " << (rbegin < rend) << '\n'; 
+// 	std::cout << "ge " << (rbegin >= rend) << '\n'; 
+// 	std::cout << "le " << (rbegin <= rend) << '\n'; 
 
-}
+// }
 
 
 // int main() //checking insert
@@ -389,43 +389,43 @@ int main() //checking reverse iterators
 	
 // }
 
-// int main(int argc, char const *argv[])//checking swap
-// {
-// 	Timer<> t;
+int main(int argc, char const *argv[])//checking swap
+{
+	Timer<float, MICRO> t;
 
-//     std::vector<int> v;
-//     _vector<int> vector;
-//     vector.assign(1100 * _ratio, 11);
-//     _vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
+    std::vector<int> v;
+    _vector<int> vector;
+    vector.assign(1100 * _ratio, 11);
+    _vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
 
-// 	t.start();
+	t.start();
 
-//     v.push_back(vector[2]);
-//     v.push_back(vector.size());
-//     v.push_back(vector.capacity());
-//     vector.swap(tmp);
-//     v.push_back(vector[2]);
-//     v.push_back(vector.size());
-//     v.push_back(vector.capacity());
-//     vector.swap(tmp3);
-//     v.push_back(vector[2]);
-//     v.push_back(vector.size());
-//     v.push_back(vector.capacity());
-//     std::swap(vector, tmp2);
-//     v.push_back(vector[2]);
-//     v.push_back(vector.size());
-//     v.push_back(vector.capacity());
-//     std::swap(vector, tmp4);
-//     v.push_back(vector[2]);
-//     v.push_back(vector.size());
-//     v.push_back(vector.capacity());
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    vector.swap(tmp);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    vector.swap(tmp3);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    std::swap(vector, tmp2);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
+    std::swap(vector, tmp4);
+    v.push_back(vector[2]);
+    v.push_back(vector.size());
+    v.push_back(vector.capacity());
 
-// 	t.finish();
+	t.finish();
 
-// 	t.printTime(0);
-// 	print_vec(v);
-//     return 0;
-// }
+	t.printTime(0);
+	print_vec(v);
+    return 0;
+}
 
 // int main()//checking erase
 // {

@@ -6,8 +6,6 @@
 namespace ft
 {
 
-
-
 template <typename T>
 class treeIterator : public iterator<bidirectional_iterator_tag, T>
 {
@@ -52,8 +50,8 @@ public:
 		return retval;
 	}
 
-	operator vectorIterator<const T> () const
-	{ return (vectorIterator<const T>(this->n_ptr)); }
+	operator treeIterator<const T> () const
+	{ return (treeIterator<const T>(this->n_ptr)); }
 
 	reference operator*() const { return n_ptr->val; }
 	pointer operator->() const { return &(this->operator*()); }
@@ -78,5 +76,6 @@ template <typename T>
 bool operator!=(const treeIterator<T> &lhs,
 				const treeIterator<T> &rhs)
 {return &(*lhs) != &(*rhs);}
+
 
 }
