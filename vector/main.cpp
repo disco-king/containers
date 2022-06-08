@@ -5,7 +5,7 @@
 #include <iostream>
 #include <Timer.hpp>
 
-#define _vector std::vector
+#define _vector ft::vector
 #define _ratio 1000
 
 template <typename T>
@@ -58,7 +58,7 @@ void print_vec(T const &vec)
 
 // int main()//checking iterators
 // {
-// 	_vector<int> v(1, 1000);
+// 	_vector<int> v(1000, 1);
 // 	ft::vector<int>::iterator b = v.begin();
 // 	ft::vector<int>::iterator e = v.begin() + 1;
 
@@ -351,81 +351,81 @@ void print_vec(T const &vec)
 // // 	print_vec(v1);
 // // }
 
-// int main() //checking swap
-// {
-// 	_vector<std::string> v1;
-// 	v1.push_back("s1");
-// 	v1.push_back("s2");
-// 	v1.push_back("s3");
-// 	_vector<std::string> v2;
-// 	v2.push_back("s4");
-// 	v2.push_back("s5");
-
-// 	_vector<std::string>::iterator i1 = v1.begin();
-// 	_vector<std::string>::iterator i2 = v2.begin();
-
-// 	std::string const & ref1 = v1.back();
-// 	std::string const & ref2 = v2.back();
-
-// 	std::cout << "references: " << ref1 << " " << ref2 << '\n';
-// 	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
-// 	for (_vector<std::string>::iterator i = i1; i < v1.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
-// 	for (_vector<std::string>::iterator i = i2; i < v2.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
-	
-// 	v1.swap(v2);
-
-// 	std::cout << "references: " << ref1 << " " << ref2 << '\n';
-// 	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
-// 	for (_vector<std::string>::iterator i = i1; i < v2.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
-// 	for (_vector<std::string>::iterator i = i2; i < v1.end(); i++)
-// 		std::cout << *i << ' ';
-// 	std::cout << '\n';
-	
-// }
-
-int main(int argc, char const *argv[])//checking swap
+int main() //checking swap
 {
-	Timer<float, MICRO> t;
+	_vector<std::string> v1;
+	v1.push_back("s1");
+	v1.push_back("s2");
+	v1.push_back("s3");
+	_vector<std::string> v2;
+	v2.push_back("s4");
+	v2.push_back("s5");
 
-    std::vector<int> v;
-    _vector<int> vector;
-    vector.assign(1100 * _ratio, 11);
-    _vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
+	_vector<std::string>::iterator i1 = v1.begin();
+	_vector<std::string>::iterator i2 = v2.begin();
 
-	t.start();
+	std::string const & ref1 = v1.back();
+	std::string const & ref2 = v2.back();
 
-    v.push_back(vector[2]);
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
-    vector.swap(tmp);
-    v.push_back(vector[2]);
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
-    vector.swap(tmp3);
-    v.push_back(vector[2]);
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
-    std::swap(vector, tmp2);
-    v.push_back(vector[2]);
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
-    std::swap(vector, tmp4);
-    v.push_back(vector[2]);
-    v.push_back(vector.size());
-    v.push_back(vector.capacity());
+	std::cout << "references: " << ref1 << " " << ref2 << '\n';
+	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
+	for (_vector<std::string>::iterator i = i1; i < v1.end(); i++)
+		std::cout << *i << ' ';
+	std::cout << '\n';
+	for (_vector<std::string>::iterator i = i2; i < v2.end(); i++)
+		std::cout << *i << ' ';
+	std::cout << '\n';
+	
+	v1.swap(v2);
 
-	t.finish();
-
-	t.printTime(0);
-	print_vec(v);
-    return 0;
+	std::cout << "references: " << ref1 << " " << ref2 << '\n';
+	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
+	for (_vector<std::string>::iterator i = i1; i < v2.end(); i++)
+		std::cout << *i << ' ';
+	std::cout << '\n';
+	for (_vector<std::string>::iterator i = i2; i < v1.end(); i++)
+		std::cout << *i << ' ';
+	std::cout << '\n';
+	
 }
+
+// int main(int argc, char const *argv[])//checking swap
+// {
+// 	Timer<float, MICRO> t;
+
+//     std::vector<int> v;
+//     _vector<int> vector;
+//     vector.assign(1100 * _ratio, 11);
+//     _vector<int> tmp(500 * _ratio, 5), tmp2(1000 * _ratio, 10), tmp3(1500 * _ratio, 15), tmp4(3000 * _ratio, 30);
+
+// 	t.start();
+
+//     v.push_back(vector[2]);
+//     v.push_back(vector.size());
+//     v.push_back(vector.capacity());
+//     vector.swap(tmp);
+//     v.push_back(vector[2]);
+//     v.push_back(vector.size());
+//     v.push_back(vector.capacity());
+//     vector.swap(tmp3);
+//     v.push_back(vector[2]);
+//     v.push_back(vector.size());
+//     v.push_back(vector.capacity());
+//     std::swap(vector, tmp2);
+//     v.push_back(vector[2]);
+//     v.push_back(vector.size());
+//     v.push_back(vector.capacity());
+//     std::swap(vector, tmp4);
+//     v.push_back(vector[2]);
+//     v.push_back(vector.size());
+//     v.push_back(vector.capacity());
+
+// 	t.finish();
+
+// 	t.printTime(0);
+// 	print_vec(v);
+//     return 0;
+// }
 
 // int main()//checking erase
 // {

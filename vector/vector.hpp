@@ -28,8 +28,8 @@ public:
 	typedef size_t size_type;
 	typedef vectorIterator<T> iterator;
 	typedef vectorIterator<const T> const_iterator;
-	typedef ft::reverse_iterator<iterator> reverse_iterator;
-	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+	typedef ft::ra_reverse_iterator<iterator> reverse_iterator;
+	typedef ft::ra_reverse_iterator<const_iterator> const_reverse_iterator;
 
 private:
 	size_t sz;
