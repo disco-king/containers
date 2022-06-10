@@ -20,14 +20,6 @@ class Tree
 {
 
 public:
-	typedef T value_type;
-	typedef Comp key_compare;
-	typedef ptrdiff_t difference_type;
-	typedef size_t size_type;
-	typedef treeIterator<T> iterator;
-	typedef treeIterator<const T> const_iterator;
-	typedef ft::reverse_iterator<iterator> reverse_iterator;
-	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	struct Node{
 		Tree *t_ptr;
@@ -41,12 +33,33 @@ public:
 		p(ptr), left(ptr), right(ptr), val(val), color(RED) {}
 	};
 
-private:
+	typedef T key_type;
+	typedef T value_type;
+	typedef Comp key_compare;
+	typedef Comp value_compare;
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
+	typedef Allocator allocator_type;
+	typedef value_type& reference;
+	typedef const value_type& const_reference;
+	typedef typename Allocator::pointer pointer;
+	typedef typename Allocator::const_pointer const_pointer;
+	typedef treeIterator<T> iterator;
+	typedef treeIterator<const T> const_iterator;
+	typedef ft::reverse_iterator<iterator> reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
+
+
+protected:
 	friend class ft::treeIterator<T>;
-	Node *root;
+	typedef ft::pair<iterator, bool> pairib;
+	typedef ft::pair<const_iterator, bool> paircb;
+
 	Node * const nil;
+	Node *root;
 	int height;
-	key_compare comp;
+	key_compare comp_obj;
+	allocator_type alloc;
 
 	Node *addNode(Node *head, T val, int depth);
 	void insertFixup(Node *n);
@@ -58,13 +71,20 @@ private:
 	void transplant(Node *prev_n, Node * new_n);
 	void updateHeight();
 	void clearNodes(Node *head);
-	virtual bool isLess(T const & lhs, T const &rhs)
-	{ return comp(lhs, rhs); }
+
+	template <typename U>
+	bool isLess(U const & lhs, U const &rhs)
+	{ return comp_obj(lhs, rhs); }
+
+	template <typename U, typename V>
+	bool isLess(ft::pair<U, V> const & lhs, ft::pair<U, V> const &rhs)
+	{ return comp_obj(lhs.first, rhs.first); }
 
 public:
-	Tree() : root(0), height(0), nil(new Node(this)){
+	Tree() : nil(new Node(this)), root(nil), height(0), comp_obj(){
 		nil->color = BLACK;
 	}
+
 	~Tree(){
 		clearNodes(root);
 		delete nil;
@@ -80,6 +100,7 @@ public:
 	Node *predecessor(Node *x);
 	void rotateLeft(Node *x);
 	void rotateRight(Node *x);
+	size_t numElems(Node *head);
 
 	int getHeight(){ return height; }
 	Node *getRoot(){ return root; }
@@ -87,11 +108,29 @@ public:
 	Node *getMax(){ return treeMaximum(root); }
 	void checkPars(Node *head);
 
+
+	size_t size() { return numElems(root); }
+	size_t max_size() { return alloc.max_size(); }
+	bool empty() { return (numElems(root) == 0); }
+	void clear() { clearNodes(root); }
+	// iterator find( const Key& key );
+	// const_iterator find( const Key& key ) const;
+
 	iterator begin() { return iterator(treeMinimum(root)); }
 	iterator end() { return iterator(nil); }
 	reverse_iterator rbegin() { return reverse_iterator(end()); }
 	reverse_iterator rend() { return reverse_iterator(begin()); }
 };
+
+template <typename T, typename Comp, typename Alloc>
+size_t Tree<T, Comp, Alloc>::numElems(Node *head)
+{
+	if(head == nil)
+		return 0;
+	return 1 + numElems(head->left) + numElems(head->right);
+}
+
+
 
 template <typename T, typename Comp, typename Alloc>
 void Tree<T, Comp, Alloc>::insertFixup(Node *x)
@@ -234,7 +273,7 @@ typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::addNode(Node *n, T va
 template <typename T, typename Comp, typename Alloc>
 void Tree<T, Comp, Alloc>::addValue(T val)
 {
-	if(!root)
+	if(root == nil)
 	{
 		root = new Node(this, val, nil);
 		root->color = BLACK;
@@ -414,7 +453,7 @@ void Tree<T, Comp, Alloc>::printTree()
 template <typename T, typename Comp, typename Alloc>
 typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::treeMinimum(Node *head)
 {
-	if(head->left == nil)
+	if(head ==nil || head->left == nil)
 		return head;
 	
 	return treeMinimum(head->left);
@@ -423,7 +462,7 @@ typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::treeMinimum(Node *hea
 template <typename T, typename Comp, typename Alloc>
 typename Tree<T, Comp, Alloc>::Node *Tree<T, Comp, Alloc>::treeMaximum(Node *head)
 {
-	if(head->right == nil)
+	if(head == nil || head->right == nil)
 		return head;
 	
 	return treeMaximum(head->right);
