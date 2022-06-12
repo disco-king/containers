@@ -1,0 +1,616 @@
+#pragma once
+
+#include <functional>
+#include <memory>
+#include "../reverse_iterator.hpp"
+#include "../pair.hpp"
+
+#define RED true
+#define BLACK false
+
+// template <typename Key, typename Val, typename Alloc, typename KeyComp, typename ValComp>
+struct tree_traits
+{
+	// typedef Key key_type;
+	// typedef Val value_type;
+	// typedef Alloc allocator_type;
+	// typedef KeyComp key_compare;
+	// typedef ValComp value_compare;
+	
+	typedef int key_type;
+	typedef int value_type;
+	typedef std::allocator<int> allocator_type;
+	typedef std::less<key_type> key_compare;
+	typedef std::less<value_type> value_compare;
+
+	struct Kfn{
+		const key_type& operator() (const value_type& v) const
+		{ return v; }
+	};
+
+	key_compare comp;
+	value_compare v_comp;
+	tree_traits (key_compare const & comp) : comp(comp) {}
+};
+
+template <typename Tr>
+class Tree_node : public Tr
+{
+protected:
+	typedef typename Tr::allocator_type allocator_type;
+	typedef typename Tr::key_compare key_compare;
+	typedef typename Tr::value_type value_type;
+	typedef typename allocator_type::template
+		rebind<void>::other::pointer Genptr;
+	friend struct Node;
+	struct Node{
+		Node *left, *right, *p;
+		value_type value;
+		bool color;
+		bool isnil;
+	};
+	typedef typename allocator_type::template
+		rebind<Node>::other Alnode;
+
+	Alnode alnode;
+
+	Tree_node (key_compare const & comp, allocator_type const & al) :
+		Tr(comp), alnode(al) {};
+};
+
+template <typename Tr>
+class Tree_ptr : public Tree_node<Tr>
+{
+protected:
+	typedef typename Tree_node<Tr>::Node Node;
+	typedef typename Tr::allocator_type allocator_type;
+	typedef typename Tr::key_compare key_compare;
+	typedef typename allocator_type::template
+		rebind<Node>::other::pointer Nodeptr;
+	typedef typename allocator_type::template
+		rebind<Node>::other Alptr;
+
+	Alptr alptr;
+
+	Tree_ptr (key_compare const & comp, allocator_type const & al) :
+		Tree_node<Tr>(comp, al), alptr(al) {};
+};
+
+template <typename Tr>
+class Tree_val : public Tree_ptr<Tr>
+{
+protected:
+	typedef typename Tr::allocator_type allocator_type;
+	typedef typename Tr::key_compare key_compare;
+
+	allocator_type alval;
+
+	Tree_val (key_compare const & comp, allocator_type const & al) :
+		Tree_ptr<Tr>(comp, al), alval(al) {};
+};
+
+template <typename Tr>
+class Tree : public Tree_val<Tr>
+{
+public:
+	typedef Tree<Tr> Type;
+	typedef Tree_val<Tr> Base;
+	typedef typename Tr::key_type key_type;
+	typedef typename Tr::key_compare key_compare;
+	typedef typename Tr::value_type value_type;
+	typedef typename Tr::value_compare value_compare;
+	typedef typename Tr::allocator_type allocator_type;
+
+protected:
+	typedef typename Tree_node<Tr>::Genptr Genptr;
+	typedef typename Tree_node<Tr>::Node Node;
+	typedef typename Tr::Kfn Kfn;
+	typedef typename allocator_type::template
+		rebind<Node>::other::pointer Nodeptr;
+	typedef typename allocator_type::template
+		rebind<Nodeptr>::other::reference Nodepref;
+	typedef typename allocator_type::template
+		rebind<key_type>::other::const_reference Keyref;
+	typedef typename allocator_type::template
+		rebind<value_type>::other::const_reference Valref;
+	typedef typename allocator_type::template
+		rebind<bool>::other::const_reference Boolref;
+
+	static Boolref color(Nodeptr P) { return ((Boolref) (*P).color); }
+	static Boolref isnil(Nodeptr P) { return ((Boolref) (*P).isnil); }
+	static Valref value(Nodeptr P) { return ((Valref) (*P).value); }
+	static Keyref key(Nodeptr P) { return (Kfn()(value(P))); }
+	static Nodepref left(Nodeptr P) { return ((Nodepref) (*P).left); }
+	static Nodepref right(Nodeptr P) { return ((Nodepref) (*P).right); }
+	static Nodepref parent(Nodeptr P) { return ((Nodepref) (*P).p); }
+
+public:
+	typedef typename allocator_type::size_type size_type;
+	typedef typename allocator_type::difference_type difference_type;
+	typedef typename allocator_type::template
+		rebind<value_type>::other::pointer pointer;
+	typedef typename allocator_type::template
+		rebind<value_type>::other::const_pointer const_pointer;
+	typedef typename allocator_type::template
+		rebind<value_type>::other::reference reference;
+	typedef typename allocator_type::template
+		rebind<value_type>::other::const_reference const_reference;
+
+	class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag,
+										value_type,
+										difference_type,
+										pointer,
+										reference>
+	{
+
+	private:
+		Nodeptr nptr;
+
+	public:
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::iterator_category iterator_category;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::difference_type difference_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::value_type value_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::pointer pointer;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::reference reference;
+
+		explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
+
+		TreeIterator& operator=(TreeIterator const &src) {
+			nptr = src.nptr;
+			return *this;
+		}
+
+		bool operator==(TreeIterator const &x) const { return (nptr == x.nptr); }
+		bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
+
+		TreeIterator& operator++() {
+			nptr = successor(nptr);
+			return *this;
+		}
+		
+		TreeIterator operator++(int) {
+			TreeIterator retval = *this;
+			++(*this);
+			return retval;
+		}
+
+		TreeIterator& operator--() {
+			nptr = predecessor(nptr);
+			return *this;
+		}
+
+		TreeIterator operator--(int) {
+			TreeIterator retval = *this;
+			--(*this);
+			return retval;
+		}
+
+		Nodeptr base() const { return nptr; }
+
+ 
+
+		reference operator*() const { return value(nptr); }
+		pointer operator->() const { return &(**this); }
+	};
+
+	typedef TreeIterator iterator;
+	//const_iterator
+	typedef ft::reverse_iterator<iterator> reverse_iterator;
+	//const_reverse_iterator
+	typedef ft::pair<iterator, bool> Pairib;
+	typedef ft::pair<iterator, iterator> Pairii;
+	//Paircc
+
+	Tree() : Base(key_compare(), allocator_type())
+	{ init (); }
+
+	explicit Tree (key_compare const &comp, allocator_type const &al) :
+	Base(comp, al) { init(); }
+
+	Tree(value_type const *f, value_type const *l,
+		key_compare const &comp, allocator_type const &al) :
+	Base(comp, al) {
+		init();
+		insert(f, l);
+	}
+	
+	Tree(Type const &src) : Base(src.key_comp(), src.get_allocator()) {
+		init();
+		copy(src);
+	}
+
+	~Tree() {
+		clearNodes(root);
+		this->alnode.deallocate(nil, 1);
+	}
+
+	Type& operator=(Type const &src) {
+		if(this == &src)
+			return *this;
+		erase(begin(), end());
+		this->comp = src.comp;
+		return *this;
+	}
+
+	iterator begin() { return iterator(treeMinimum()); }
+	//const_it begin()
+	iterator end() { return iterator(treeMaximum()); }
+	//const_it end()
+	iterator rbegin() { return reverse_iterator(end()); }
+	//const_it rbegin()
+	iterator rend() { return reverse_iterator(begin()); }
+	//const_it rend()
+
+	size_type size() const { return sz; }
+	size_type max_size() const { return this->alval.max_size(); }
+	bool empty() const { return (sz == 0); }
+	allocator_type get_allocator() const { return this->alval; }
+	key_compare key_comp() const { return this->comp; }
+	value_compare value_comp() const { return this->v_comp; }
+
+
+// protected:
+public:
+	Nodeptr root;
+	size_type sz;
+	Nodeptr nil;
+
+	void init()
+	{
+		nil = this->alnode.allocate(1);
+		nil->color = BLACK;
+		root = nil;
+	}
+
+	Nodeptr newNode() {
+		Nodeptr n = this->alnode.allocate(1);
+		n->color = RED;
+		n->left = n->right = n->p = nil;
+		return n;
+	}
+
+	void deleteNode(Nodeptr n) {
+		this->alnode.deallocate(n, 1);
+	}
+
+	Nodeptr successor(Nodeptr x)
+	{
+		if(x->right != nil)
+			return treeMinimum(x->right);
+		Nodeptr y = x;
+		while(y != nil && x != y->left)
+		{
+			x = y;
+			y = y->p;
+		}
+		return y;
+	}
+
+	Nodeptr predecessor(Nodeptr x)
+	{
+		if(x == nil)
+			return x->p;
+		if(x->left != nil)
+			return treeMaximum(x->left);
+		Node *y = x;
+		while(y != nil && x != y->right)
+		{
+			x = y;
+			y = y->p;
+		}
+		return y;
+	}
+
+	Nodeptr treeMinimum (Nodeptr n)
+	{
+		if(n == nil || n->left == nil)
+			return n;
+	
+		return treeMinimum(n->left);
+	}
+
+	Nodeptr treeMaximum (Nodeptr n)
+	{
+		if(n == nil || n->right == nil)
+			return n;
+	
+		return treeMinimum(n->right);
+	}
+
+	Nodeptr findValue(value_type val)
+	{
+		if(root == nil)
+			return root;
+
+		Node *n = root;
+		while (n != nil)
+		{
+			if(this->comp(Kfn()(val), Kfn()(n->value)))
+				n = n->left;
+			else if(!this->comp(Kfn()(n->value), Kfn()(val)))
+				break;
+			else
+				n = n->right;
+		}
+		return n;
+	}
+
+	void addValue(value_type val)
+	{
+		if(root == nil)
+		{
+			root = newNode();
+			try { this->alval.construct(&(root->value), val); }
+			catch (...) { deleteNode(root); throw; }
+			root->color = BLACK;
+		}
+		else
+			insertFixup(addNode(root, val));
+		nil->p = treeMaximum(root);
+		root->p = nil;
+	}
+
+	Nodeptr addNode(Nodeptr n, value_type val)
+	{
+		if(this->comp(Kfn()(val), Kfn()(n->value)))
+		{
+			if(n->left == nil)
+			{
+				n->left = newNode();
+				try { this->alval.construct(&(n->left->value), val); }
+				catch (...) { deleteNode(root); throw; }
+				n->left->p = n;
+				return n->left;
+			}
+			return addNode(n->left, val);
+		}
+		else
+		{
+			if(n->right == nil)
+			{
+				n->right = newNode();
+				try { this->alval.construct(&(n->right->value), val); }
+				catch (...) { deleteNode(root); throw; }
+				n->right->p = n;
+				return n->right;
+			}
+			return addNode(n->right, val);
+		}
+	}
+
+	void insertFixup(Nodeptr x)
+	{
+		Nodeptr y;
+		while(x->p->color == RED)
+		{
+			if(x->p == x->p->p->left)
+			{
+				y = x->p->p->right;
+				if(y->color == RED)
+				{
+					y->color = BLACK;
+					x->p->color = BLACK;
+					y->p->color = RED;
+					x = x->p->p;
+				}
+				else
+				{
+					if(x == x->p->right)
+						rotateLeft(x = x->p);
+					x->p->color = BLACK;
+					x->p->p->color = RED;
+					rotateRight(x->p->p);
+				}
+			}
+			else
+			{
+				y = x->p->p->left;
+				if(y->color == RED)
+				{
+					y->color = BLACK;
+					x->p->color = BLACK;
+					y->p->color = RED;
+					x = x->p->p;
+				}
+				else
+				{
+					if(x == x->p->left)
+						rotateRight(x = x->p);
+					x->p->color = BLACK;
+					x->p->p->color = RED;
+					rotateLeft(x->p->p);
+				}
+			}
+		}
+		root->color = BLACK;
+	}
+
+	void rotateLeft(Nodeptr x)
+	{
+		Nodeptr y = x->right;
+		x->right = y->left;
+		if(y->left != nil)
+			y->left->p = x;
+
+		y->p = x->p;
+		if(y->p == nil)
+			root = y;
+		else if(x == x->p->left)
+			y->p->left = y;
+		else
+			y->p->right = y;
+		x->p = y;
+		y->left = x;
+	}
+
+	void rotateRight(Nodeptr x)
+	{
+		Nodeptr y = x->left;
+		x->left = y->right;
+		if(y->right != nil)
+			y->right->p = x;
+
+		y->p = x->p;
+		if(y->p == nil)
+			root = y;
+		else if(x == x->p->left)
+			y->p->left = y;
+		else
+			y->p->right = y;
+		x->p = y;
+		y->right = x;
+	}
+
+	void transplant(Nodeptr prev_n, Nodeptr new_n)
+	{
+		if(prev_n->p == nil)
+			root = new_n;
+		else if(prev_n == prev_n->p->left)
+			prev_n->p->left = new_n;
+		else
+			prev_n->p->right = new_n;
+		new_n->p = prev_n->p;
+	}
+
+	void removeValue(value_type val)
+	{
+		Nodeptr n = findValue(val);
+		if(n == nil)
+			return;
+		Nodeptr repl;
+		bool orig_color = n->color;
+
+		if(n->right == nil)
+		{
+			repl = n->left;
+			transplant(n, n->left);
+		}
+		else if(n->left == nil)
+		{
+			repl = n->right;
+			transplant(n, n->right);
+		}
+		else
+		{
+			Node *subs = treeMinimum(n->right);
+			orig_color = subs->color;
+			repl = subs->right;
+			if(subs->p == n)
+				repl->p = subs;
+			else
+			{
+				transplant(subs, subs->right);
+				subs->right = n->right;
+				subs->right->p = subs;
+			}
+			transplant(n, subs);
+			subs->left = n->left;
+			subs->left->p = subs;
+			subs->color = n->color;
+		}
+
+		this->alval.destroy(&(n->value));
+		deleteNode(n);
+		if(orig_color == BLACK)
+			deleteFixup(repl);
+
+		nil->p = treeMaximum(root);
+		root->p = nil;
+	}
+
+	void deleteFixup(Nodeptr n)
+	{
+		Nodeptr s;
+		while(n != root && n->color == BLACK)
+		{
+			if(n == n->p->left)
+			{
+				s = n->p->right;
+				if(s->color == RED)
+				{
+					s->color = BLACK;
+					s->p->color = RED;
+					rotateLeft(s->p);
+					s = n->p->right;
+				}
+				if(s->left->color == BLACK && s->right->color == BLACK)
+				{
+					s->color = RED;
+					n = n->p;
+				}
+				else
+				{
+					if(s->right->color == BLACK)
+					{
+						s->left->color = BLACK;
+						s->color = RED;
+						rotateRight(s);
+						s = n->p->right;
+					}
+					s->color = n->p->color;
+					n->p->color = BLACK;
+					s->right->color = BLACK;
+					rotateLeft(n->p);
+					n = root;
+				}
+			}
+			else
+			{
+				s = n->p->left;
+				if(s->color == RED)
+				{
+					s->color = BLACK;
+					s->p->color = RED;
+					rotateRight(s->p);
+					s = n->p->left;
+				}
+				if(s->left->color == BLACK && s->right->color == BLACK)
+				{
+					s->color = RED;
+					n = n->p;
+				}
+				else
+				{
+					if(s->left->color == BLACK)
+					{
+						s->right->color = BLACK;
+						s->color = RED;
+						rotateLeft(s);
+						s = n->p->left;
+					}
+					s->color = n->p->color;
+					n->p->color = BLACK;
+					s->left->color = BLACK;
+					rotateRight(n->p);
+					n = root;
+				}
+			}
+		}
+		n->color = BLACK;
+	}
+
+	void clearNodes(Nodeptr n)
+	{
+		if(n == nil)
+		return;
+		if(n->left != nil)
+			clearNodes(n->left);
+		if(n->right != nil)
+			clearNodes(n->right);
+		this->alval.destroy(&(n->value));
+		this->alnode.deallocate(n, 1);
+	}
+
+	void printNodes(Nodeptr n)
+	{
+		if(n == nil)
+			return;
+		if(n->left != nil)
+			printNodes(n->left);
+		std::cout << n->value << ' ';
+		if(n->right != nil)
+			printNodes(n->right);
+	}
+};
+
+// #include "TreeIterator.hpp"
