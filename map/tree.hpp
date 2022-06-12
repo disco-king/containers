@@ -19,6 +19,7 @@ struct tree_traits
 	
 	typedef int key_type;
 	typedef int value_type;
+	// typedef ft::pair<int, char> value_type;
 	typedef std::allocator<int> allocator_type;
 	typedef std::less<key_type> key_compare;
 	typedef std::less<value_type> value_compare;
@@ -26,6 +27,7 @@ struct tree_traits
 	struct Kfn{
 		const key_type& operator() (const value_type& v) const
 		{ return v; }
+		// { return v.first; }
 	};
 
 	key_compare comp;
@@ -145,15 +147,16 @@ public:
 
 	private:
 		Nodeptr nptr;
+		Type *tptr;
 
 	public:
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::iterator_category iterator_category;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::difference_type difference_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::value_type value_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::pointer pointer;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Tree<Tr>::value_type>::reference reference;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::iterator_category iterator_category;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::difference_type difference_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::value_type value_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::pointer pointer;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::reference reference;
 
-		explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
+		explicit TreeIterator(Nodeptr ptr = 0, Type *tree = 0) : nptr(ptr), tptr(tree) {};
 
 		TreeIterator& operator=(TreeIterator const &src) {
 			nptr = src.nptr;
@@ -164,7 +167,7 @@ public:
 		bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
 
 		TreeIterator& operator++() {
-			nptr = successor(nptr);
+			nptr = tptr->successor(nptr);
 			return *this;
 		}
 		
@@ -175,7 +178,7 @@ public:
 		}
 
 		TreeIterator& operator--() {
-			nptr = predecessor(nptr);
+			nptr = tptr->predecessor(nptr);
 			return *this;
 		}
 
@@ -187,10 +190,8 @@ public:
 
 		Nodeptr base() const { return nptr; }
 
- 
-
-		reference operator*() const { return value(nptr); }
-		pointer operator->() const { return &(**this); }
+		const value_type& operator*() const { return value(nptr); }
+		const value_type* operator->() const { return &(**this); }
 	};
 
 	typedef TreeIterator iterator;
@@ -200,6 +201,8 @@ public:
 	typedef ft::pair<iterator, bool> Pairib;
 	typedef ft::pair<iterator, iterator> Pairii;
 	//Paircc
+	typedef ft::pair<Nodeptr, bool> Pairnb;
+
 
 	Tree() : Base(key_compare(), allocator_type())
 	{ init (); }
@@ -232,13 +235,13 @@ public:
 		return *this;
 	}
 
-	iterator begin() { return iterator(treeMinimum()); }
+	iterator begin() { return iterator(treeMinimum(root), this); }
 	//const_it begin()
-	iterator end() { return iterator(treeMaximum()); }
+	iterator end() { return iterator(treeMaximum(root), this); }
 	//const_it end()
-	iterator rbegin() { return reverse_iterator(end()); }
+	reverse_iterator rbegin() { return reverse_iterator(end()); }
 	//const_it rbegin()
-	iterator rend() { return reverse_iterator(begin()); }
+	reverse_iterator rend() { return reverse_iterator(begin()); }
 	//const_it rend()
 
 	size_type size() const { return sz; }
@@ -248,6 +251,7 @@ public:
 	key_compare key_comp() const { return this->comp; }
 	value_compare value_comp() const { return this->v_comp; }
 
+	
 
 // protected:
 public:
@@ -314,17 +318,20 @@ public:
 		if(n == nil || n->right == nil)
 			return n;
 	
-		return treeMinimum(n->right);
+		return treeMaximum(n->right);
 	}
 
-	Nodeptr findValue(value_type val)
+	Pairnb findValue(value_type val)
 	{
 		if(root == nil)
 			return root;
 
-		Node *n = root;
+		Nodeptr n = root;
+		// Pairnb r;
+		// r.second = false;
 		while (n != nil)
 		{
+			// r.first = n;
 			if(this->comp(Kfn()(val), Kfn()(n->value)))
 				n = n->left;
 			else if(!this->comp(Kfn()(n->value), Kfn()(val)))
@@ -607,7 +614,8 @@ public:
 			return;
 		if(n->left != nil)
 			printNodes(n->left);
-		std::cout << n->value << ' ';
+		std::cout << (n->color == BLACK ? "b:" : "r:") << n->value << ' ';
+		// std::cout << n->value.first << ' ' << n->value.second << '\n';
 		if(n->right != nil)
 			printNodes(n->right);
 	}

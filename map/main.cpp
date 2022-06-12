@@ -1,4 +1,5 @@
 #include <map>
+#include <set>
 #include <string>
 #include <iostream>
 
@@ -40,24 +41,39 @@ int main(int argc, char const *argv[])
 	}
 
 	{
-		std::map<int, int> m1;
-		std::map<int, int> m2;
+		// std::map<int, int> m1;
+		// std::map<int, int> m2;
+
+		// for (int i = 0; i < 5; i++)
+		// 	m1[i] = i;
+		// for (int i = 3; i < 7; i++)
+		// 	m2[i] = i;
+
+		// m1.insert(m2.begin(), m2.end());
+
+		// std::map<int, int>::iterator it;
+		// for (int i = 0; i < 7; i++)
+		// {
+		// 	it = m1.find(i);
+		// 	std::cout << "it.first: " << it->first
+		// 	<< " it.second " << it->second << '\n';
+		// }
+
+	}
+
+	{
+		std::set<int> s;
 
 		for (int i = 0; i < 5; i++)
-			m1[i] = i;
-		for (int i = 3; i < 7; i++)
-			m2[i] = i;
+			s.insert(i);
 
-		m1.insert(m2.begin(), m2.end());
-
-		std::map<int, int>::iterator it;
-		for (int i = 0; i < 7; i++)
+		std::set<int>::iterator it = s.begin();
+		while(it != s.end())
 		{
-			it = m1.find(i);
-			std::cout << "it.first: " << it->first
-			<< " it.second " << it->second << '\n';
+			std::cout << *it << ' ';
+			++it;
 		}
-
+		std::cout << '\n';
 	}
 
 
