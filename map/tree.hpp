@@ -251,9 +251,42 @@ public:
 	key_compare key_comp() const { return this->comp; }
 	value_compare value_comp() const { return this->v_comp; }
 
-	
+	Pairib insert(value_type const &val)
+	{
+		std::cout << "generic " << val << '\n';
+		if(root == nil)
+			return (ft::make_pair(iterator(addValue(val)), true));
+		Pairnb p = findValue(val);
+		if(p.second == true)
+			return (ft::make_pair(iterator(p.first), false));
+		Pairib ret = ft::make_pair(iterator(addNode(p.first, val)), true);
+		insertFixup(p.first);
+		return ret;
+	}
 
-// protected:
+	iterator insert(iterator hint, value_type const &val)
+	{
+		if(hint.base()->right == nil
+			&& this->comp(key(hint.base()), Kfn()(val)))
+		{
+			std::cout << "hinted " << val << '\n';
+			Nodeptr p = addNode(hint.base(), val);
+			insertFixup(p);
+			return (iterator(p));
+		}
+		// else if(hint == end())//might be an additional optimization here
+
+		return (insert(val).first);
+	}
+
+	void insert(iterator first, iterator last)
+	{
+		//if(first.base())
+		for(; first != last; ++first)
+			insert(end(), *first);
+	}
+	
+//protected
 public:
 	Nodeptr root;
 	size_type sz;
@@ -261,6 +294,7 @@ public:
 
 	void init()
 	{
+		sz = 0;
 		nil = this->alnode.allocate(1);
 		nil->color = BLACK;
 		root = nil;
@@ -324,65 +358,69 @@ public:
 	Pairnb findValue(value_type val)
 	{
 		if(root == nil)
-			return root;
+			return ft::make_pair(root, false);
 
 		Nodeptr n = root;
-		// Pairnb r;
-		// r.second = false;
+		Pairnb r;
+		r.second = false;
 		while (n != nil)
 		{
-			// r.first = n;
+			r.first = n;
 			if(this->comp(Kfn()(val), Kfn()(n->value)))
 				n = n->left;
-			else if(!this->comp(Kfn()(n->value), Kfn()(val)))
-				break;
-			else
+			else if(this->comp(Kfn()(n->value), Kfn()(val)))
 				n = n->right;
+			else
+			{
+				r.second = true;
+				break;
+			}
 		}
-		return n;
+		return r;
 	}
 
-	void addValue(value_type val)
+	Nodeptr addValue(value_type val)
 	{
+		Nodeptr ret;
 		if(root == nil)
 		{
 			root = newNode();
 			try { this->alval.construct(&(root->value), val); }
 			catch (...) { deleteNode(root); throw; }
 			root->color = BLACK;
+			ret = root;
+			sz++;
 		}
 		else
-			insertFixup(addNode(root, val));
+		{
+			Pairnb p = findValue(val);
+			if(p.second == true)
+				return p.first;
+			insertFixup(addNode(p.first, val));
+			ret = p.first;
+		}
 		nil->p = treeMaximum(root);
 		root->p = nil;
+		return ret;
 	}
 
 	Nodeptr addNode(Nodeptr n, value_type val)
 	{
 		if(this->comp(Kfn()(val), Kfn()(n->value)))
 		{
-			if(n->left == nil)
-			{
-				n->left = newNode();
-				try { this->alval.construct(&(n->left->value), val); }
-				catch (...) { deleteNode(root); throw; }
-				n->left->p = n;
-				return n->left;
-			}
-			return addNode(n->left, val);
+			n->left = newNode();
+			try { this->alval.construct(&(n->left->value), val); }
+			catch (...) { deleteNode(n->left); throw; }
+			n->left->p = n;
+			sz++;
+			return n->left;
 		}
-		else
-		{
-			if(n->right == nil)
-			{
-				n->right = newNode();
-				try { this->alval.construct(&(n->right->value), val); }
-				catch (...) { deleteNode(root); throw; }
-				n->right->p = n;
-				return n->right;
-			}
-			return addNode(n->right, val);
-		}
+		n->right = newNode();
+		try { this->alval.construct(&(n->right->value), val); }
+		catch (...) { deleteNode(n->right); throw; }
+		n->right->p = n;
+		sz++;
+		return n->right;
 	}
 
 	void insertFixup(Nodeptr x)
@@ -481,9 +519,10 @@ public:
 
 	void removeValue(value_type val)
 	{
-		Nodeptr n = findValue(val);
-		if(n == nil)
+		Pairnb p = findValue(val);
+		if(p.second == false)
 			return;
+		Nodeptr n = p.first;
 		Nodeptr repl;
 		bool orig_color = n->color;
 
@@ -499,7 +538,7 @@ public:
 		}
 		else
 		{
-			Node *subs = treeMinimum(n->right);
+			Nodeptr subs = treeMinimum(n->right);
 			orig_color = subs->color;
 			repl = subs->right;
 			if(subs->p == n)

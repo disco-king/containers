@@ -20,24 +20,25 @@ int main(int argc, char const *argv[])
 	}
 
 	{
-		// std::map<int, float> m;
+		std::map<int, float> m;
 
-		// float f = 500;
+		float f = 500;
 
+		m.insert(m.end(), std::make_pair(1, 501));
 		// m[1] = 501;
-		// m[2] = 502;
-		// m[3] = 503;
+		m[2] = 502;
+		m[3] = 503;
 
-		// std::cout << m[1] << " count " << m.count(1) << '\n';
+		std::cout << m[1] << " count " << m.count(1) << '\n';
 
-		// std::map<int, float>::iterator it = m.find(3);
-		// it = m.insert(it, std::make_pair(2, 504));
+		std::map<int, float>::iterator it = m.find(3);
+		it = m.insert(it, std::make_pair(4, 504));
 
-		// std::cout << "res 1st " << it->first << " res 2nd " << it->second << '\n';
+		std::cout << "res 1st " << it->first << " res 2nd " << it->second << '\n';
 
-		// std::map<int, float>::reverse_iterator i = m.rbegin();
-		// for(; i != m.rend(); i++)
-		// 	std::cout << i->first << ' ' << i->second << '\n';
+		std::map<int, float>::reverse_iterator i = m.rbegin();
+		for(; i != m.rend(); i++)
+			std::cout << i->first << ' ' << i->second << '\n';
 	}
 
 	{
@@ -62,18 +63,18 @@ int main(int argc, char const *argv[])
 	}
 
 	{
-		std::set<int> s;
+		// std::set<int> s;
 
-		for (int i = 0; i < 5; i++)
-			s.insert(i);
+		// for (int i = 0; i < 5; i++)
+		// 	s.insert(i);
 
-		std::set<int>::iterator it = s.begin();
-		while(it != s.end())
-		{
-			std::cout << *it << ' ';
-			++it;
-		}
-		std::cout << '\n';
+		// std::set<int>::iterator it = s.begin();
+		// while(it != s.end())
+		// {
+		// 	std::cout << *it << ' ';
+		// 	++it;
+		// }
+		// std::cout << '\n';
 	}
 
 
