@@ -18,16 +18,16 @@ struct tree_traits
 	// typedef ValComp value_compare;
 	
 	typedef int key_type;
-	typedef int value_type;
-	// typedef ft::pair<int, char> value_type;
+	// typedef int value_type;
+	typedef ft::pair<int, char> value_type;
 	typedef std::allocator<int> allocator_type;
 	typedef std::less<key_type> key_compare;
 	typedef std::less<value_type> value_compare;
 
 	struct Kfn{
 		const key_type& operator() (const value_type& v) const
-		{ return v; }
-		// { return v.first; }
+		// { return v; }
+		{ return v.first; }
 	};
 
 	key_compare comp;
@@ -235,7 +235,7 @@ public:
 		return *this;
 	}
 
-	iterator begin() { return iterator(nil->left, this); }
+	iterator begin() { return iterator(nil->right, this); }
 	//const_it begin()
 	iterator end() { return iterator(nil, this); }
 	//const_it end()
@@ -291,6 +291,7 @@ public:
 		sz = 0;
 		nil = this->alnode.allocate(1);
 		nil->color = BLACK;
+		nil->p = nil->right = nil;
 		root = nil;
 	}
 
@@ -304,10 +305,10 @@ public:
 	}
 
 	void deleteNode(Nodeptr n) {
-		if(n == nil->left)
-			nil->left = successor(n);
-		else if(n == nil->p)
-			nil->p = predecessor(n);
+		// if(n == nil->right)
+		// 	nil->right = successor(n);
+		// else if(n == nil->p)
+		// 	nil->p = predecessor(n);
 		this->alnode.deallocate(n, 1);
 	}
 
@@ -330,8 +331,8 @@ public:
 	{
 		if(x == nil)
 			return x->p;
-		if(x == nil->left)
-			return x->p;
+		if(x == nil->right)
+			return nil;
 		if(x->left != nil)
 			return treeMaximum(x->left);
 		Node *y = x;
@@ -385,26 +386,13 @@ public:
 
 	Nodeptr addValue(value_type const &val)
 	{
-		Nodeptr ret;
-		// if(root == nil)
-		// {
-			root = newNode(val);
-			root->color = BLACK;
-			nil->p = root;
-			nil->left = root;
-			ret = root;
-			sz++;
-		// }
-		// else
-		// {
-		// 	Pairnb p = findValue(val);
-		// 	if(p.second == true)
-		// 		return p.first;
-		// 	ret = addNode(p.first, val);
-		// }
-		// nil->p = treeMaximum(root);
+		root = newNode(val);
+		root->color = BLACK;
+		nil->p = root;
+		nil->right = root;
+		++sz;
 		root->p = nil;
-		return ret;
+		return root;
 	}
 
 	Nodeptr addNode(Nodeptr n, value_type const &val)
@@ -414,8 +402,8 @@ public:
 		{
 			n->left = newNode(val);
 			n->left->p = n;
-			if(n == nil->left)
-				nil->left = n->left;
+			if(n == nil->right)
+				nil->right = n->left;
 			ret = n->left;
 		}
 		else
@@ -427,7 +415,7 @@ public:
 			ret = n->right;
 		}
 		root->p = nil;
-		sz++;
+		++sz;
 		return insertFixup(ret);
 	}
 
@@ -533,6 +521,18 @@ public:
 			return;
 		Nodeptr n = p.first;
 		Nodeptr repl;
+		p.first = 0;
+		nil->left = nil->p;
+		if(n == nil->right)
+		{
+			p.first = successor(n);
+			p.second = true;
+		}
+		else if(n == nil->p)
+		{
+			p.first = predecessor(n);
+			p.second = false;
+		}
 		bool orig_color = n->color;
 
 		if(n->right == nil)
@@ -569,8 +569,14 @@ public:
 		if(orig_color == BLACK)
 			deleteFixup(repl);
 
-		nil->p = treeMaximum(root);
+		if(p.first && p.second)
+			nil->right = p.first;
+		if(p.first && !p.second)
+			nil->p = p.first;
+		else
+			nil->p = nil->left;
 		root->p = nil;
+		--sz;
 	}
 
 	void deleteFixup(Nodeptr n)
@@ -662,8 +668,9 @@ public:
 			return;
 		if(n->left != nil)
 			printNodes(n->left);
-		std::cout << (n->color == BLACK ? "b:" : "r:") << n->value << ' ';
-		// std::cout << n->value.first << ' ' << n->value.second << '\n';
+		// std::cout << (n->color == BLACK ? "b:" : "r:") << n->value << ' ';
+		std::cout << (n->color == BLACK ? "b: " : "r: ")
+		<< n->value.first << ' ' << n->value.second << '\n';
 		if(n->right != nil)
 			printNodes(n->right);
 	}
