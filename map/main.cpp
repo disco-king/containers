@@ -36,9 +36,12 @@ int main(int argc, char const *argv[])
 
 		std::cout << "res 1st " << it->first << " res 2nd " << it->second << '\n';
 
-		std::map<int, float>::reverse_iterator i = m.rbegin();
-		for(; i != m.rend(); i++)
+		std::map<int, float>::iterator i = m.begin();
+		for(; i != m.end(); i++)
+		{
+			i->second -= 1;
 			std::cout << i->first << ' ' << i->second << '\n';
+		}
 	}
 
 	{

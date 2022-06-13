@@ -18,16 +18,16 @@ struct tree_traits
 	// typedef ValComp value_compare;
 	
 	typedef int key_type;
-	// typedef int value_type;
-	typedef ft::pair<int, char> value_type;
+	typedef int value_type;
+	// typedef ft::pair<int, char> value_type;
 	typedef std::allocator<int> allocator_type;
 	typedef std::less<key_type> key_compare;
 	typedef std::less<value_type> value_compare;
 
 	struct Kfn{
 		const key_type& operator() (const value_type& v) const
-		// { return v; }
-		{ return v.first; }
+		{ return v; }
+		// { return v.first; }
 	};
 
 	key_compare comp;
@@ -114,7 +114,7 @@ protected:
 	typedef typename allocator_type::template
 		rebind<key_type>::other::const_reference Keyref;
 	typedef typename allocator_type::template
-		rebind<value_type>::other::const_reference Valref;
+		rebind<value_type>::other::const_reference Valref;//is const_ necessary?
 	typedef typename allocator_type::template
 		rebind<bool>::other::const_reference Boolref;
 
@@ -153,8 +153,8 @@ public:
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::iterator_category iterator_category;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::difference_type difference_type;
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::value_type value_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::pointer pointer;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::reference reference;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, const Type::value_type>::pointer pointer;//because of value()
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag, const Type::value_type>::reference reference;
 
 		explicit TreeIterator(Nodeptr ptr = 0, Type *tree = 0) : nptr(ptr), tptr(tree) {};
 
@@ -190,17 +190,17 @@ public:
 
 		Nodeptr base() const { return nptr; }
 
-		const value_type& operator*() const { return value(nptr); }
-		const value_type* operator->() const { return &(**this); }
+		reference operator*() const { return value(nptr); }
+		pointer operator->() const { return &(**this); }
 	};
 
 	typedef TreeIterator iterator;
-	//const_iterator
+	typedef TreeIterator const_iterator;
 	typedef ft::reverse_iterator<iterator> reverse_iterator;
-	//const_reverse_iterator
+	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	typedef ft::pair<iterator, bool> Pairib;
 	typedef ft::pair<iterator, iterator> Pairii;
-	//Paircc
+	typedef ft::pair<const_iterator, const_iterator> Paircc;
 	typedef ft::pair<Nodeptr, bool> Pairnb;
 
 
@@ -253,10 +253,9 @@ public:
 
 	Pairib insert(value_type const &val)
 	{
+		std::cout << "generic " << val << '\n';
 		if(root == nil)
-		{
 			return (ft::make_pair(iterator(addValue(val)), true));
-		}
 		Pairnb p = findValue(val);
 		if(p.second == true)
 			return (ft::make_pair(iterator(p.first), false));
@@ -266,11 +265,27 @@ public:
 
 	iterator insert(iterator hint, value_type const &val)
 	{
-		if(hint.base()->right == nil
-			&& this->comp(key(hint.base()), Kfn()(val)))
-			return (iterator(addNode(hint.base(), val)));
-		// else if(hint == end())//might be an additional optimization here
-
+		if (sz == 0)
+			return (iterator(addValue(val)));
+		std::cout << "hinted " << val << '\n';
+		Nodeptr p = hint.base();
+		if(p == nil->right)
+		{
+			if(this->comp(Kfn()(val), key(p)))
+				return (iterator(addNode(p, val)));
+		}
+		else if(p == nil || p == nil->p)
+		{
+			if(this->comp(key(nil->p), Kfn()(val)))
+				return (iterator(addNode(nil->p, val)));
+		}
+		else
+		{
+			if(this->comp(Kfn()(p->value), Kfn()(val))
+				&& this->comp(Kfn()(val), Kfn()(*(++hint)))
+				&& (p = addNode(p, val)) != nil)
+				return iterator(p);
+		}
 		return (insert(val).first);
 	}
 
@@ -398,7 +413,8 @@ public:
 	Nodeptr addNode(Nodeptr n, value_type const &val)
 	{
 		Nodeptr ret;
-		if(this->comp(Kfn()(val), Kfn()(n->value)))
+		if(this->comp(Kfn()(val), Kfn()(n->value))
+			&& n->left == nil)
 		{
 			n->left = newNode(val);
 			n->left->p = n;
@@ -406,7 +422,7 @@ public:
 				nil->right = n->left;
 			ret = n->left;
 		}
-		else
+		else if(n->right == nil)
 		{
 			n->right = newNode(val);
 			n->right->p = n;
@@ -414,6 +430,8 @@ public:
 				nil->p = n->right;
 			ret = n->right;
 		}
+		else
+			return nil;
 		root->p = nil;
 		++sz;
 		return insertFixup(ret);
@@ -668,9 +686,9 @@ public:
 			return;
 		if(n->left != nil)
 			printNodes(n->left);
-		// std::cout << (n->color == BLACK ? "b:" : "r:") << n->value << ' ';
-		std::cout << (n->color == BLACK ? "b: " : "r: ")
-		<< n->value.first << ' ' << n->value.second << '\n';
+		std::cout << (n->color == BLACK ? "b:" : "r:") << n->value << ' ';
+		// std::cout << (n->color == BLACK ? "b: " : "r: ")
+		// << n->value.first << ' ' << n->value.second << '\n';
 		if(n->right != nil)
 			printNodes(n->right);
 	}
