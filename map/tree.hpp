@@ -235,9 +235,9 @@ public:
 		return *this;
 	}
 
-	iterator begin() { return iterator(treeMinimum(root), this); }
+	iterator begin() { return iterator(nil->left, this); }
 	//const_it begin()
-	iterator end() { return iterator(treeMaximum(root), this); }
+	iterator end() { return iterator(nil, this); }
 	//const_it end()
 	reverse_iterator rbegin() { return reverse_iterator(end()); }
 	//const_it rbegin()
@@ -276,7 +276,6 @@ public:
 
 	void insert(iterator first, iterator last)
 	{
-		//if(first.base())
 		for(; first != last; ++first)
 			insert(end(), *first);
 	}
@@ -295,21 +294,27 @@ public:
 		root = nil;
 	}
 
-	Nodeptr newNode() {
+	Nodeptr newNode(value_type const & val) {
 		Nodeptr n = this->alnode.allocate(1);
-		// try { this->alval.construct(&(n->right->value), val); }
-		// catch (...) { deleteNode(n->right); throw; }
+		try { this->alval.construct(&(n->value), val); }
+		catch (...) { deleteNode(n); throw; }
 		n->color = RED;
 		n->left = n->right = n->p = nil;
 		return n;
 	}
 
 	void deleteNode(Nodeptr n) {
+		if(n == nil->left)
+			nil->left = successor(n);
+		else if(n == nil->p)
+			nil->p = predecessor(n);
 		this->alnode.deallocate(n, 1);
 	}
 
 	Nodeptr successor(Nodeptr x)
 	{
+		if(x == nil->p)
+			return nil;
 		if(x->right != nil)
 			return treeMinimum(x->right);
 		Nodeptr y = x;
@@ -324,6 +329,8 @@ public:
 	Nodeptr predecessor(Nodeptr x)
 	{
 		if(x == nil)
+			return x->p;
+		if(x == nil->left)
 			return x->p;
 		if(x->left != nil)
 			return treeMaximum(x->left);
@@ -376,49 +383,52 @@ public:
 		return r;
 	}
 
-	Nodeptr addValue(value_type val)
+	Nodeptr addValue(value_type const &val)
 	{
 		Nodeptr ret;
-		if(root == nil)
-		{
-			root = newNode();
-			try { this->alval.construct(&(root->value), val); }
-			catch (...) { deleteNode(root); root = nil; throw; }
+		// if(root == nil)
+		// {
+			root = newNode(val);
 			root->color = BLACK;
 			nil->p = root;
 			nil->left = root;
 			ret = root;
 			sz++;
-		}
-		else
-		{
-			Pairnb p = findValue(val);
-			if(p.second == true)
-				return p.first;
-			ret = addNode(p.first, val);
-		}
-		nil->p = treeMaximum(root);
+		// }
+		// else
+		// {
+		// 	Pairnb p = findValue(val);
+		// 	if(p.second == true)
+		// 		return p.first;
+		// 	ret = addNode(p.first, val);
+		// }
+		// nil->p = treeMaximum(root);
 		root->p = nil;
 		return ret;
 	}
 
-	Nodeptr addNode(Nodeptr n, value_type val)
+	Nodeptr addNode(Nodeptr n, value_type const &val)
 	{
+		Nodeptr ret;
 		if(this->comp(Kfn()(val), Kfn()(n->value)))
 		{
-			n->left = newNode();
-			try { this->alval.construct(&(n->left->value), val); }
-			catch (...) { deleteNode(n->left); throw; }
+			n->left = newNode(val);
 			n->left->p = n;
-			sz++;
-			return insertFixup(n->left);
+			if(n == nil->left)
+				nil->left = n->left;
+			ret = n->left;
 		}
-		n->right = newNode();
-		try { this->alval.construct(&(n->right->value), val); }
-		catch (...) { deleteNode(n->right); throw; }
-		n->right->p = n;
+		else
+		{
+			n->right = newNode(val);
+			n->right->p = n;
+			if(n == nil->p)
+				nil->p = n->right;
+			ret = n->right;
+		}
+		root->p = nil;
 		sz++;
-		return insertFixup(n->right);
+		return insertFixup(ret);
 	}
 
 	Nodeptr insertFixup(Nodeptr x)
