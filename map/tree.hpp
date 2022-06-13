@@ -253,14 +253,14 @@ public:
 
 	Pairib insert(value_type const &val)
 	{
-		std::cout << "generic " << val << '\n';
 		if(root == nil)
+		{
 			return (ft::make_pair(iterator(addValue(val)), true));
+		}
 		Pairnb p = findValue(val);
 		if(p.second == true)
 			return (ft::make_pair(iterator(p.first), false));
 		Pairib ret = ft::make_pair(iterator(addNode(p.first, val)), true);
-		insertFixup(p.first);
 		return ret;
 	}
 
@@ -268,12 +268,7 @@ public:
 	{
 		if(hint.base()->right == nil
 			&& this->comp(key(hint.base()), Kfn()(val)))
-		{
-			std::cout << "hinted " << val << '\n';
-			Nodeptr p = addNode(hint.base(), val);
-			insertFixup(p);
-			return (iterator(p));
-		}
+			return (iterator(addNode(hint.base(), val)));
 		// else if(hint == end())//might be an additional optimization here
 
 		return (insert(val).first);
@@ -286,7 +281,7 @@ public:
 			insert(end(), *first);
 	}
 	
-//protected
+//protected:
 public:
 	Nodeptr root;
 	size_type sz;
@@ -302,6 +297,8 @@ public:
 
 	Nodeptr newNode() {
 		Nodeptr n = this->alnode.allocate(1);
+		// try { this->alval.construct(&(n->right->value), val); }
+		// catch (...) { deleteNode(n->right); throw; }
 		n->color = RED;
 		n->left = n->right = n->p = nil;
 		return n;
@@ -386,8 +383,10 @@ public:
 		{
 			root = newNode();
 			try { this->alval.construct(&(root->value), val); }
-			catch (...) { deleteNode(root); throw; }
+			catch (...) { deleteNode(root); root = nil; throw; }
 			root->color = BLACK;
+			nil->p = root;
+			nil->left = root;
 			ret = root;
 			sz++;
 		}
@@ -396,8 +395,7 @@ public:
 			Pairnb p = findValue(val);
 			if(p.second == true)
 				return p.first;
-			insertFixup(addNode(p.first, val));
-			ret = p.first;
+			ret = addNode(p.first, val);
 		}
 		nil->p = treeMaximum(root);
 		root->p = nil;
@@ -413,19 +411,19 @@ public:
 			catch (...) { deleteNode(n->left); throw; }
 			n->left->p = n;
 			sz++;
-			return n->left;
+			return insertFixup(n->left);
 		}
 		n->right = newNode();
 		try { this->alval.construct(&(n->right->value), val); }
 		catch (...) { deleteNode(n->right); throw; }
 		n->right->p = n;
 		sz++;
-		return n->right;
+		return insertFixup(n->right);
 	}
 
-	void insertFixup(Nodeptr x)
+	Nodeptr insertFixup(Nodeptr x)
 	{
-		Nodeptr y;
+		Nodeptr ret = x, y;
 		while(x->p->color == RED)
 		{
 			if(x->p == x->p->p->left)
@@ -468,6 +466,7 @@ public:
 			}
 		}
 		root->color = BLACK;
+		return ret;
 	}
 
 	void rotateLeft(Nodeptr x)
