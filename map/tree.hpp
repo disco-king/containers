@@ -5,6 +5,7 @@
 #include "../reverse_iterator.hpp"
 #include "../pair.hpp"
 #include "../swaps.hpp"
+#include "../template_meta.hpp"
 
 #define RED true
 #define BLACK false
@@ -20,7 +21,7 @@ struct tree_traits
 	
 	typedef int key_type;
 	// typedef int value_type;
-	typedef ft::pair<int, char> value_type;
+	typedef ft::pair<const int, char> value_type;
 	typedef std::allocator<int> allocator_type;
 	typedef std::less<key_type> key_compare;
 	typedef std::less<value_type> value_compare;
@@ -137,6 +138,7 @@ public:
 	typedef typename allocator_type::template
 		rebind<value_type>::other::const_reference const_reference;
 
+	template <bool Bool>
 	class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag,
 										value_type,
 										difference_type,
@@ -148,12 +150,22 @@ public:
 		Nodeptr nptr;
 		Type *tptr;
 
+		Nodeptr base() const { return nptr; }
+
 	public:
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::iterator_category iterator_category;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::difference_type difference_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, Type::value_type>::value_type value_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, const Type::value_type>::pointer pointer;//because of value()
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag, const Type::value_type>::reference reference;
+		typedef typename ft::conditional<Type::value_type,
+										const Type::value_type,
+										Bool>::type v_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+							Type::value_type>::iterator_category iterator_category;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+							Type::value_type>::difference_type difference_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+							v_type>::value_type value_type;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+								value_type>::pointer pointer;
+		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+								value_type>::reference reference;
 
 		explicit TreeIterator(Nodeptr ptr = 0, Type *tree = 0) : nptr(ptr), tptr(tree) {};
 
@@ -187,14 +199,16 @@ public:
 			return retval;
 		}
 
-		Nodeptr base() const { return nptr; }
+
+		operator TreeIterator<false> () const
+		{ return (TreeIterator<false>(this->nptr, this->tptr)); }
 
 		reference operator*() const { return value(nptr); }
 		pointer operator->() const { return &(**this); }
 	};
 
-	typedef TreeIterator iterator;
-	typedef TreeIterator const_iterator;
+	typedef TreeIterator<true> iterator;
+	typedef TreeIterator<false> const_iterator;
 	typedef ft::reverse_iterator<iterator> reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	typedef ft::pair<iterator, bool> Pairib;
@@ -237,13 +251,13 @@ public:
 	}
 
 	iterator begin() { return iterator(nil->right, this); }
-	//const_it begin()
+	const_iterator begin() const { return const_terator(nil->right, this); }
 	iterator end() { return iterator(nil, this); }
-	//const_it end()
+	const_iterator end() const { return const_terator(nil, this); }
 	reverse_iterator rbegin() { return reverse_iterator(end()); }
-	//const_it rbegin()
+	const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
 	reverse_iterator rend() { return reverse_iterator(begin()); }
-	//const_it rend()
+	const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
 	size_type size() const { return sz; }
 	size_type max_size() const { return this->alval.max_size(); }

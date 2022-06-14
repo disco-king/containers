@@ -15,6 +15,21 @@ struct enable_if<true, T>
 	typedef T type;
 };
 
+template <typename T, typename U, bool B>
+struct conditional {};
+
+template <typename T, typename U>
+struct conditional<T, U, true>
+{
+	typedef T type;
+};
+
+template <typename T, typename U>
+struct conditional<T, U, false>
+{
+	typedef U type;
+};
+
 template <class T, class U>
 struct is_same { const static bool value = false; };
 

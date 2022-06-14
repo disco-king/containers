@@ -117,43 +117,51 @@ int main(int argc, char const *argv[])
 	}
 
 	{
-		std::set<int> s1;
-		std::set<int> s2;
+		// std::set<int> s1;
+		// std::set<int> s2;
 
-		for (int i = 1; i < 6; i++)
-		{
-			if(i % 2)
-				s1.insert(i);
-			else
-				s2.insert(i);
-		}
+		// for (int i = 1; i < 6; i++)
+		// {
+		// 	if(i % 2)
+		// 		s1.insert(i);
+		// 	else
+		// 		s2.insert(i);
+		// }
 
-		std::set<int>::iterator it1 = s1.begin();
-		std::set<int>::iterator it2 = s2.begin();
+		// std::set<int>::iterator it1 = s1.begin();
+		// std::set<int>::iterator it2 = s2.begin();
 
-		std::cout << "first " << *it1 << " size " << s1.size() << '\n';
-		std::cout << "second " << *it2 << " size " << s2.size() << '\n';
+		// std::cout << "first " << *it1 << " size " << s1.size() << '\n';
+		// std::cout << "second " << *it2 << " size " << s2.size() << '\n';
 		
-		for (std::set<int>::iterator i = it1; i != s1.end(); ++i)
-			std::cout << *i << ' ';
-		std::cout << '\n';
-		for (std::set<int>::iterator i = it2; i != s2.end(); ++i)
-			std::cout << *i << ' ';
-		std::cout << '\n';
+		// for (std::set<int>::iterator i = it1; i != s1.end(); ++i)
+		// 	std::cout << *i << ' ';
+		// std::cout << '\n';
+		// for (std::set<int>::iterator i = it2; i != s2.end(); ++i)
+		// 	std::cout << *i << ' ';
+		// std::cout << '\n';
 
-		s1.swap(s2);
-		
-		std::cout << "first " << *it1 << " size " << s2.size() << '\n';
-		std::cout << "second " << *it2 << " size " << s1.size() << '\n';
+		// s1.swap(s2);
 
-		for (std::set<int>::iterator i = it1; i != s2.end(); ++i)
-			std::cout << *i << ' ';
-		std::cout << '\n';
-		for (std::set<int>::iterator i = it2; i != s1.end(); ++i)
-			std::cout << *i << ' ';
-		std::cout << '\n';
+		// std::cout << "first " << *it1 << " size " << s2.size() << '\n';
+		// std::cout << "second " << *it2 << " size " << s1.size() << '\n';
+
+		// for (std::set<int>::iterator i = it1; i != s2.end(); ++i)
+		// 	std::cout << *i << ' ';
+		// std::cout << '\n';
+		// for (std::set<int>::iterator i = it2; i != s1.end(); ++i)
+		// 	std::cout << *i << ' ';
+		// std::cout << '\n';
 	}
 
+	{
+		std::set<int> s;
+
+		for (int i = 1; i <= 10; i++)
+			s.insert(i);
+
+		// std::cout << s[5] << '\n';
+	}
 
 	return 0;
 }
