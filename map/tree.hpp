@@ -4,6 +4,7 @@
 #include <memory>
 #include "../reverse_iterator.hpp"
 #include "../pair.hpp"
+#include "../swaps.hpp"
 
 #define RED true
 #define BLACK false
@@ -18,16 +19,16 @@ struct tree_traits
 	// typedef ValComp value_compare;
 	
 	typedef int key_type;
-	typedef int value_type;
-	// typedef ft::pair<int, char> value_type;
+	// typedef int value_type;
+	typedef ft::pair<int, char> value_type;
 	typedef std::allocator<int> allocator_type;
 	typedef std::less<key_type> key_compare;
 	typedef std::less<value_type> value_compare;
 
 	struct Kfn{
 		const key_type& operator() (const value_type& v) const
-		{ return v; }
-		// { return v.first; }
+		// { return v; }
+		{ return v.first; }
 	};
 
 	key_compare comp;
@@ -46,10 +47,9 @@ protected:
 		rebind<void>::other::pointer Genptr;
 	friend struct Node;
 	struct Node{
-		Node *left, *right, *p;
+		Node *left, *right, *p, *nil;
 		value_type value;
 		bool color;
-		bool isnil;
 	};
 	typedef typename allocator_type::template
 		rebind<Node>::other Alnode;
@@ -114,12 +114,11 @@ protected:
 	typedef typename allocator_type::template
 		rebind<key_type>::other::const_reference Keyref;
 	typedef typename allocator_type::template
-		rebind<value_type>::other::const_reference Valref;//is const_ necessary?
+		rebind<value_type>::other::reference Valref;
 	typedef typename allocator_type::template
-		rebind<bool>::other::const_reference Boolref;
+		rebind<bool>::other::reference Boolref;
 
 	static Boolref color(Nodeptr P) { return ((Boolref) (*P).color); }
-	static Boolref isnil(Nodeptr P) { return ((Boolref) (*P).isnil); }
 	static Valref value(Nodeptr P) { return ((Valref) (*P).value); }
 	static Keyref key(Nodeptr P) { return (Kfn()(value(P))); }
 	static Nodepref left(Nodeptr P) { return ((Nodepref) (*P).left); }
@@ -212,12 +211,14 @@ public:
 
 	Tree(value_type const *f, value_type const *l,
 		key_compare const &comp, allocator_type const &al) :
-	Base(comp, al) {
+	Base(comp, al)
+	{
 		init();
 		insert(f, l);
 	}
 	
-	Tree(Type const &src) : Base(src.key_comp(), src.get_allocator()) {
+	Tree(Type const &src) : Base(src.key_comp(), src.get_allocator())
+	{
 		init();
 		copy(src);
 	}
@@ -253,10 +254,9 @@ public:
 
 	Pairib insert(value_type const &val)
 	{
-		std::cout << "generic " << val << '\n';
 		if(root == nil)
 			return (ft::make_pair(iterator(addValue(val)), true));
-		Pairnb p = findValue(val);
+		Pairnb p = findValue(Kfn()(val));
 		if(p.second == true)
 			return (ft::make_pair(iterator(p.first), false));
 		Pairib ret = ft::make_pair(iterator(addNode(p.first, val)), true);
@@ -267,7 +267,6 @@ public:
 	{
 		if (sz == 0)
 			return (iterator(addValue(val)));
-		std::cout << "hinted " << val << '\n';
 		Nodeptr p = hint.base();
 		if(p == nil->right)
 		{
@@ -294,9 +293,62 @@ public:
 		for(; first != last; ++first)
 			insert(end(), *first);
 	}
+
+	void erase(iterator pos)
+	{
+		removeNode(pos.base());
+	}
 	
-//protected:
-public:
+	void erase(iterator first, iterator last)
+	{
+		while(first != last)
+			removeNode((first++).base());
+	}
+
+	size_type erase(key_type const &k)
+	{
+		Pairnb p = findValue(k);
+		if(!p.second)
+			return 0;
+		removeNode(p.first);
+		return 1;
+	}
+
+	void clear()
+	{
+		erase(begin(), end());
+	}
+
+	void swap (Type &x)
+	{
+		ft::swap(root, x.root);
+		ft::swap(this->comp, x.comp);
+		ft::swap(sz, x.sz);
+		ft::swap(nil, x.nil);
+	}
+
+	iterator lower_bound(key_type const & key)
+	{
+		Pairnb p = findValue(key);
+		if(p.second || !this->comp(Kfn()(p.first->value), key))
+			return (iterator(p.first));
+		return (iterator(successor(p.first)));
+	}
+
+	iterator upper_bound(key_type const & key)
+	{
+		Pairnb p = findValue(key);
+		if(p.second || !this->comp(key, Kfn()(p.first->value)))
+			return (iterator(successor(p.first)));
+		return (iterator(p.first));
+	}
+
+	Pairii equal_range(key_type const & key)
+	{
+		return (ft::make_pair(lower_bound(key), upper_bound(key)));
+	}
+
+protected:
 	Nodeptr root;
 	size_type sz;
 	Nodeptr nil;
@@ -306,7 +358,7 @@ public:
 		sz = 0;
 		nil = this->alnode.allocate(1);
 		nil->color = BLACK;
-		nil->p = nil->right = nil;
+		nil->p = nil->right = nil->nil = nil;
 		root = nil;
 	}
 
@@ -315,26 +367,23 @@ public:
 		try { this->alval.construct(&(n->value), val); }
 		catch (...) { deleteNode(n); throw; }
 		n->color = RED;
-		n->left = n->right = n->p = nil;
+		n->left = n->right = n->p = n->nil = nil;
 		return n;
 	}
 
 	void deleteNode(Nodeptr n) {
-		// if(n == nil->right)
-		// 	nil->right = successor(n);
-		// else if(n == nil->p)
-		// 	nil->p = predecessor(n);
 		this->alnode.deallocate(n, 1);
 	}
 
-	Nodeptr successor(Nodeptr x)
+	static Nodeptr successor(Nodeptr x)
 	{
-		if(x == nil->p)
-			return nil;
-		if(x->right != nil)
+		Nodeptr tnil = x->nil;
+		if(x == tnil->p)
+			return tnil;
+		if(x->right != tnil)
 			return treeMinimum(x->right);
 		Nodeptr y = x;
-		while(y != nil && x != y->left)
+		while(y != tnil && x != y->left)
 		{
 			x = y;
 			y = y->p;
@@ -342,16 +391,17 @@ public:
 		return y;
 	}
 
-	Nodeptr predecessor(Nodeptr x)
+	static Nodeptr predecessor(Nodeptr x)
 	{
-		if(x == nil)
+		Nodeptr tnil = x->nil;
+		if(x == tnil)
 			return x->p;
-		if(x == nil->right)
-			return nil;
-		if(x->left != nil)
+		if(x == tnil->right)
+			return tnil;
+		if(x->left != tnil)
 			return treeMaximum(x->left);
 		Node *y = x;
-		while(y != nil && x != y->right)
+		while(y != tnil && x != y->right)
 		{
 			x = y;
 			y = y->p;
@@ -359,23 +409,25 @@ public:
 		return y;
 	}
 
-	Nodeptr treeMinimum (Nodeptr n)
+	static Nodeptr treeMinimum (Nodeptr n)
 	{
-		if(n == nil || n->left == nil)
+		Nodeptr tnil = n->nil;
+		if(n == tnil || n->left == tnil)
 			return n;
 	
 		return treeMinimum(n->left);
 	}
 
-	Nodeptr treeMaximum (Nodeptr n)
+	static Nodeptr treeMaximum (Nodeptr n)
 	{
-		if(n == nil || n->right == nil)
+		Nodeptr tnil = n->nil;
+		if(n == tnil || n->right == tnil)
 			return n;
 	
 		return treeMaximum(n->right);
 	}
 
-	Pairnb findValue(value_type val)
+	Pairnb findValue(key_type const &k)
 	{
 		if(root == nil)
 			return ft::make_pair(root, false);
@@ -386,9 +438,9 @@ public:
 		while (n != nil)
 		{
 			r.first = n;
-			if(this->comp(Kfn()(val), Kfn()(n->value)))
+			if(this->comp(k, Kfn()(n->value)))
 				n = n->left;
-			else if(this->comp(Kfn()(n->value), Kfn()(val)))
+			else if(this->comp(Kfn()(n->value), k))
 				n = n->right;
 			else
 			{
@@ -532,13 +584,19 @@ public:
 		new_n->p = prev_n->p;
 	}
 
-	void removeValue(value_type val)
+	void removeValue(key_type const &val)
 	{
 		Pairnb p = findValue(val);
 		if(p.second == false)
 			return;
 		Nodeptr n = p.first;
+		removeNode(n);
+	}
+
+	void removeNode(Nodeptr n)
+	{
 		Nodeptr repl;
+		Pairnb p;
 		p.first = 0;
 		nil->left = nil->p;
 		if(n == nil->right)
