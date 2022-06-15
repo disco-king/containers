@@ -307,36 +307,70 @@ int main()
 	}
 
 	{
+	// 	Tree<tree_traits> t;
+
+	// 	t.insert(ft::make_pair(3, 'a'));
+	// 	t.insert(ft::make_pair(1, 'a'));
+	// 	t.insert(ft::make_pair(2, 'a'));
+	// 	t.insert(ft::make_pair(4, 'a'));
+	// 	t.insert(ft::make_pair(5, 'a'));
+	// 	t.insert(ft::make_pair(15, 'a'));
+	// 	t.insert(ft::make_pair(-7, 'a'));
+	// 	t.insert(ft::make_pair(10, 'a'));
+	// 	t.insert(ft::make_pair(300, 'a'));
+
+	// 	Tree<tree_traits>::iterator it = t.begin();
+	// 	while(it != t.end())
+	// 	{
+	// 		// (*it).first += 1;
+	// 		// (*it).second += 1;
+	// 		it->second += 1;
+	// 		std::cout << (*it).first << ' ' << (*it).second << '\n';
+	// 		++it;
+	// 	}
+
+	// 	std::cout << '\n';
+
+	// 	Tree<tree_traits>::reverse_iterator rit = t.rbegin();
+	// 	while(rit != t.rend())
+	// 	{
+	// 		// (*rit).first += 1;
+	// 		// (*rit).second += 1;
+	// 		rit->second += 1;
+	// 		std::cout << (*rit).first << ' ' << (*rit).second << '\n';
+	// 		++rit;
+	// 	}
+	}
+
+	{
 		Tree<tree_traits> t;
 
-		t.insert(ft::make_pair(3, 'a'));
-		t.insert(ft::make_pair(1, 'a'));
-		t.insert(ft::make_pair(2, 'a'));
-		t.insert(ft::make_pair(4, 'a'));
-		t.insert(ft::make_pair(5, 'a'));
-		t.insert(ft::make_pair(15, 'a'));
-		t.insert(ft::make_pair(-7, 'a'));
-		t.insert(ft::make_pair(10, 'a'));
-		t.insert(ft::make_pair(300, 'a'));
+		t.insert(3);
+		t.insert(1);
+		t.insert(2);
+		t.insert(4);
+		t.insert(5);
+		t.insert(15);
+		t.insert(-7);
+		t.insert(10);
+		t.insert(300);
 
-		Tree<tree_traits>::const_iterator it = t.begin();
-		while(it != t.end())
+		Tree<tree_traits> t1(t);
+
+		Tree<tree_traits>::const_iterator it = t1.end();
+		while(it != t1.begin())
 		{
-			// (*it).first += 1;
-			// (*it).second += 1;
-			std::cout << (*it).first << ' ' << (*it).second << '\n';
-			++it;
+			--it;
+			std::cout << *it << '\n';
 		}
 
 		std::cout << '\n';
 
-		Tree<tree_traits>::const_reverse_iterator rit = t.rbegin();
-		while(rit != t.rend())
+		Tree<tree_traits>::const_reverse_iterator rit = t1.rend();
+		while(rit != t1.rbegin())
 		{
-			// (*rit).first += 1;
-			// (*rit).second += 1;
-			std::cout << (*rit).first << ' ' << (*rit).second << '\n';
-			++rit;
+			--rit;
+			std::cout << *rit << '\n';
 		}
 	}
 }

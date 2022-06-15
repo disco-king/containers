@@ -20,16 +20,16 @@ struct tree_traits
 	// typedef ValComp value_compare;
 	
 	typedef int key_type;
-	// typedef int value_type;
-	typedef ft::pair<const int, char> value_type;
+	typedef int value_type;
+	// typedef ft::pair<const int, char> value_type;
 	typedef std::allocator<int> allocator_type;
 	typedef std::less<key_type> key_compare;
 	typedef std::less<value_type> value_compare;
 
 	struct Kfn{
 		const key_type& operator() (const value_type& v) const
-		// { return v; }
-		{ return v.first; }
+		{ return v; }
+		// { return v.first; }
 	};
 
 	key_compare comp;
@@ -148,7 +148,6 @@ public:
 
 	private:
 		Nodeptr nptr;
-		Type *tptr;
 
 		Nodeptr base() const { return nptr; }
 
@@ -167,7 +166,7 @@ public:
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
 								value_type>::reference reference;
 
-		explicit TreeIterator(Nodeptr ptr = 0, Type *tree = 0) : nptr(ptr), tptr(tree) {};
+		explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
 
 		TreeIterator& operator=(TreeIterator const &src) {
 			nptr = src.nptr;
@@ -178,7 +177,7 @@ public:
 		bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
 
 		TreeIterator& operator++() {
-			nptr = tptr->successor(nptr);
+			nptr = successor(nptr);
 			return *this;
 		}
 		
@@ -189,7 +188,7 @@ public:
 		}
 
 		TreeIterator& operator--() {
-			nptr = tptr->predecessor(nptr);
+			nptr = predecessor(nptr);
 			return *this;
 		}
 
@@ -201,7 +200,7 @@ public:
 
 
 		operator TreeIterator<false> () const
-		{ return (TreeIterator<false>(this->nptr, this->tptr)); }
+		{ return (TreeIterator<false>(this->nptr)); }
 
 		reference operator*() const { return value(nptr); }
 		pointer operator->() const { return &(**this); }
@@ -250,10 +249,10 @@ public:
 		return *this;
 	}
 
-	iterator begin() { return iterator(nil->right, this); }
-	const_iterator begin() const { return const_terator(nil->right, this); }
-	iterator end() { return iterator(nil, this); }
-	const_iterator end() const { return const_terator(nil, this); }
+	iterator begin() { return iterator(nil->right); }
+	const_iterator begin() const { return const_terator(nil->right); }
+	iterator end() { return iterator(nil); }
+	const_iterator end() const { return const_terator(nil); }
 	reverse_iterator rbegin() { return reverse_iterator(end()); }
 	const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
 	reverse_iterator rend() { return reverse_iterator(begin()); }
@@ -362,10 +361,58 @@ public:
 		return (ft::make_pair(lower_bound(key), upper_bound(key)));
 	}
 
-protected:
+// protected:
+public:
 	Nodeptr root;
 	size_type sz;
 	Nodeptr nil;
+
+	void copy(Type const & src)
+	{
+		root = copy(src.root);
+		sz = src.sz;
+		if(root != nil)
+		{
+			nil->p = treeMaximum(root);
+			nil->right = treeMinimum(root);
+		}
+	}
+
+	Nodeptr copy(Nodeptr head)
+	{
+		if(head == head->nil)
+			return nil;
+		Nodeptr ret = newNode(head->value);
+		ret->color = head->color;
+		ret->left = ret->right = nil;
+		try
+		{
+			ret->left = copy(head->left);
+			ret->right = copy(head->right);
+		}
+		catch(...)
+		{
+			if(ret->left != nil)
+				deleteBranch(ret->left);
+			deleteNode(ret);
+			throw;
+		}
+		ret->left->p = ret;
+		ret->right->p = ret;
+		return ret;
+	}
+
+	void deleteBranch(Nodeptr head)
+	{
+		if(head == nil)
+			return;
+		Nodeptr l = head->left;
+		Nodeptr r = head->right;
+		deleteNode(head);
+		deleteBranch(l);
+		deleteBranch(r);
+		return;
+	}
 
 	void init()
 	{
@@ -387,6 +434,7 @@ protected:
 
 	void deleteNode(Nodeptr n) {
 		this->alnode.deallocate(n, 1);
+		n = nil;
 	}
 
 	static Nodeptr successor(Nodeptr x)
