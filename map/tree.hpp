@@ -361,8 +361,23 @@ public:
 		return (ft::make_pair(lower_bound(key), upper_bound(key)));
 	}
 
-// protected:
-public:
+	iterator find(key_type const &k)
+	{
+		Pairnb p = findValue(k);
+		if(p.second)
+			return iterator(p.first);
+		return end();
+	}
+
+	size_type count(key_type const &k)
+	{
+		Pairnb p = findValue(k);
+		if(p.second)
+			return 1;
+		return 0;
+	}
+
+protected:
 	Nodeptr root;
 	size_type sz;
 	Nodeptr nil;
