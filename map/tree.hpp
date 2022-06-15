@@ -10,32 +10,25 @@
 #define RED true
 #define BLACK false
 
-// template <typename Key, typename Val, typename Alloc, typename KeyComp, typename ValComp>
-struct tree_traits
-{
-	// typedef Key key_type;
-	// typedef Val value_type;
-	// typedef Alloc allocator_type;
-	// typedef KeyComp key_compare;
-	// typedef ValComp value_compare;
-	
-	typedef int key_type;
-	typedef int value_type;
-	// typedef ft::pair<const int, char> value_type;
-	typedef std::allocator<int> allocator_type;
-	typedef std::less<key_type> key_compare;
-	typedef std::less<value_type> value_compare;
+// struct tree_traits
+// {
+// 	typedef int key_type;
+// 	typedef int value_type;
+// 	// typedef ft::pair<const int, char> value_type;
+// 	typedef std::allocator<int> allocator_type;
+// 	typedef std::less<key_type> key_compare;
+// 	typedef std::less<value_type> value_compare;
 
-	struct Kfn{
-		const key_type& operator() (const value_type& v) const
-		{ return v; }
-		// { return v.first; }
-	};
+// 	struct Kfn{
+// 		const key_type& operator() (const value_type& v) const
+// 		{ return v; }
+// 		// { return v.first; }
+// 	};
 
-	key_compare comp;
-	value_compare v_comp;
-	tree_traits (key_compare const & comp) : comp(comp) {}
-};
+// 	key_compare comp;
+// 	value_compare v_comp;
+// 	tree_traits (key_compare const & comp) : comp(comp) {}
+// };
 
 template <typename Tr>
 class Tree_node : public Tr
@@ -146,9 +139,9 @@ public:
 										reference>
 	{
 
-	private:
+	protected:
+		friend class Tree;
 		Nodeptr nptr;
-
 		Nodeptr base() const { return nptr; }
 
 	public:
@@ -216,8 +209,8 @@ public:
 	typedef ft::pair<Nodeptr, bool> Pairnb;
 
 
-	Tree() : Base(key_compare(), allocator_type())
-	{ init (); }
+	// Tree() : Base(key_compare(), allocator_type())
+	// { init (); }
 
 	explicit Tree (key_compare const &comp, allocator_type const &al) :
 	Base(comp, al) { init(); }
@@ -241,13 +234,22 @@ public:
 		this->alnode.deallocate(nil, 1);
 	}
 
-	Type& operator=(Type const &src) {
+	Type &operator=(Type const &src) {
 		if(this == &src)
 			return *this;
 		erase(begin(), end());
-		this->comp = src.comp;
+		copy(src);
 		return *this;
 	}
+
+	
+	// Type &operator= (Type const &other)
+	// {
+	// 	if(this == &other)
+	// 		return *this;
+	// 	clear();
+	// 	copy(other);
+	// }
 
 	iterator begin() { return iterator(nil->right); }
 	const_iterator begin() const { return const_terator(nil->right); }
@@ -301,7 +303,8 @@ public:
 		return (insert(val).first);
 	}
 
-	void insert(iterator first, iterator last)
+	template <typename Iter>
+	void insert(Iter first, Iter last)
 	{
 		for(; first != last; ++first)
 			insert(end(), *first);

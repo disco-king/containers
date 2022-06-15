@@ -5,24 +5,24 @@
 #include <string>
 #include <iostream>
 
-#define ns ft
+#define ns std
 #define _set ns::set
 #define _map ns::map
 
 int main(int argc, char const *argv[])
 {
 	{
-		_map<int, std::string> m;
+		// _map<int, std::string> m;
 
-		ns::pair<_map<int, std::string>::iterator, bool> p;
-		p = m.insert(ns::pair<int, std::string>(1, "str1"));
-		std::cout << p.first->first << ' ' << p.first->second << '\n';
+		// ns::pair<_map<int, std::string>::iterator, bool> p;
+		// p = m.insert(ns::pair<int, std::string>(1, "str1"));
+		// std::cout << p.first->first << ' ' << p.first->second << '\n';
 
-		// m.insert(ns::pair<int, std::string>(1, "str1"));
-		// _map<int, std::string>::iterator i = m.find(1);
-		// std::cout << i->first << ' ' << i->second << '\n';
+		// // m.insert(ns::pair<int, std::string>(1, "str1"));
+		// // _map<int, std::string>::iterator i = m.find(1);
+		// // std::cout << i->first << ' ' << i->second << '\n';
 
-		std::cout << "string by key 1: " << m[1] << '\n';
+		// std::cout << "string by key 1: " << m[1] << '\n';
 	}
 
 	{
@@ -158,6 +158,23 @@ int main(int argc, char const *argv[])
 		// for (_set<int>::iterator i = it2; i != s1.end(); ++i)
 		// 	std::cout << *i << ' ';
 		// std::cout << '\n';
+	}
+
+	{
+		_set<int> src;
+
+		for (int i = 0; i < 5; i++)
+			src.insert(i);
+
+		_set<int> s(src);
+
+		_set<int>::iterator it = s.begin();
+		while(it != s.end())
+		{
+			std::cout << *it << ' ';
+			++it;
+		}
+		std::cout << '\n';
 	}
 
 	return 0;

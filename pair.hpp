@@ -52,7 +52,7 @@ template <typename T1, typename T2>
 bool operator< (pair<T1, T2> const & p1, pair<T1, T2> const & p2)
 {
 	return (p1.first < p2.first
-			|| !(p2.first < p1.first) && p1.second < p2.second);
+			|| (!(p2.first < p1.first) && p1.second < p2.second));
 }
 
 template <typename T1, typename T2>

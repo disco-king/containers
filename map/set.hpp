@@ -62,7 +62,7 @@ public:
 	set(Iter first, Iter last) : Base(key_compare(), allocator_type())
 	{
 		for(; first != last; ++first)
-			insert(*first);
+			this->insert(*first);
 	}
 
 	template <typename Iter>
@@ -70,7 +70,7 @@ public:
 	Base(comp, allocator_type())
 	{
 		for(; first != last; ++first)
-			insert(*first);
+			this->insert(*first);
 	}
 
 	template <typename Iter>
@@ -78,8 +78,11 @@ public:
 	Base(comp, alloc)
 	{
 		for(; first != last; ++first)
-			insert(*first);
+			this->insert(*first);
 	}
+
+	set( const set& other ) : Base(other)
+	{};
 
 };
 

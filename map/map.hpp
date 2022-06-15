@@ -9,6 +9,7 @@ namespace ft
 template <typename K, typename T, typename Comp, typename Alloc>
 class map_traits
 {
+
 public:
 	typedef K key_type;
 	typedef pair<K, T> value_type;
@@ -43,6 +44,9 @@ template <typename K,
 			typename Alloc = std::allocator<pair<const K, T> > >
 class map : public Tree<map_traits<K, T, Comp, Alloc> >
 {
+
+protected:
+	typedef typename Tree<map_traits<K, T, Comp, Alloc> >::Pairnb Pairnb;
 
 public:
 	typedef map<K, T, Comp, Alloc> Type;
@@ -94,11 +98,31 @@ public:
 			insert(*first);
 	}
 
+	map( const map& other ) : Base(other)
+	{};
+
+	mapped_type &at(key_type const &k)
+	{
+		Pairnb p = this->findValue(k);
+		if(!p.second)
+			throw std::out_of_range("out of range");
+		return p.first->second;
+	}
+
+	mapped_type const &at(key_type const &k) const
+	{
+		Pairnb p = this->findValue(k);
+		if(!p.second)
+			throw std::out_of_range("out of range");
+		return p.first->second;
+	}
+
 	mapped_type &operator[] (key_type const &k)
 	{
 		iterator P = this->insert(value_type(k, mapped_type())).first;
 		return P->second;
 	}
+
 };
 
 }
