@@ -32,9 +32,9 @@ public:
 	}
 	
 	reverse_iterator& operator++() {iter--; return *this;}
-	reverse_iterator operator++(int) {reverse_iterator retval = *this; --(*this); return retval;}
+	reverse_iterator operator++(int) {reverse_iterator retval = *this; --iter; return retval;}
 	reverse_iterator& operator--() {iter++; return *this;}
-	reverse_iterator operator--(int) {reverse_iterator retval = *this; ++(*this); return retval;}
+	reverse_iterator operator--(int) {reverse_iterator retval = *this; ++iter; return retval;}
 
 	operator reverse_iterator<const Iter> () const
 	{ return (reverse_iterator<const Iter>(this->ptr)); }
@@ -99,73 +99,41 @@ public:
 };
 
 template <typename T, typename U>
-// typename enable_if<is_same<typename reverse_iterator<T>::iterator_category,
-// 				random_access_iterator_tag>::value &&
-// 				is_same<typename reverse_iterator<U>::iterator_category,
-// 				random_access_iterator_tag>::value,
-// 				bool>::type
 bool operator>(const ra_reverse_iterator<T> &lhs,
 				const ra_reverse_iterator<U> &rhs)
 { return &(*lhs) < &(*rhs); }
 
 template <typename T>
-// typename enable_if<is_same<typename reverse_iterator<T>::iterator_category,
-// 				random_access_iterator_tag>::value,
-// 				bool>::type
 bool operator>(const ra_reverse_iterator<T> &lhs,
 				const ra_reverse_iterator<T> &rhs)
 { return &(*lhs) < &(*rhs); }
 
 template <typename T, typename U>
-// typename enable_if<is_same<typename reverse_iterator<T>::iterator_category,
-// 				random_access_iterator_tag>::value &&
-// 				is_same<typename reverse_iterator<U>::iterator_category,
-// 				random_access_iterator_tag>::value,
-// 				bool>::type
 bool operator<(const ra_reverse_iterator<T> &lhs,
 				const ra_reverse_iterator<U> &rhs)
 {return &(*lhs) > &(*rhs);}
 
 template <typename T>
-// typename enable_if<is_same<typename reverse_iterator<T>::iterator_category,
-// 				random_access_iterator_tag>::value,
-// 				bool>::type
 bool operator<(const ra_reverse_iterator<T> &lhs,
 				const ra_reverse_iterator<T> &rhs)
 {return &(*lhs) > &(*rhs);}
 
 template <typename T, typename U>
-// typename enable_if<is_same<typename reverse_iterator<T>::iterator_category,
-// 				random_access_iterator_tag>::value &&
-// 				is_same<typename reverse_iterator<U>::iterator_category,
-// 				random_access_iterator_tag>::value,
-// 				bool>::type
 bool operator>=(const ra_reverse_iterator<T> &lhs,
 				const ra_reverse_iterator<U> &rhs)
 {return &(*lhs) <= &(*rhs);}
 
 template <typename T>
-// typename enable_if<is_same<typename reverse_iterator<T>::iterator_category,
-// 				random_access_iterator_tag>::value,
-// 				bool>::type
 bool operator>=(const ra_reverse_iterator<T> &lhs,
 				const ra_reverse_iterator<T> &rhs)
 {return &(*lhs) <= &(*rhs);}
 
 template <typename T, typename U>
-// typename enable_if<is_same<typename reverse_iterator<T>::iterator_category,
-// 				random_access_iterator_tag>::value &&
-// 				is_same<typename reverse_iterator<U>::iterator_category,
-// 				random_access_iterator_tag>::value,
-// 				bool>::type
 bool operator<=(const ra_reverse_iterator<T> &lhs,
 				const ra_reverse_iterator<U> &rhs)
 {return &(*lhs) >= &(*rhs);}
 
 template <typename T>
-// typename enable_if<is_same<typename reverse_iterator<T>::iterator_category,
-// 				random_access_iterator_tag>::value,
-// 				bool>::type
 bool operator<=(const ra_reverse_iterator<T> &lhs,
 				const ra_reverse_iterator<T> &rhs)
 {return &(*lhs) >= &(*rhs);}

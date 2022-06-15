@@ -2,10 +2,16 @@
 
 #include <functional>
 #include <memory>
+#include "../iterator.hpp"
 #include "../reverse_iterator.hpp"
-#include "../pair.hpp"
-#include "../swaps.hpp"
 #include "../template_meta.hpp"
+#include "../compare.hpp"
+#include "../swaps.hpp"
+#include "../pair.hpp"
+// #include "../utils.hpp"
+
+namespace ft
+{
 
 #define RED true
 #define BLACK false
@@ -192,15 +198,140 @@ public:
 		}
 
 
-		operator TreeIterator<false> () const
+		operator TreeIterator<false>() const
 		{ return (TreeIterator<false>(this->nptr)); }
 
 		reference operator*() const { return value(nptr); }
 		pointer operator->() const { return &(**this); }
 	};
 
+	// class TreeConstIterator : public ft::iterator<ft::bidirectional_iterator_tag,
+	// 									value_type,
+	// 									difference_type,
+	// 									pointer,
+	// 									reference>
+	// {
+
+	// protected:
+	// 	friend class Tree;
+	// 	Nodeptr nptr;
+	// 	Nodeptr base() const { return nptr; }
+
+	// public:
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 						Type::value_type>::iterator_category iterator_category;
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 						Type::value_type>::difference_type difference_type;
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 						const Type::value_type>::value_type value_type;
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 							value_type>::pointer pointer;
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 							value_type>::reference reference;
+
+	// 	explicit TreeConstIterator(Nodeptr ptr = 0) : nptr(ptr) {};
+
+	// 	TreeConstIterator& operator=(TreeConstIterator const &src) {
+	// 		nptr = src.nptr;
+	// 		return *this;
+	// 	}
+
+	// 	bool operator==(TreeConstIterator const &x) const { return (nptr == x.nptr); }
+	// 	bool operator!=(TreeConstIterator const &x) const { return (nptr != x.nptr); }
+
+	// 	TreeConstIterator& operator++() {
+	// 		nptr = successor(nptr);
+	// 		return *this;
+	// 	}
+		
+	// 	TreeConstIterator operator++(int) {
+	// 		TreeIterator retval = *this;
+	// 		++(*this);
+	// 		return retval;
+	// 	}
+
+	// 	TreeConstIterator& operator--() {
+	// 		nptr = predecessor(nptr);
+	// 		return *this;
+	// 	}
+
+	// 	TreeConstIterator operator--(int) {
+	// 		TreeIterator retval = *this;
+	// 		--(*this);
+	// 		return retval;
+	// 	}
+
+	// 	reference operator*() const { return value(nptr); }
+	// 	pointer operator->() const { return &(**this); }
+	// };
+
+	// class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag,
+	// 									value_type,
+	// 									difference_type,
+	// 									pointer,
+	// 									reference>
+	// {
+
+	// protected:
+	// 	friend class Tree;
+	// 	Nodeptr nptr;
+	// 	Nodeptr base() const { return nptr; }
+
+	// public:
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 						Type::value_type>::iterator_category iterator_category;
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 						Type::value_type>::difference_type difference_type;
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 						Type::value_type>::value_type value_type;
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 							value_type>::pointer pointer;
+	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 							value_type>::reference reference;
+
+	// 	explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
+
+	// 	TreeIterator& operator=(TreeIterator const &src) {
+	// 		nptr = src.nptr;
+	// 		return *this;
+	// 	}
+
+	// 	bool operator==(TreeIterator const &x) const { return (nptr == x.nptr); }
+	// 	bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
+
+	// 	TreeIterator& operator++() {
+	// 		nptr = successor(nptr);
+	// 		return *this;
+	// 	}
+		
+	// 	TreeIterator operator++(int) {
+	// 		TreeIterator retval = *this;
+	// 		++(*this);
+	// 		return retval;
+	// 	}
+
+	// 	TreeIterator& operator--() {
+	// 		nptr = predecessor(nptr);
+	// 		return *this;
+	// 	}
+
+	// 	TreeIterator operator--(int) {
+	// 		TreeIterator retval = *this;
+	// 		--(*this);
+	// 		return retval;
+	// 	}
+
+	// 	operator TreeConstIterator() const
+	// 	{ return TreeConstIterator(this->nptr); }
+
+	// 	reference operator*() const { return value(nptr); }
+	// 	pointer operator->() const { return &(**this); }
+	// };
+
 	typedef TreeIterator<true> iterator;
 	typedef TreeIterator<false> const_iterator;
+	// typedef TreeIterator iterator;
+	// typedef TreeConstIterator const_iterator;
 	typedef ft::reverse_iterator<iterator> reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	typedef ft::pair<iterator, bool> Pairib;
@@ -242,19 +373,10 @@ public:
 		return *this;
 	}
 
-	
-	// Type &operator= (Type const &other)
-	// {
-	// 	if(this == &other)
-	// 		return *this;
-	// 	clear();
-	// 	copy(other);
-	// }
-
 	iterator begin() { return iterator(nil->right); }
-	const_iterator begin() const { return const_terator(nil->right); }
+	const_iterator begin() const { return const_iterator(nil->right); }
 	iterator end() { return iterator(nil); }
-	const_iterator end() const { return const_terator(nil); }
+	const_iterator end() const { return const_iterator(nil); }
 	reverse_iterator rbegin() { return reverse_iterator(end()); }
 	const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
 	reverse_iterator rend() { return reverse_iterator(begin()); }
@@ -817,19 +939,47 @@ protected:
 		this->alval.destroy(&(n->value));
 		this->alnode.deallocate(n, 1);
 	}
-
-	void printNodes(Nodeptr n)
-	{
-		if(n == nil)
-			return;
-		if(n->left != nil)
-			printNodes(n->left);
-		std::cout << (n->color == BLACK ? "b:" : "r:") << n->value << ' ';
-		// std::cout << (n->color == BLACK ? "b: " : "r: ")
-		// << n->value.first << ' ' << n->value.second << '\n';
-		if(n->right != nil)
-			printNodes(n->right);
-	}
 };
 
+template <typename T>
+bool operator==(ft::Tree<T> const &lhs, ft::Tree<T> const &rhs)
+{
+	if(lhs.size() != rhs.size())
+		return false;
+	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
+
+template <typename T>
+bool operator!=(ft::Tree<T> const &lhs, ft::Tree<T> const &rhs)
+{
+	return !(lhs == rhs);
+}
+
+template <typename T>
+bool operator>(ft::Tree<T> const &lhs, ft::Tree<T> const &rhs)
+{
+	return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+}
+
+template <typename T>
+bool operator<(ft::Tree<T> const &lhs, ft::Tree<T> const &rhs)
+{
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+}
+
+template <typename T>
+bool operator>=(ft::Tree<T> const &lhs, ft::Tree<T> const &rhs)
+{
+	return ( lhs > rhs || lhs == rhs);
+}
+
+template <typename T>
+bool operator<=(ft::Tree<T> const &lhs, ft::Tree<T> const &rhs)
+{
+	return (lhs < rhs || lhs == rhs);
+}
+
+
 // #include "TreeIterator.hpp"
+
+}

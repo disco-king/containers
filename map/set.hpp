@@ -86,4 +86,42 @@ public:
 
 };
 
+// template <typename T>
+// bool operator==(ft::set<T> const &lhs, ft::set<T> const &rhs)
+// {
+// 	if(lhs.size() != rhs.size())
+// 		return false;
+// 	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+// }
+
+// template <typename T>
+// bool operator!=(ft::set<T> const &lhs, ft::set<T> const &rhs)
+// {
+// 	return !(lhs == rhs);
+// }
+
+// template <typename T>
+// bool operator>(ft::set<T> const &lhs, ft::set<T> const &rhs)
+// {
+// 	return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+// }
+
+// template <typename T>
+// bool operator<(ft::set<T> const &lhs, ft::set<T> const &rhs)
+// {
+// 	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+// }
+
+// template <typename T>
+// bool operator>=(ft::set<T> const &lhs, ft::set<T> const &rhs)
+// {
+// 	return ( lhs > rhs || lhs == rhs);
+// }
+
+// template <typename T>
+// bool operator<=(ft::set<T> const &lhs, ft::set<T> const &rhs)
+// {
+// 	return (lhs < rhs || lhs == rhs);
+// }
+
 }
