@@ -15,19 +15,19 @@ struct enable_if<true, T>
 	typedef T type;
 };
 
-template <typename T, typename U, bool B>
+template <bool B, typename T, typename F>
 struct conditional {};
 
-template <typename T, typename U>
-struct conditional<T, U, true>
+template <typename T, typename F>
+struct conditional<true, T, F>
 {
 	typedef T type;
 };
 
-template <typename T, typename U>
-struct conditional<T, U, false>
+template <typename T, typename F>
+struct conditional<false, T, F>
 {
-	typedef U type;
+	typedef F type;
 };
 
 template <class T, class U>

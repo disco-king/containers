@@ -10,31 +10,19 @@
 #include "../pair.hpp"
 // #include "../utils.hpp"
 
+namespace ft{
+
+template <class Tr> class Tree;
+}
+
+#include "TreeIterator.hpp"
+
 namespace ft
 {
 
 #define RED true
 #define BLACK false
 
-// struct tree_traits
-// {
-// 	typedef int key_type;
-// 	typedef int value_type;
-// 	// typedef ft::pair<const int, char> value_type;
-// 	typedef std::allocator<int> allocator_type;
-// 	typedef std::less<key_type> key_compare;
-// 	typedef std::less<value_type> value_compare;
-
-// 	struct Kfn{
-// 		const key_type& operator() (const value_type& v) const
-// 		{ return v; }
-// 		// { return v.first; }
-// 	};
-
-// 	key_compare comp;
-// 	value_compare v_comp;
-// 	tree_traits (key_compare const & comp) : comp(comp) {}
-// };
 
 template <typename Tr>
 class Tree_node : public Tr
@@ -91,7 +79,7 @@ protected:
 		Tree_ptr<Tr>(comp, al), alval(al) {};
 };
 
-template <typename Tr>
+template <class Tr>
 class Tree : public Tree_val<Tr>
 {
 public:
@@ -137,75 +125,8 @@ public:
 	typedef typename allocator_type::template
 		rebind<value_type>::other::const_reference const_reference;
 
-	template <bool Bool>
-	class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag,
-										value_type,
-										difference_type,
-										pointer,
-										reference>
-	{
-
-	protected:
-		friend class Tree;
-		Nodeptr nptr;
-		Nodeptr base() const { return nptr; }
-
-	public:
-		typedef typename ft::conditional<Type::value_type,
-										const Type::value_type,
-										Bool>::type v_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-							Type::value_type>::iterator_category iterator_category;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-							Type::value_type>::difference_type difference_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-							v_type>::value_type value_type;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-								value_type>::pointer pointer;
-		typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-								value_type>::reference reference;
-
-		explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
-
-		TreeIterator& operator=(TreeIterator const &src) {
-			nptr = src.nptr;
-			return *this;
-		}
-
-		bool operator==(TreeIterator const &x) const { return (nptr == x.nptr); }
-		bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
-
-		TreeIterator& operator++() {
-			nptr = successor(nptr);
-			return *this;
-		}
-		
-		TreeIterator operator++(int) {
-			TreeIterator retval = *this;
-			++(*this);
-			return retval;
-		}
-
-		TreeIterator& operator--() {
-			nptr = predecessor(nptr);
-			return *this;
-		}
-
-		TreeIterator operator--(int) {
-			TreeIterator retval = *this;
-			--(*this);
-			return retval;
-		}
-
-
-		operator TreeIterator<false>() const
-		{ return (TreeIterator<false>(this->nptr)); }
-
-		reference operator*() const { return value(nptr); }
-		pointer operator->() const { return &(**this); }
-	};
-
-	// class TreeConstIterator : public ft::iterator<ft::bidirectional_iterator_tag,
+	// template <bool Bool>
+	// class TreeIterator : public iterator<bidirectional_iterator_tag,
 	// 									value_type,
 	// 									difference_type,
 	// 									pointer,
@@ -218,75 +139,18 @@ public:
 	// 	Nodeptr base() const { return nptr; }
 
 	// public:
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-	// 						Type::value_type>::iterator_category iterator_category;
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-	// 						Type::value_type>::difference_type difference_type;
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-	// 						const Type::value_type>::value_type value_type;
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 	typedef typename conditional<Bool,
+	// 									Tree::value_type,
+	// 									const Tree::value_type>::type v_type;
+	// 	typedef typename iterator<bidirectional_iterator_tag,
+	// 						v_type>::iterator_category iterator_category;
+	// 	typedef typename iterator<bidirectional_iterator_tag,
+	// 						v_type>::difference_type difference_type;
+	// 	typedef typename iterator<bidirectional_iterator_tag,
+	// 						v_type>::value_type value_type;
+	// 	typedef typename iterator<bidirectional_iterator_tag,
 	// 							value_type>::pointer pointer;
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-	// 							value_type>::reference reference;
-
-	// 	explicit TreeConstIterator(Nodeptr ptr = 0) : nptr(ptr) {};
-
-	// 	TreeConstIterator& operator=(TreeConstIterator const &src) {
-	// 		nptr = src.nptr;
-	// 		return *this;
-	// 	}
-
-	// 	bool operator==(TreeConstIterator const &x) const { return (nptr == x.nptr); }
-	// 	bool operator!=(TreeConstIterator const &x) const { return (nptr != x.nptr); }
-
-	// 	TreeConstIterator& operator++() {
-	// 		nptr = successor(nptr);
-	// 		return *this;
-	// 	}
-		
-	// 	TreeConstIterator operator++(int) {
-	// 		TreeIterator retval = *this;
-	// 		++(*this);
-	// 		return retval;
-	// 	}
-
-	// 	TreeConstIterator& operator--() {
-	// 		nptr = predecessor(nptr);
-	// 		return *this;
-	// 	}
-
-	// 	TreeConstIterator operator--(int) {
-	// 		TreeIterator retval = *this;
-	// 		--(*this);
-	// 		return retval;
-	// 	}
-
-	// 	reference operator*() const { return value(nptr); }
-	// 	pointer operator->() const { return &(**this); }
-	// };
-
-	// class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag,
-	// 									value_type,
-	// 									difference_type,
-	// 									pointer,
-	// 									reference>
-	// {
-
-	// protected:
-	// 	friend class Tree;
-	// 	Nodeptr nptr;
-	// 	Nodeptr base() const { return nptr; }
-
-	// public:
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-	// 						Type::value_type>::iterator_category iterator_category;
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-	// 						Type::value_type>::difference_type difference_type;
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-	// 						Type::value_type>::value_type value_type;
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
-	// 							value_type>::pointer pointer;
-	// 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+	// 	typedef typename iterator<bidirectional_iterator_tag,
 	// 							value_type>::reference reference;
 
 	// 	explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
@@ -321,17 +185,19 @@ public:
 	// 		return retval;
 	// 	}
 
-	// 	operator TreeConstIterator() const
-	// 	{ return TreeConstIterator(this->nptr); }
+
+	// 	operator TreeIterator<false>() const
+	// 	{ return (TreeIterator<false>(this->nptr)); }
 
 	// 	reference operator*() const { return value(nptr); }
 	// 	pointer operator->() const { return &(**this); }
 	// };
 
-	typedef TreeIterator<true> iterator;
-	typedef TreeIterator<false> const_iterator;
-	// typedef TreeIterator iterator;
-	// typedef TreeConstIterator const_iterator;
+	friend class TreeIterator<true, Tr>;
+	friend class TreeIterator<false, Tr>;
+
+	typedef TreeIterator<true, Tr> iterator;
+	typedef TreeIterator<false, Tr> const_iterator;
 	typedef ft::reverse_iterator<iterator> reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	typedef ft::pair<iterator, bool> Pairib;
@@ -339,9 +205,6 @@ public:
 	typedef ft::pair<const_iterator, const_iterator> Paircc;
 	typedef ft::pair<Nodeptr, bool> Pairnb;
 
-
-	// Tree() : Base(key_compare(), allocator_type())
-	// { init (); }
 
 	explicit Tree (key_compare const &comp, allocator_type const &al) :
 	Base(comp, al) { init(); }
@@ -978,8 +841,5 @@ bool operator<=(ft::Tree<T> const &lhs, ft::Tree<T> const &rhs)
 {
 	return (lhs < rhs || lhs == rhs);
 }
-
-
-// #include "TreeIterator.hpp"
 
 }

@@ -1,33 +1,49 @@
 #pragma once
 
+
 #include "../iterator.hpp"
 #include "tree.hpp"
 
 
-template <typename T>
-class TreeIterator : public iterator<bidirectional_iterator_tag, T>
+namespace ft
 {
 
-private:
-	typedef typename Tree<T>::Node Node;
-	Node *n_ptr;
+template <bool Bool, typename Tr>
+class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag, Tr>
+{
+
+protected:
+	typedef typename Tree<Tr>::Nodeptr Nodeptr;
+	Nodeptr nptr;
+	Nodeptr base() const { return nptr; }
 
 public:
-	typedef typename iterator<bidirectional_iterator_tag, T>::iterator_category iterator_category;
-	typedef typename iterator<bidirectional_iterator_tag, T>::difference_type difference_type;
-	typedef typename iterator<bidirectional_iterator_tag, T>::value_type value_type;
-	typedef typename iterator<bidirectional_iterator_tag, T>::pointer pointer;
-	typedef typename iterator<bidirectional_iterator_tag, T>::reference reference;
+	typedef typename ft::conditional<Bool,
+									typename Tree<Tr>::value_type,
+									const typename Tree<Tr>::value_type>::type v_type;
+	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+						v_type>::iterator_category iterator_category;
+	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+						v_type>::difference_type difference_type;
+	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+						v_type>::value_type value_type;
+	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+							value_type>::pointer pointer;
+	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
+							value_type>::reference reference;
 
-	explicit TreeIterator(Node *ptr = 0) : n_ptr(ptr) {};
+	explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
 
 	TreeIterator& operator=(TreeIterator const &src) {
-		n_ptr = src.n_ptr;
+		nptr = src.nptr;
 		return *this;
 	}
 
+	bool operator==(TreeIterator const &x) const { return (nptr == x.nptr); }
+	bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
+
 	TreeIterator& operator++() {
-		n_ptr = n_ptr->t_ptr->successor(n_ptr);
+		nptr = Tree<Tr>::successor(nptr);
 		return *this;
 	}
 	
@@ -38,7 +54,7 @@ public:
 	}
 
 	TreeIterator& operator--() {
-		n_ptr = n_ptr->t_ptr->predecessor(n_ptr);
+		nptr = Tree<Tr>::predecessor(nptr);
 		return *this;
 	}
 
@@ -48,29 +64,12 @@ public:
 		return retval;
 	}
 
-	operator TreeIterator<const T> () const
-	{ return (TreeIterator<const T>(this->n_ptr)); }
 
-	reference operator*() const { return n_ptr->val; }
-	pointer operator->() const { return &(this->operator*()); }
+	operator TreeIterator<false, Tr>() const
+	{ return (TreeIterator<false, Tr>(this->nptr)); }
+
+	reference operator*() const { return Tree<Tr>::value(nptr); }
+	pointer operator->() const { return &(**this); }
 };
 
-template <typename T, typename U>
-bool operator==(const TreeIterator<T> &lhs,
-				const TreeIterator<U> &rhs)
-{return &(*lhs) == &(*rhs);}
-
-template <typename T>
-bool operator==(const TreeIterator<T> &lhs,
-				const TreeIterator<T> &rhs)
-{return &(*lhs) == &(*rhs);}
-
-template <typename T, typename U>
-bool operator!=(const TreeIterator<T> &lhs,
-				const TreeIterator<U> &rhs)
-{return &(*lhs) != &(*rhs);}
-
-template <typename T>
-bool operator!=(const TreeIterator<T> &lhs,
-				const TreeIterator<T> &rhs)
-{return &(*lhs) != &(*rhs);}
+}
