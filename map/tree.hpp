@@ -2,13 +2,7 @@
 
 #include <functional>
 #include <memory>
-#include "../iterator.hpp"
-#include "../reverse_iterator.hpp"
-#include "../template_meta.hpp"
-#include "../compare.hpp"
-#include "../swaps.hpp"
-#include "../pair.hpp"
-// #include "../utils.hpp"
+#include "../utils.hpp"
 
 namespace ft{
 
@@ -125,79 +119,11 @@ public:
 	typedef typename allocator_type::template
 		rebind<value_type>::other::const_reference const_reference;
 
-	// template <bool Bool>
-	// class TreeIterator : public iterator<bidirectional_iterator_tag,
-	// 									value_type,
-	// 									difference_type,
-	// 									pointer,
-	// 									reference>
-	// {
+	friend class TreeIterator<true, Type>;
+	friend class TreeIterator<false, Type>;
 
-	// protected:
-	// 	friend class Tree;
-	// 	Nodeptr nptr;
-	// 	Nodeptr base() const { return nptr; }
-
-	// public:
-	// 	typedef typename conditional<Bool,
-	// 									Tree::value_type,
-	// 									const Tree::value_type>::type v_type;
-	// 	typedef typename iterator<bidirectional_iterator_tag,
-	// 						v_type>::iterator_category iterator_category;
-	// 	typedef typename iterator<bidirectional_iterator_tag,
-	// 						v_type>::difference_type difference_type;
-	// 	typedef typename iterator<bidirectional_iterator_tag,
-	// 						v_type>::value_type value_type;
-	// 	typedef typename iterator<bidirectional_iterator_tag,
-	// 							value_type>::pointer pointer;
-	// 	typedef typename iterator<bidirectional_iterator_tag,
-	// 							value_type>::reference reference;
-
-	// 	explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
-
-	// 	TreeIterator& operator=(TreeIterator const &src) {
-	// 		nptr = src.nptr;
-	// 		return *this;
-	// 	}
-
-	// 	bool operator==(TreeIterator const &x) const { return (nptr == x.nptr); }
-	// 	bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
-
-	// 	TreeIterator& operator++() {
-	// 		nptr = successor(nptr);
-	// 		return *this;
-	// 	}
-		
-	// 	TreeIterator operator++(int) {
-	// 		TreeIterator retval = *this;
-	// 		++(*this);
-	// 		return retval;
-	// 	}
-
-	// 	TreeIterator& operator--() {
-	// 		nptr = predecessor(nptr);
-	// 		return *this;
-	// 	}
-
-	// 	TreeIterator operator--(int) {
-	// 		TreeIterator retval = *this;
-	// 		--(*this);
-	// 		return retval;
-	// 	}
-
-
-	// 	operator TreeIterator<false>() const
-	// 	{ return (TreeIterator<false>(this->nptr)); }
-
-	// 	reference operator*() const { return value(nptr); }
-	// 	pointer operator->() const { return &(**this); }
-	// };
-
-	friend class TreeIterator<true, Tr>;
-	friend class TreeIterator<false, Tr>;
-
-	typedef TreeIterator<true, Tr> iterator;
-	typedef TreeIterator<false, Tr> const_iterator;
+	typedef TreeIterator<true, Type> iterator;
+	typedef TreeIterator<false, Type> const_iterator;
 	typedef ft::reverse_iterator<iterator> reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
 	typedef ft::pair<iterator, bool> Pairib;

@@ -8,19 +8,19 @@
 namespace ft
 {
 
-template <bool Bool, typename Tr>
-class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag, Tr>
+template <bool Bool, typename Tree>
+class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag, typename Tree::value_type>
 {
 
 protected:
-	typedef typename Tree<Tr>::Nodeptr Nodeptr;
+	typedef typename Tree::Nodeptr Nodeptr;
 	Nodeptr nptr;
-	Nodeptr base() const { return nptr; }
 
 public:
+	Nodeptr base() { return nptr; }
 	typedef typename ft::conditional<Bool,
-									typename Tree<Tr>::value_type,
-									const typename Tree<Tr>::value_type>::type v_type;
+									typename Tree::value_type,
+									const typename Tree::value_type>::type v_type;
 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
 						v_type>::iterator_category iterator_category;
 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
@@ -34,6 +34,13 @@ public:
 
 	explicit TreeIterator(Nodeptr ptr = 0) : nptr(ptr) {};
 
+	template <bool B, typename OtherTree>
+	friend class TreeIterator;
+
+	template <bool B, typename OtherTree>
+	TreeIterator(TreeIterator<B, OtherTree> const &src) :
+	nptr(reinterpret_cast<Nodeptr>(src.nptr)) {};
+
 	TreeIterator& operator=(TreeIterator const &src) {
 		nptr = src.nptr;
 		return *this;
@@ -43,7 +50,7 @@ public:
 	bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
 
 	TreeIterator& operator++() {
-		nptr = Tree<Tr>::successor(nptr);
+		nptr = Tree::successor(nptr);
 		return *this;
 	}
 	
@@ -54,7 +61,7 @@ public:
 	}
 
 	TreeIterator& operator--() {
-		nptr = Tree<Tr>::predecessor(nptr);
+		nptr = Tree::predecessor(nptr);
 		return *this;
 	}
 
@@ -64,11 +71,10 @@ public:
 		return retval;
 	}
 
+	operator TreeIterator<false, Tree>() const
+	{ return (TreeIterator<false, Tree>(this->nptr)); }
 
-	operator TreeIterator<false, Tr>() const
-	{ return (TreeIterator<false, Tr>(this->nptr)); }
-
-	reference operator*() const { return Tree<Tr>::value(nptr); }
+	reference operator*() const { return Tree::value(nptr); }
 	pointer operator->() const { return &(**this); }
 };
 
