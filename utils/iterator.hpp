@@ -20,20 +20,20 @@ public:
 
 };
 
-class input_iterator_tag { };
+// class input_iterator_tag { };
 
-class output_iterator_tag { };
+// class output_iterator_tag { };
 
-class forward_iterator_tag : public input_iterator_tag { };
+// class forward_iterator_tag : public input_iterator_tag { };
 
-class bidirectional_iterator_tag : public forward_iterator_tag { };
+// class bidirectional_iterator_tag : public forward_iterator_tag { };
 
-class random_access_iterator_tag : public bidirectional_iterator_tag { };
+// class random_access_iterator_tag : public bidirectional_iterator_tag { };
 
 template <typename IterType>
 typename ft::enable_if<
 ft::is_same<typename IterType::iterator_category,
-			random_access_iterator_tag>::value,
+			std::random_access_iterator_tag>::value,
 			ptrdiff_t>::type
 distance(IterType first, IterType last)
 {
@@ -43,7 +43,7 @@ distance(IterType first, IterType last)
 template <typename IterType>
 typename ft::enable_if<
 !ft::is_same<typename IterType::iterator_category,
-			random_access_iterator_tag>::value,
+			std::random_access_iterator_tag>::value,
 			ptrdiff_t>::type
 distance(IterType first, IterType last)
 {
@@ -73,7 +73,7 @@ struct iterator_traits<T*>
 	typedef T value_type;
 	typedef T* pointer;
 	typedef T& reference;
-	typedef random_access_iterator_tag iterator_category;
+	typedef std::random_access_iterator_tag iterator_category;
 };
 
 template< class T >
@@ -83,7 +83,7 @@ struct iterator_traits<const T*>
 	typedef const T value_type;
 	typedef const T* pointer;
 	typedef const T& reference;
-	typedef random_access_iterator_tag iterator_category;
+	typedef std::random_access_iterator_tag iterator_category;
 };
 
 }

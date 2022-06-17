@@ -5,7 +5,7 @@
 namespace ft{
 
 template <typename T>
-class VectorIterator: public iterator<random_access_iterator_tag, T>
+class VectorIterator: public iterator<std::random_access_iterator_tag, T>
 {
 
 private:
@@ -13,11 +13,11 @@ private:
 
 public:
 	typedef VectorIterator iterator_type;
-	typedef typename iterator<random_access_iterator_tag, T>::iterator_category iterator_category;
-	typedef typename iterator<random_access_iterator_tag, T>::difference_type difference_type;
-	typedef typename iterator<random_access_iterator_tag, T>::value_type value_type;
-	typedef typename iterator<random_access_iterator_tag, T>::pointer pointer;
-	typedef typename iterator<random_access_iterator_tag, T>::reference reference;
+	typedef typename iterator<std::random_access_iterator_tag, T>::iterator_category iterator_category;
+	typedef typename iterator<std::random_access_iterator_tag, T>::difference_type difference_type;
+	typedef typename iterator<std::random_access_iterator_tag, T>::value_type value_type;
+	typedef typename iterator<std::random_access_iterator_tag, T>::pointer pointer;
+	typedef typename iterator<std::random_access_iterator_tag, T>::reference reference;
 
 	explicit VectorIterator(T *ptr = 0) : ptr(ptr) {}
 
