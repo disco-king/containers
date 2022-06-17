@@ -4,10 +4,13 @@
 #include "set.hpp"
 #include <string>
 #include <iostream>
+#include "../unit_test/sources/system/Alloc.hpp"
 
 #define ns ft
 #define _set ns::set
 #define _map ns::map
+
+bool _allocator_used = false;
 
 int main(int argc, char const *argv[])
 {
@@ -72,20 +75,36 @@ int main(int argc, char const *argv[])
 	// }
 
 	{
-		_map<int, int> m;
+		// _map<int, int> m;
 
-		for(int i = 0; i < 10; i++)
-			m[i] = i * 1000;
+		// for(int i = 0; i < 10; i++)
+		// 	m[i] = i * 1000;
 
-		try
-		{
-			for(int i = 0; i < 11; i++)
-				std::cout << m.at(i) << '\n';
-		}
-		catch(std::exception const &e)
-		{
-			std::cout << e.what() << '\n';
-		}
+		// try
+		// {
+		// 	for(int i = 0; i < 11; i++)
+		// 		std::cout << m.at(i) << '\n';
+		// }
+		// catch(std::exception const &e)
+		// {
+		// 	std::cout << e.what() << '\n';
+		// }
+	}
+
+	{
+		// _map<int, int>::iterator it;
+
+		// it->first = 1;
+
+		// return (0);
+	}
+
+	{
+		_map<int, int, std::less<int>, Alloc<ft::pair<const int, int> > > m;
+
+		m.insert(ft::make_pair(1, 1));
+
+		std::cout << std::boolalpha << _allocator_used << '\n';
 	}
 
 	return 0;

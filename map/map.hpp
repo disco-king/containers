@@ -12,7 +12,7 @@ class map_traits
 
 public:
 	typedef K key_type;
-	typedef pair<K, T> value_type;
+	typedef pair<const K, T> value_type;
 	typedef typename Alloc::template rebind<value_type>::other allocator_type;
 	typedef Comp key_compare;
 

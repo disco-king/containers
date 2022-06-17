@@ -25,8 +25,6 @@ protected:
 	typedef typename Tr::allocator_type allocator_type;
 	typedef typename Tr::key_compare key_compare;
 	typedef typename Tr::value_type value_type;
-	typedef typename allocator_type::template
-		rebind<void>::other::pointer Genptr;
 	friend struct Node;
 	struct Node{
 		Node *left, *right, *p, *nil;
@@ -86,7 +84,6 @@ public:
 	typedef typename Tr::allocator_type allocator_type;
 
 protected:
-	typedef typename Tree_node<Tr>::Genptr Genptr;
 	typedef typename Tree_node<Tr>::Node Node;
 	typedef typename Tr::Kfn Kfn;
 	typedef typename allocator_type::template
