@@ -247,49 +247,49 @@ int main(int argc, char const *argv[])
 	}
 
 	{// compare class check
-		// std::vector<int> v;
+		std::vector<int> v;
 
-		// _set<int, std::greater<int> > st;
-		// fillSet(st);
-		// for (_set<int>::iterator it = st.begin(); it != st.end(); it++) { v.push_back(*it); } 
-		// for (_set<int>::iterator it = --st.end(); it != st.begin(); it--) { v.push_back(*it); }
-		// _set<int, std::greater<int> > st1;
-		// fillSet(st1);
-		// v.push_back(*(st1.begin()));
-		// st1.erase(41);
-		// v.push_back(*(st1.begin()));
-		// st1.erase(29);
-		// v.push_back(*(st1.begin()));
-		// _set<int, std::greater<int> > st2;
-		// st2.insert(3);
-		// v.push_back(*(st2.begin()));
-		// st2.erase(3);
-		// if (st2.begin() == st2.end())
-		// 	v.push_back(1);
-		// _set<int, std::plus<int> > st3;
-		// fillSet(st3);
-		// for (_set<int>::iterator it = st3.begin(); it != st3.end(); it++) { v.push_back(*it); }
-		// for (_set<int>::iterator it = --st3.end(); it != st3.begin(); it--) { v.push_back(*it); }
-		// _set<int, std::minus<int> > st4;
-		// fillSet(st4);
-		// for (_set<int>::iterator it = st4.begin(); it != st4.end(); it++) { v.push_back(*it); }
-		// for (_set<int>::iterator it = --st4.end(); it != st4.begin(); it--) { v.push_back(*it); }
-		// _set<int, std::greater_equal<int> > st5;
-		// fillSet(st5);
-		// for (_set<int>::iterator it = st5.begin(); it != st5.end(); it++) { v.push_back(*it); }
-		// for (_set<int>::iterator it = --st5.end(); it != st5.begin(); it--) { v.push_back(*it); }
-		// _set<int, std::multiplies<int> > st6;
-		// fillSet(st6);
-		// for (_set<int>::iterator it = st6.begin(); it != st6.end(); it++) { v.push_back(*it); }
-		// for (_set<int>::iterator it = --st6.end(); it != st6.begin(); it--) { v.push_back(*it); }
-		// _set<int, std::bit_xor<int> > st7;
-		// fillSet(st7);
-		// for (_set<int>::iterator it = st7.begin(); it != st7.end(); it++) { v.push_back(*it); }
-		// for (_set<int>::iterator it = --st7.end(); it != st7.begin(); it--) { v.push_back(*it); }
-		// std::set<int, std::logical_and<int> > st8;
+		_set<int, std::greater<int> > st;
+		fillSet(st);
+		for (_set<int>::iterator it = st.begin(); it != st.end(); it++) { v.push_back(*it); } 
+		for (_set<int>::iterator it = --st.end(); it != st.begin(); it--) { v.push_back(*it); }
+		_set<int, std::greater<int> > st1;
+		fillSet(st1);
+		v.push_back(*(st1.begin()));
+		st1.erase(41);
+		v.push_back(*(st1.begin()));
+		st1.erase(29);
+		v.push_back(*(st1.begin()));
+		_set<int, std::greater<int> > st2;
+		st2.insert(3);
+		v.push_back(*(st2.begin()));
+		st2.erase(3);
+		if (st2.begin() == st2.end())
+			v.push_back(1);
+		_set<int, std::plus<int> > st3;
+		fillSet(st3);
+		for (_set<int>::iterator it = st3.begin(); it != st3.end(); it++) { v.push_back(*it); }
+		for (_set<int>::iterator it = --st3.end(); it != st3.begin(); it--) { v.push_back(*it); }
+		_set<int, std::minus<int> > st4;
+		fillSet(st4);
+		for (_set<int>::iterator it = st4.begin(); it != st4.end(); it++) { v.push_back(*it); }
+		for (_set<int>::iterator it = --st4.end(); it != st4.begin(); it--) { v.push_back(*it); }
+		_set<int, std::greater_equal<int> > st5;
+		fillSet(st5);
+		for (_set<int>::iterator it = st5.begin(); it != st5.end(); it++) { v.push_back(*it); }
+		for (_set<int>::iterator it = --st5.end(); it != st5.begin(); it--) { v.push_back(*it); }
+		_set<int, std::multiplies<int> > st6;
+		fillSet(st6);
+		for (_set<int>::iterator it = st6.begin(); it != st6.end(); it++) { v.push_back(*it); }
+		for (_set<int>::iterator it = --st6.end(); it != st6.begin(); it--) { v.push_back(*it); }
+		_set<int, std::bit_xor<int> > st7;
+		fillSet(st7);
+		for (_set<int>::iterator it = st7.begin(); it != st7.end(); it++) { v.push_back(*it); }
+		for (_set<int>::iterator it = --st7.end(); it != st7.begin(); it--) { v.push_back(*it); }
+		std::set<int, std::logical_and<int> > st8;
 
-		// v.push_back(st1.size());
-		// print_vec(v);
+		v.push_back(st1.size());
+		print_vec(v);
 	}
 
 

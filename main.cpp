@@ -14,6 +14,7 @@
 
 #include "./stack/stack.hpp"
 #include "./vector/vector.hpp"
+#include "./map/map.hpp"
 
 #include <stdlib.h>
 
@@ -63,7 +64,7 @@ int main(int argc, char** argv) {
 	ft::stack<int> stack_int;
 	ft::vector<Buffer> vector_buffer;
 	ft::stack<Buffer, std::deque<Buffer> > stack_deq_buffer;
-	// ft::map<int, int> map_int;
+	ft::map<int, int> map_int;
 
 	try
 	{
@@ -101,22 +102,22 @@ int main(int argc, char** argv) {
 		//NORMAL ! :P
 	}
 	
-	// for (int i = 0; i < COUNT; ++i)
-	// {
-	// 	map_int.insert(ft::make_pair(rand(), rand()));
-	// }
+	for (int i = 0; i < COUNT; ++i)
+	{
+		map_int.insert(ft::make_pair(rand(), rand()));
+	}
 
-	// int sum = 0;
-	// for (int i = 0; i < 10000; i++)
-	// {
-	// 	int access = rand();
-	// 	sum += map_int[access];
-	// }
-	// std::cout << "should be constant with the same seed: " << sum << std::endl;
+	int sum = 0;
+	for (int i = 0; i < 10000; i++)
+	{
+		int access = rand();
+		sum += map_int[access];
+	}
+	std::cout << "should be constant with the same seed: " << sum << std::endl;
 
-	// {
-	// 	ft::map<int, int> copy = map_int;
-	// }
+	{
+		ft::map<int, int> copy = map_int;
+	}
 	MutantStack<char> iterable_stack;
 	for (char letter = 'a'; letter <= 'z'; letter++)
 		iterable_stack.push(letter);

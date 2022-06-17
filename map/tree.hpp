@@ -97,12 +97,8 @@ protected:
 	typedef typename allocator_type::template
 		rebind<bool>::other::reference Boolref;
 
-	static Boolref color(Nodeptr P) { return ((Boolref) (*P).color); }
 	static Valref value(Nodeptr P) { return ((Valref) (*P).value); }
 	static Keyref key(Nodeptr P) { return (Kfn()(value(P))); }
-	static Nodepref left(Nodeptr P) { return ((Nodepref) (*P).left); }
-	static Nodepref right(Nodeptr P) { return ((Nodepref) (*P).right); }
-	static Nodepref parent(Nodeptr P) { return ((Nodepref) (*P).p); }
 
 public:
 	typedef typename allocator_type::size_type size_type;
@@ -204,7 +200,7 @@ public:
 		}
 		else
 		{
-			if(this->comp(Kfn()(p->value), Kfn()(val))
+			if(this->comp(key(p), Kfn()(val))
 				&& this->comp(Kfn()(val), Kfn()(*(++hint)))
 				&& (p = addNode(p, val)) != nil)
 				return iterator(p);
@@ -252,23 +248,44 @@ public:
 		ft::swap(nil, x.nil);
 	}
 
-	iterator lower_bound(key_type const & key)
+	iterator lower_bound(key_type const & k)
 	{
-		Pairnb p = findValue(key);
-		if(p.second || !this->comp(Kfn()(p.first->value), key))
+		Pairnb p = findValue(k);
+		if(p.second || !this->comp(key(p.first), k))
 			return (iterator(p.first));
 		return (iterator(successor(p.first)));
 	}
 
-	iterator upper_bound(key_type const & key)
+	iterator upper_bound(key_type const & k)
 	{
-		Pairnb p = findValue(key);
-		if(p.second || !this->comp(key, Kfn()(p.first->value)))
+		Pairnb p = findValue(k);
+		if(p.second || !this->comp(k, key(p.first)))
 			return (iterator(successor(p.first)));
 		return (iterator(p.first));
 	}
 
 	Pairii equal_range(key_type const & key)
+	{
+		return (ft::make_pair(lower_bound(key), upper_bound(key)));
+	}
+
+	const_iterator lower_bound(key_type const & k) const
+	{
+		Pairnb p = findValue(k);
+		if(p.second || !this->comp(key(p.first), k))
+			return (iterator(p.first));
+		return (iterator(successor(p.first)));
+	}
+
+	const_iterator upper_bound(key_type const & k) const
+	{
+		Pairnb p = findValue(k);
+		if(p.second || !this->comp(k, key(p.first)))
+			return (iterator(successor(p.first)));
+		return (iterator(p.first));
+	}
+
+	Paircc equal_range(key_type const & key) const
 	{
 		return (ft::make_pair(lower_bound(key), upper_bound(key)));
 	}
@@ -427,9 +444,9 @@ protected:
 		while (n != nil)
 		{
 			r.first = n;
-			if(this->comp(k, Kfn()(n->value)))
+			if(this->comp(k, key(n)))
 				n = n->left;
-			else if(this->comp(Kfn()(n->value), k))
+			else if(this->comp(key(n), k))
 				n = n->right;
 			else
 			{
@@ -454,7 +471,7 @@ protected:
 	Nodeptr addNode(Nodeptr n, value_type const &val)
 	{
 		Nodeptr ret;
-		if(this->comp(Kfn()(val), Kfn()(n->value))
+		if(this->comp(Kfn()(val), key(n))
 			&& n->left == nil)
 		{
 			n->left = newNode(val);
