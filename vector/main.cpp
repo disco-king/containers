@@ -28,7 +28,7 @@ public:
         this->l = new char('a');
     };
     virtual ~B() {
-        delete this->l;
+        // delete this->l;
         this->l = nullptr;
     };
 };
@@ -42,13 +42,15 @@ public:
         if (ex->i == -1) throw "n";
     }
     ~A() {
-        delete this->l;
+        // delete this->l;
         this->l = nullptr;
     };
 };
 
-// int main()
-// {
+int main()
+{
+
+// { //checking exception handling
 // 	std::vector<int> v;
 // 	std::unique_ptr<B> k2(new B(3));
 // 	std::unique_ptr<B> k3(new B(4));
@@ -68,9 +70,49 @@ public:
 // 	print_vec(v);
 // }
 
+// {//checking insert exception handling
+// 	std::vector<int> v;
+// 	std::unique_ptr<B> k2(new B(3));
+// 	std::unique_ptr<B> k3(new B(4));
+// 	std::unique_ptr<B> k4(new B(-1));
+// 	_vector<A> vv;
+// 	_vector<B*> v1;
 
-// int main()// checking access funcs
-// {
+// 	v1.push_back(&(*k2));
+// 	v1.push_back(&(*k3));
+// 	v1.push_back(&(*k4));
+
+// 	for (size_t i = 0; i < 10; i++)
+// 		vv.push_back(v1[0]);
+	
+// 	// {
+// 	// 	try { vv.insert(vv.begin() + 7, v1.begin(), v1.end()); }
+// 	// 	catch (...) {
+// 	// 		v.push_back(vv.size());
+// 	// 		v.push_back(vv.capacity());
+// 	// 	}
+// 	// }
+// 	{
+// 		try { vv.insert(vv.begin() + 7, 3, v1[2]); }
+// 		catch (...) {
+// 			v.push_back(vv.size());
+// 			v.push_back(vv.capacity());
+// 		}
+// 	}
+// 	print_vec(v);
+// 	_vector<A>::iterator it = vv.begin();
+// 	for(; it < vv.end(); ++it)
+// 	{
+// 		std::cout << (*it).i << ' ' << (*it).l << '\n';
+// 	}
+// 	// for(int num = 0; num < vv.capacity(); num++)
+// 	// {
+// 	// 	std::cout << (*it).i << ' ' << (*it).l << '\n';
+// 	// 	++it;
+// 	// }
+// }
+
+// {// checking access funcs
 // 	_vector<int> v;
 
 // 	for (size_t i = 0; i < 10; i++)
@@ -94,8 +136,7 @@ public:
 // }
 
 
-// int main() //checking pop_back
-// {
+// {//checking pop_back
 // 	_vector<int> v(5, 1);
 
 // 	std::cout << v.size() << '\n';
@@ -107,8 +148,7 @@ public:
 	
 // }
 
-// int main()//checking iterators
-// {
+// {//checking iterators
 // 	_vector<int> v(1000, 1);
 // 	ft::vector<int>::iterator b = v.begin();
 // 	ft::vector<int>::iterator e = v.begin() + 1;
@@ -119,8 +159,7 @@ public:
 // }
 
 
-// int main()//checking constructors
-// {
+// {//checking constructors
 // 	Timer<> t;
 // 	std::vector<int> v;
 // 	// std::vector<int> vector(100, 5);
@@ -143,8 +182,7 @@ public:
 // 	return 0;
 // }
 
-// int main()//checking iterator to const conversion
-// {
+// {//checking iterator to const conversion
 // 	_vector<int> v(5, 1);
 
 // 	_vector<int>::iterator i = v.begin();
@@ -159,9 +197,7 @@ public:
 // 	return 0;
 // }
 
-
-// int main() //checking assign
-// {
+// {//checking assign
 // 	{
 // 		_vector<int> v1(5, 1);
 // 		_vector<int> v2(3, 7);
@@ -192,16 +228,14 @@ public:
 // 	}
 // }
 
-// int main()//checking value constructor
-// {
+// {//checking value constructor
 // 	// _vector<std::string> v(5, "string");
 // 	_vector<int> v(5, 1);
 
 // 	print_vec(v);
 // }
 
-// int main()//checking compares
-// {
+// {//checking compares
 // 	_vector<int> v1(10, 3);
 // 	_vector<int> v2(3, 5);
 
@@ -210,8 +244,7 @@ public:
 // 	print_vec(v2);
 // }
 
-// int main()//checking compares
-// {
+// {//checking compares
 // 	_vector<int> v1, v2;
 
 // 	for (size_t i = 0; i < 5; i++)
@@ -237,8 +270,7 @@ public:
 // 	return 0;
 // }
 
-// int main()//checking resize
-// {
+// {//checking resize
 // 	{
 // 		_vector<int> v;
 // 		v.assign(9900, 1);
@@ -284,8 +316,7 @@ public:
 // }
 
 
-// int main() //checking reverse iterators
-// {
+// {//checking reverse iterators
 // 	_vector<int> v;
 // 	v.push_back(1);
 // 	v.push_back(2);
@@ -321,8 +352,7 @@ public:
 // }
 
 
-// int main() //checking insert
-// {
+// {//checking insert
 // 	_vector<std::string> v1;
 // 	_vector<std::string> v2;
 
@@ -351,8 +381,7 @@ public:
 // 	print_vec(v1);
 // }
 
-// int main () //checking erase and iterators
-// {
+// {//checking erase and iterators
 // 	_vector<int> myvector;
 
 // 	// set some values (from 1 to 10)
@@ -388,22 +417,20 @@ public:
 // }
 
 
-int main() //checking push_back
-{
-	_vector<std::string> v1;
-	std::string s = "foo bar";
-	for (size_t i = 0; i < 5; i++)
-	{
-		v1.push_back(s);
-		std::cout << "size " << v1.size()
-		<< " capacity " << v1.capacity() << '\n';
-	}
+// {//checking push_back
+	// _vector<std::string> v1;
+	// std::string s = "foo bar";
+	// for (size_t i = 0; i < 5; i++)
+	// {
+	// 	v1.push_back(s);
+	// 	std::cout << "size " << v1.size()
+	// 	<< " capacity " << v1.capacity() << '\n';
+	// }
 
-	print_vec(v1);
-}
+	// print_vec(v1);
+// }
 
-// int main() //checking swap
-// {
+// {//checking swap
 // 	_vector<std::string> v1;
 // 	v1.push_back("s1");
 // 	v1.push_back("s2");
@@ -440,8 +467,7 @@ int main() //checking push_back
 	
 // }
 
-// int main(int argc, char const *argv[])//checking swap
-// {
+// {//checking swap
 // 	Timer<float, MICRO> t;
 
 //     std::vector<int> v;
@@ -478,8 +504,7 @@ int main() //checking push_back
 //     return 0;
 // }
 
-// int main()//checking erase
-// {
+// {//checking erase
 // 	_vector<int> v(1000 * _ratio, 5);
 // 	Timer<float, MILLI> t;
 
@@ -503,4 +528,4 @@ int main() //checking push_back
 // 	<< " capacity " << v.capacity() << '\n';
 // }
 
-
+}

@@ -5,7 +5,7 @@ template <typename T, typename Allocator> class vector;
 }
 
 #include "../utils.hpp"
-#include "vectorIterator.hpp"
+#include "VectorIterator.hpp"
 #include <memory>
 #include <iterator>
 #include <cstdlib>
@@ -26,8 +26,8 @@ public:
 	typedef typename allocator_type::const_pointer const_pointer;
 	typedef ptrdiff_t difference_type;
 	typedef size_t size_type;
-	typedef vectorIterator<T> iterator;
-	typedef vectorIterator<const T> const_iterator;
+	typedef VectorIterator<T> iterator;
+	typedef VectorIterator<const T> const_iterator;
 	typedef ft::ra_reverse_iterator<iterator> reverse_iterator;
 	typedef ft::ra_reverse_iterator<const_iterator> const_reverse_iterator;
 

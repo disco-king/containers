@@ -108,21 +108,20 @@ void ft::vector<T, Allocator>::push_back (const value_type& val)
 	if (!array)
 	{
 		array = alloc.allocate(1);
-		alloc.construct(array, val);
-		sz = cap = 1;
-		return;
+		cap = 1;
 	}
-	if(sz == cap)
+	else if(sz == cap)
 		reserve(sz * 2);
-	alloc.construct(array + sz, val);
-	sz++;
+	try { alloc.construct(array + sz, val); }
+	catch(...) {}
+	++sz;
 }
 
 template <typename T, typename Allocator>
 void ft::vector<T, Allocator>::pop_back ()
 {
 	alloc.destroy(array + sz);
-	sz--;
+	--sz;
 }
 
 template <typename T, typename Allocator>
@@ -190,12 +189,22 @@ ft::vector<T, Allocator>::erase (iterator position)
 	{
 		T *end_p = &(*end());
 		T *pos = &(*position);
-		for (; pos + 1 != end_p; pos++)
+		try
 		{
+			for (; pos + 1 != end_p; ++pos)
+			{
+				alloc.destroy(pos);
+				alloc.construct(pos, *(pos + 1));
+			}
 			alloc.destroy(pos);
-			alloc.construct(pos, *(pos + 1));
 		}
-		alloc.destroy(pos);
+		catch(...)
+		{
+			sz = ft::distance(begin(), iterator(pos++));
+			for(; pos != end_p; ++pos)
+				alloc.destroy(pos);
+			throw;
+		}
 	}
 	sz--;
 	return begin() + dist;
@@ -210,11 +219,21 @@ ft::vector<T, Allocator>::erase (iterator first, iterator last)
 
 	T *end_p = &(*end());
 	T *pos = &(*first);
-	for (; pos < end_p; pos++)
+	try
 	{
-		alloc.destroy(pos);
-		if(pos + jump < end_p)
-			alloc.construct(pos, *(pos + jump));
+		for (; pos < end_p; ++pos)
+		{
+			alloc.destroy(pos);
+			if(pos + jump < end_p)
+				alloc.construct(pos, *(pos + jump));
+		}
+	}
+	catch(...)
+	{
+		sz = ft::distance(begin(), iterator(pos++));
+		for(; pos != end_p; ++pos)
+			alloc.destroy(pos);
+		throw;
 	}
 	sz -= jump;
 	return begin() + dist;
@@ -238,17 +257,27 @@ void ft::vector<T, Allocator>::insert( iterator pos, size_type count, const T& v
 	{
 		iterator iter = end() + count - 1;
 		iterator arr_end = end();
-		for (; iter >= pos; iter--)
+		try
+		{
+			for (; iter >= pos; --iter)
+			{
+				if(iter < arr_end)
+					alloc.destroy(&(*iter));
+				if(iter > pos + (count - 1))
+					alloc.construct(&(*iter), *(iter - count));
+				else
+					alloc.construct(&(*iter), value);
+			}
+		}
+		catch(...)
 		{
 			if(iter < arr_end)
-				alloc.destroy(&(*iter));
-			if(iter > pos + (count - 1))
-				alloc.construct(&(*iter), *(iter - count));
-			else
-				alloc.construct(&(*iter), value);
-			if(iter >= arr_end)
-				sz++;
+				sz = ft::distance(begin(), iter++);
+			for(; iter < arr_end + count; ++iter)
+					alloc.destroy(&(*iter));
+			throw;
 		}
+		sz += count;
 		return;
 	}
 
@@ -275,20 +304,30 @@ ft::vector<T, Allocator>::insert ( iterator pos, InputIt first, InputIt last )
 		last--;
 		iterator iter = end() + count - 1;
 		iterator arr_end = end();
-		for (; iter >= pos; iter--)
+		try
+		{
+			for (; iter >= pos; --iter)
+			{
+				if(iter < arr_end)
+					alloc.destroy(&(*iter));
+				if(iter > pos + (count - 1))
+					alloc.construct(&(*iter), *(iter - count));
+				else
+				{
+					alloc.construct(&(*iter), *last);
+					--last;
+				}
+			}
+		}
+		catch(...)
 		{
 			if(iter < arr_end)
-				alloc.destroy(&(*iter));
-			if(iter > pos + (count - 1))
-				alloc.construct(&(*iter), *(iter - count));
-			else
-			{
-				alloc.construct(&(*iter), *last);
-				last--;
-			}
-			if(iter >= arr_end)
-				sz++;
+				sz = ft::distance(begin(), iter++);
+			for(; iter < arr_end + count; ++iter)
+					alloc.destroy(&(*iter));
+			throw;
 		}
+		sz += count;
 		return;
 	}
 
