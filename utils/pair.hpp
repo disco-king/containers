@@ -22,6 +22,10 @@ public:
 	pair( const pair<U1, U2>& p ) : first(p.first), second(p.second)
 	{}
 
+	template< class U1, class U2 >
+	pair( const std::pair<U1, U2>& p ) : first(p.first), second(p.second)
+	{}
+
 	pair& operator=( const pair& other )
 	{
 		first = other.first;

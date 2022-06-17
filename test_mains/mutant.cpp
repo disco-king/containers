@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#include "stack.hpp"
+#include "../stack/stack.hpp"
 #include <stack>
 
 #include <stdlib.h>
