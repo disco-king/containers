@@ -3,6 +3,7 @@
 #include "../utils/iterator.hpp"
 
 namespace ft{
+
 template <typename T>
 class VectorIterator: public iterator<random_access_iterator_tag, T>
 {
@@ -11,6 +12,7 @@ private:
 	T *ptr;
 
 public:
+	typedef VectorIterator iterator_type;
 	typedef typename iterator<random_access_iterator_tag, T>::iterator_category iterator_category;
 	typedef typename iterator<random_access_iterator_tag, T>::difference_type difference_type;
 	typedef typename iterator<random_access_iterator_tag, T>::value_type value_type;
