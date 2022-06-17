@@ -8,19 +8,21 @@
 namespace ft
 {
 
-template <bool Bool, typename Tree>
-class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag, typename Tree::value_type>
+template <bool Bool, typename TreeType>
+class TreeIterator : public ft::iterator<ft::bidirectional_iterator_tag, typename TreeType::value_type>
 {
 
 protected:
-	typedef typename Tree::Nodeptr Nodeptr;
+	template <typename Tr>
+	friend class Tree;
+	typedef typename TreeType::Nodeptr Nodeptr;
 	Nodeptr nptr;
+	Nodeptr base() { return nptr; }
 
 public:
-	Nodeptr base() { return nptr; }
 	typedef typename ft::conditional<Bool,
-									typename Tree::value_type,
-									const typename Tree::value_type>::type v_type;
+									typename TreeType::value_type,
+									const typename TreeType::value_type>::type v_type;
 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
 						v_type>::iterator_category iterator_category;
 	typedef typename ft::iterator<ft::bidirectional_iterator_tag,
@@ -50,7 +52,7 @@ public:
 	bool operator!=(TreeIterator const &x) const { return (nptr != x.nptr); }
 
 	TreeIterator& operator++() {
-		nptr = Tree::successor(nptr);
+		nptr = TreeType::successor(nptr);
 		return *this;
 	}
 	
@@ -61,7 +63,7 @@ public:
 	}
 
 	TreeIterator& operator--() {
-		nptr = Tree::predecessor(nptr);
+		nptr = 	TreeType::predecessor(nptr);
 		return *this;
 	}
 
@@ -71,10 +73,10 @@ public:
 		return retval;
 	}
 
-	operator TreeIterator<false, Tree>() const
-	{ return (TreeIterator<false, Tree>(this->nptr)); }
+	operator TreeIterator<false, TreeType>() const
+	{ return (TreeIterator<false, TreeType>(this->nptr)); }
 
-	reference operator*() const { return Tree::value(nptr); }
+	reference operator*() const { return TreeType::value(nptr); }
 	pointer operator->() const { return &(**this); }
 };
 

@@ -79,7 +79,7 @@ public:
 	map(Iter first, Iter last) : Base(key_compare(), allocator_type())
 	{
 		for(; first != last; ++first)
-			insert(*first);
+			this->insert(*first);
 	}
 
 	template <typename Iter>
@@ -87,7 +87,7 @@ public:
 	Base(comp, allocator_type())
 	{
 		for(; first != last; ++first)
-			insert(*first);
+			this->insert(*first);
 	}
 
 	template <typename Iter>
@@ -95,7 +95,7 @@ public:
 	Base(comp, alloc)
 	{
 		for(; first != last; ++first)
-			insert(*first);
+			this->insert(*first);
 	}
 
 	map( const map& other ) : Base(other)
@@ -106,7 +106,7 @@ public:
 		Pairnb p = this->findValue(k);
 		if(!p.second)
 			throw std::out_of_range("out of range");
-		return p.first->second;
+		return p.first->value.second;
 	}
 
 	mapped_type const &at(key_type const &k) const
@@ -114,13 +114,13 @@ public:
 		Pairnb p = this->findValue(k);
 		if(!p.second)
 			throw std::out_of_range("out of range");
-		return p.first->second;
+		return p.first->value.second;
 	}
 
 	mapped_type &operator[] (key_type const &k)
 	{
-		iterator P = this->insert(value_type(k, mapped_type())).first;
-		return P->second;
+		iterator p = this->insert(value_type(k, mapped_type())).first;
+		return p->second;
 	}
 
 };

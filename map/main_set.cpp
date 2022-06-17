@@ -39,18 +39,18 @@ int main(int argc, char const *argv[])
 {
 
 	{// default constructor and insert check
-		// _set<int> s;
+		_set<int> s;
 
-		// for (int i = 0; i < 5; i++)
-		// 	s.insert(i);
+		for (int i = 0; i < 5; i++)
+			s.insert(i);
 
-		// _set<int>::iterator it = s.begin();
-		// while(it != s.end())
-		// {
-		// 	std::cout << *it << ' ';
-		// 	++it;
-		// }
-		// std::cout << '\n';
+		_set<int>::iterator it = s.begin();
+		while(it != s.end())
+		{
+			std::cout << *it << ' ';
+			++it;
+		}
+		std::cout << '\n';
 	}
 
 	{//copy constructor check
@@ -71,30 +71,30 @@ int main(int argc, char const *argv[])
 	}
 
 	{// iterator range constructor check
-		_set<int> src;
-		Timer<float, MILLI> t;
+		// _set<int> src;
+		// Timer<float, MILLI> t;
 
-		for (int i = 0; i < 10; i++)
-			src.insert(i);
+		// for (int i = 0; i < 10; i++)
+		// 	src.insert(i);
 
-		t.start();
-		// _set<int> s = _set<int>(src.rbegin(), src.rend());
-		_set<int> s;
-		s.insert(src.rbegin(), src.rend());
-		t.finish();
+		// t.start();
+		// // _set<int> s = _set<int>(src.rbegin(), src.rend());
+		// _set<int> s;
+		// s.insert(src.rbegin(), src.rend());
+		// t.finish();
 
-		t.printTime();
-		if(s.size() < 20)
-		{
-			_set<int>::iterator it = s.begin();
-			while(it != s.end())
-			{
-				std::cout << *it << ' ';
-				++it;
-			}
-		}
-		std::cout << '\n';
-		std::cout << "set size " << s.size() << '\n';
+		// t.printTime();
+		// if(s.size() < 20)
+		// {
+		// 	_set<int>::iterator it = s.begin();
+		// 	while(it != s.end())
+		// 	{
+		// 		std::cout << *it << ' ';
+		// 		++it;
+		// 	}
+		// }
+		// std::cout << '\n';
+		// std::cout << "set size " << s.size() << '\n';
 	}
 
 	{// swap check

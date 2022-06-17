@@ -119,6 +119,7 @@ public:
 	typedef typename allocator_type::template
 		rebind<value_type>::other::const_reference const_reference;
 
+
 	friend class TreeIterator<true, Type>;
 	friend class TreeIterator<false, Type>;
 
