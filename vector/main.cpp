@@ -18,6 +18,57 @@ void print_vec(T const &vec)
 	std::cout << '\n';
 }
 
+class B {
+public:
+    char *l;
+    int i;
+    B():l(nullptr), i(1) {};
+    B(const int &ex) {
+        this->i = ex;
+        this->l = new char('a');
+    };
+    virtual ~B() {
+        delete this->l;
+        this->l = nullptr;
+    };
+};
+
+class A : public B {
+public:
+    A():B(){};
+    A(const B* ex){
+        this->l = new char(*(ex->l));
+        this->i = ex->i;
+        if (ex->i == -1) throw "n";
+    }
+    ~A() {
+        delete this->l;
+        this->l = nullptr;
+    };
+};
+
+// int main()
+// {
+// 	std::vector<int> v;
+// 	std::unique_ptr<B> k2(new B(3));
+// 	std::unique_ptr<B> k3(new B(4));
+// 	std::unique_ptr<B> k4(new B(-1));
+// 	_vector<A> vv;
+// 	_vector<B*> v1;
+
+// 	v1.push_back(&(*k2));
+// 	v1.push_back(&(*k3));
+// 	v1.push_back(&(*k4));
+// 	try { vv.insert(vv.begin(), v1.begin(), v1.end()); }
+// 	catch (...) {
+// 		v.push_back(vv.size());
+// 		v.push_back(vv.capacity());
+// 	}
+
+// 	print_vec(v);
+// }
+
+
 // int main()// checking access funcs
 // {
 // 	_vector<int> v;
@@ -337,57 +388,57 @@ void print_vec(T const &vec)
 // }
 
 
-// int main() //checking push_back
-// {
-// 	_vector<std::string> v1;
-// 	std::string s = "foo bar";
-// 	for (size_t i = 0; i < 5; i++)
-// 	{
-// 		v1.push_back(s);
-// 		std::cout << "size " << v1.size()
-// 		<< " capacity " << v1.capacity() << '\n';
-// 	}
-
-// // 	print_vec(v1);
-// // }
-
-int main() //checking swap
+int main() //checking push_back
 {
 	_vector<std::string> v1;
-	v1.push_back("s1");
-	v1.push_back("s2");
-	v1.push_back("s3");
-	_vector<std::string> v2;
-	v2.push_back("s4");
-	v2.push_back("s5");
+	std::string s = "foo bar";
+	for (size_t i = 0; i < 5; i++)
+	{
+		v1.push_back(s);
+		std::cout << "size " << v1.size()
+		<< " capacity " << v1.capacity() << '\n';
+	}
 
-	_vector<std::string>::iterator i1 = v1.begin();
-	_vector<std::string>::iterator i2 = v2.begin();
-
-	std::string const & ref1 = v1.back();
-	std::string const & ref2 = v2.back();
-
-	std::cout << "references: " << ref1 << " " << ref2 << '\n';
-	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
-	for (_vector<std::string>::iterator i = i1; i < v1.end(); i++)
-		std::cout << *i << ' ';
-	std::cout << '\n';
-	for (_vector<std::string>::iterator i = i2; i < v2.end(); i++)
-		std::cout << *i << ' ';
-	std::cout << '\n';
-	
-	v1.swap(v2);
-
-	std::cout << "references: " << ref1 << " " << ref2 << '\n';
-	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
-	for (_vector<std::string>::iterator i = i1; i < v2.end(); i++)
-		std::cout << *i << ' ';
-	std::cout << '\n';
-	for (_vector<std::string>::iterator i = i2; i < v1.end(); i++)
-		std::cout << *i << ' ';
-	std::cout << '\n';
-	
+	print_vec(v1);
 }
+
+// int main() //checking swap
+// {
+// 	_vector<std::string> v1;
+// 	v1.push_back("s1");
+// 	v1.push_back("s2");
+// 	v1.push_back("s3");
+// 	_vector<std::string> v2;
+// 	v2.push_back("s4");
+// 	v2.push_back("s5");
+
+// 	_vector<std::string>::iterator i1 = v1.begin();
+// 	_vector<std::string>::iterator i2 = v2.begin();
+
+// 	std::string const & ref1 = v1.back();
+// 	std::string const & ref2 = v2.back();
+
+// 	std::cout << "references: " << ref1 << " " << ref2 << '\n';
+// 	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
+// 	for (_vector<std::string>::iterator i = i1; i < v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
+// 	for (_vector<std::string>::iterator i = i2; i < v2.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
+	
+// 	v1.swap(v2);
+
+// 	std::cout << "references: " << ref1 << " " << ref2 << '\n';
+// 	std::cout << "iterators: " << *i1 << " " << *i2 << '\n';
+// 	for (_vector<std::string>::iterator i = i1; i < v2.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
+// 	for (_vector<std::string>::iterator i = i2; i < v1.end(); i++)
+// 		std::cout << *i << ' ';
+// 	std::cout << '\n';
+	
+// }
 
 // int main(int argc, char const *argv[])//checking swap
 // {

@@ -71,7 +71,7 @@ void ft::vector<T, Allocator>::resize (size_type n, value_type val)
 			for (i = sz; i < n; i++)
 				alloc.construct(array + i, val);
 		}
-		catch(const std::exception& e)
+		catch(...)
 		{
 			for(size_t j = sz; j < i; j++)
 				alloc.destroy(array + j);
@@ -144,7 +144,7 @@ ft::vector<T, Allocator>::assign (InputIterator first, InputIterator last)
 	{
 		buff_arr = create_array(limits(0, number, 0), new_cap, first);
 	}
-	catch(std::exception const &e)
+	catch(...)
 	{
 		sz = 0;
 		throw;
@@ -251,6 +251,7 @@ void ft::vector<T, Allocator>::insert( iterator pos, size_type count, const T& v
 		}
 		return;
 	}
+
 	size_t new_cap = (sz + count) > cap * 2 ? (sz + count) : cap * 2;
 	size_t old_sz = sz;
 	size_t pos_index = ft::distance(begin(), pos);
@@ -336,7 +337,7 @@ T *ft::vector<T, Allocator>::create_array(limits lims, size_t size, Arg val)
 		for (; i < sz + lims.count; i++)
 			alloc.construct(new_arr + i, array[i - lims.count]);
 	}
-	catch(const std::exception& e)
+	catch(...)
 	{
 		for (size_t j = 0; j < i; j++)
 			alloc.destroy(new_arr + j);
