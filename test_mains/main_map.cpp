@@ -1,13 +1,10 @@
 #include <map>
-#include <set>
-#include "map.hpp"
-#include "set.hpp"
+#include "../map_and_set/map.hpp"
 #include <string>
 #include <iostream>
-#include "../unit_test/sources/system/Alloc.hpp"
+#include "../utils/Alloc.hpp"
 
 #define ns ft
-#define _set ns::set
 #define _map ns::map
 
 bool _allocator_used = false;
@@ -29,28 +26,28 @@ int main(int argc, char const *argv[])
 	}
 
 	{
-		// _map<int, float> m;
+		_map<int, float> m;
 
-		// float f = 500;
+		float f = 500;
 
-		// m.insert(m.end(), std::make_pair(1, 501));
-		// // m[1] = 501;
-		// m[2] = 502;
-		// m[3] = 503;
+		m.insert(m.end(), std::make_pair(1, 501));
+		// m[1] = 501;
+		m[2] = 502;
+		m[3] = 503;
 
-		// std::cout << m[1] << " count " << m.count(1) << '\n';
+		std::cout << m[1] << " count " << m.count(1) << '\n';
 
-		// _map<int, float>::iterator it = m.find(3);
-		// it = m.insert(it, std::make_pair(4, 504));
+		_map<int, float>::iterator it = m.find(3);
+		it = m.insert(it, std::make_pair(4, 504));
 
-		// std::cout << "res 1st " << it->first << " res 2nd " << it->second << '\n';
+		std::cout << "res 1st " << it->first << " res 2nd " << it->second << '\n';
 
-		// _map<int, float>::iterator i = m.begin();
-		// for(; i != m.end(); i++)
-		// {
-		// 	i->second -= 1;
-		// 	std::cout << i->first << ' ' << i->second << '\n';
-		// }
+		_map<int, float>::iterator i = m.begin();
+		for(; i != m.end(); i++)
+		{
+			i->second -= 1;
+			std::cout << i->first << ' ' << i->second << '\n';
+		}
 	}
 
 	// {
@@ -100,11 +97,11 @@ int main(int argc, char const *argv[])
 	}
 
 	{
-		_map<int, int, std::less<int>, Alloc<ft::pair<const int, int> > > m;
+		// _map<int, int, std::less<int>, Alloc<ft::pair<const int, int> > > m;
 
-		m.insert(ft::make_pair(1, 1));
+		// m.insert(ft::make_pair(1, 1));
 
-		std::cout << std::boolalpha << _allocator_used << '\n';
+		// std::cout << std::boolalpha << _allocator_used << '\n';
 	}
 
 	return 0;

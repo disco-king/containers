@@ -2,7 +2,7 @@
 
 #include <functional>
 #include <memory>
-#include "../utils.hpp"
+#include "../utils/utils.hpp"
 
 namespace ft{
 
@@ -89,13 +89,9 @@ protected:
 	typedef typename allocator_type::template
 		rebind<Node>::other::pointer Nodeptr;
 	typedef typename allocator_type::template
-		rebind<Nodeptr>::other::reference Nodepref;
-	typedef typename allocator_type::template
 		rebind<key_type>::other::const_reference Keyref;
 	typedef typename allocator_type::template
 		rebind<value_type>::other::reference Valref;
-	typedef typename allocator_type::template
-		rebind<bool>::other::reference Boolref;
 
 	static Valref value(Nodeptr P) { return ((Valref) (*P).value); }
 	static Keyref key(Nodeptr P) { return (Kfn()(value(P))); }
